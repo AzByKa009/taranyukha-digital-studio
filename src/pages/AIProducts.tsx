@@ -1,61 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Bot, Sparkles, FileText, Image, MessageSquare, Mic } from "lucide-react";
-
-const products = [
-  {
-    icon: Bot,
-    title: "AI Чат-бот",
-    description: "Интеллектуальный ассистент для автоматизации клиентской поддержки и продаж",
-    status: "Доступен",
-    features: ["Интеграция с CRM", "Мультиканальность", "Обучение на ваших данных", "Аналитика"],
-  },
-  {
-    icon: Sparkles,
-    title: "AI Генератор контента",
-    description: "Автоматическое создание текстов, заголовков и описаний для маркетинга",
-    status: "Доступен",
-    features: ["Генерация статей", "SEO-оптимизация", "Мультиязычность", "Тональность бренда"],
-  },
-  {
-    icon: FileText,
-    title: "Document AI",
-    description: "Система распознавания и обработки документов с использованием OCR и NLP",
-    status: "Бета",
-    features: ["OCR-распознавание", "Извлечение данных", "Классификация", "API-интеграция"],
-  },
-  {
-    icon: Image,
-    title: "Image AI",
-    description: "Генерация и редактирование изображений с помощью нейросетей",
-    status: "В разработке",
-    features: ["Генерация изображений", "Улучшение качества", "Удаление фона", "Стилизация"],
-  },
-  {
-    icon: MessageSquare,
-    title: "Sentiment Analyzer",
-    description: "Анализ тональности отзывов и сообщений для мониторинга репутации",
-    status: "Доступен",
-    features: ["Анализ отзывов", "Мониторинг соцсетей", "Отчёты", "Алерты"],
-  },
-  {
-    icon: Mic,
-    title: "Voice AI",
-    description: "Транскрибация и анализ голосовых сообщений и звонков",
-    status: "Бета",
-    features: ["Speech-to-Text", "Анализ звонков", "Саммаризация", "Интеграция с колл-центром"],
-  },
-];
+import { ArrowRight, CheckCircle, Sparkles, ClipboardList } from "lucide-react";
+import { aiCategories, aiProducts, getProductsByCategory } from "@/data/ai-products";
+import { cn } from "@/lib/utils";
 
 const AIProducts = () => {
+  const [activeCategory, setActiveCategory] = useState(aiCategories[0].id);
+
   useEffect(() => {
     document.title = "AI-продукты — Aleksey Taranukha";
     document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Готовые AI-решения для бизнеса: чат-боты, генераторы контента, системы анализа документов и изображений."
+      "Готовые AI-решения: чат-боты, автоматизация Make/Zapier, генерация контента, Mini-SaaS и аналитика."
     );
   }, []);
+
+  const currentCategory = aiCategories.find(c => c.id === activeCategory)!;
+  const categoryProducts = getProductsByCategory(activeCategory);
 
   return (
     <Layout>
@@ -70,9 +32,72 @@ const AIProducts = () => {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 animate-fade-in-up">
               AI-продукты
             </h1>
-            <p className="text-xl text-muted-foreground animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              Готовые решения на основе искусственного интеллекта для автоматизации и масштабирования бизнеса
+            <p className="text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              Готовые решения на основе искусственного интеллекта. 
+              Не нужно изобретать велосипед — берите работающие инструменты и адаптируйте под себя.
             </p>
+            
+            {/* AI Audit CTA */}
+            <Link to="/ai-audit" className="inline-flex">
+              <Button variant="hero" className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+                <ClipboardList className="h-5 w-5" />
+                Бесплатный AI-аудит
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Category Tabs */}
+      <section className="pb-8 sticky top-20 z-20 bg-background/80 backdrop-blur-lg border-b border-border/50">
+        <div className="container">
+          <div className="flex flex-wrap gap-2">
+            {aiCategories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                  activeCategory === category.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card/50 text-muted-foreground hover:bg-card hover:text-foreground border border-border"
+                )}
+              >
+                <category.icon className="h-4 w-4" />
+                {category.title}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Category Description */}
+      <section className="py-12">
+        <div className="container">
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div>
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+                <currentCategory.icon className="h-8 w-8 text-primary" />
+              </div>
+              <h2 className="text-3xl font-display font-bold mb-4">
+                {currentCategory.title}
+              </h2>
+              <p className="text-lg text-muted-foreground mb-8">
+                {currentCategory.description}
+              </p>
+            </div>
+            
+            <div className="p-6 rounded-2xl bg-card/50 border border-border">
+              <h3 className="font-display font-semibold mb-4">Примеры использования</h3>
+              <ul className="space-y-3">
+                {currentCategory.useCases.map((useCase, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/90">{useCase}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -80,67 +105,91 @@ const AIProducts = () => {
       {/* Products Grid */}
       <section className="pb-16">
         <div className="container">
+          <h3 className="text-2xl font-display font-bold mb-8">
+            Продукты в категории
+          </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product, index) => (
+            {categoryProducts.map((product, index) => (
               <div
-                key={product.title}
+                key={product.id}
                 className="group glass-card rounded-2xl p-6 hover-lift animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <product.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    product.status === "Доступен" 
-                      ? "bg-green-500/10 text-green-400"
-                      : product.status === "Бета"
-                      ? "bg-yellow-500/10 text-yellow-400"
-                      : "bg-muted text-muted-foreground"
-                  }`}>
-                    {product.status}
+                  <h4 className="text-xl font-display font-semibold">
+                    {product.title}
+                  </h4>
+                  <span className={cn(
+                    "px-3 py-1 rounded-full text-xs font-medium",
+                    product.status === "available" && "bg-green-500/10 text-green-400",
+                    product.status === "beta" && "bg-yellow-500/10 text-yellow-400",
+                    product.status === "coming" && "bg-muted text-muted-foreground"
+                  )}>
+                    {product.status === "available" ? "Доступен" : product.status === "beta" ? "Бета" : "Скоро"}
                   </span>
                 </div>
-                
-                <h2 className="text-xl font-display font-semibold mb-2">
-                  {product.title}
-                </h2>
                 
                 <p className="text-sm text-muted-foreground mb-4">
                   {product.description}
                 </p>
                 
-                <ul className="space-y-2 mb-6">
+                <div className="flex flex-wrap gap-2 mb-6">
                   {product.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <div className="w-1 h-1 rounded-full bg-primary" />
+                    <span
+                      key={feature}
+                      className="px-2 py-1 rounded text-xs bg-muted/50 text-muted-foreground"
+                    >
                       {feature}
-                    </li>
+                    </span>
                   ))}
-                </ul>
+                </div>
                 
-                <Button variant="outline" size="sm" className="w-full group/btn">
-                  Подробнее
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                </Button>
+                <Link to="/contacts?product=demo">
+                  <Button variant="outline" size="sm" className="w-full group/btn">
+                    Получить демо
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                  </Button>
+                </Link>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* AI Audit Section */}
+      <section className="py-16 bg-gradient-to-br from-primary/10 to-primary/5 border-y border-primary/20">
+        <div className="container">
+          <div className="max-w-3xl mx-auto text-center">
+            <ClipboardList className="h-12 w-12 text-primary mx-auto mb-6" />
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Не знаете, с чего начать?
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Пройдите бесплатный AI-аудит — заполните короткую анкету о вашем бизнесе, 
+              и я подготовлю персональный план автоматизации с конкретными рекомендациями.
+            </p>
+            <Link to="/ai-audit">
+              <Button variant="hero" size="lg">
+                Пройти AI-аудит
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="py-16 bg-card/30">
+      <section className="py-16">
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              Нужно кастомное AI-решение?
+              Нужно кастомное решение?
             </h2>
             <p className="text-muted-foreground mb-8">
               Разработаем AI-продукт под ваши специфические задачи
             </p>
             <Link to="/contacts">
-              <Button variant="hero">
+              <Button variant="hero-outline">
                 Обсудить проект
                 <ArrowRight className="h-5 w-5" />
               </Button>
