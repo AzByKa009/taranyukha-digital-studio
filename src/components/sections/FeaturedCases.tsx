@@ -1,32 +1,12 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const cases = [
-  {
-    id: 1,
-    title: "AI-ассистент для финтех-стартапа",
-    category: "Искусственный интеллект",
-    description: "Разработка интеллектуального чат-бота для автоматизации клиентской поддержки",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 2,
-    title: "Платформа цифрового продакшена",
-    category: "Digital Production",
-    description: "Комплексная система управления контентом и автоматизации маркетинга",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 3,
-    title: "Нейросеть для анализа данных",
-    category: "Machine Learning",
-    description: "Предиктивная аналитика для оптимизации бизнес-процессов",
-    image: "/placeholder.svg",
-  },
-];
+import { cases } from "@/data/cases";
 
 export function FeaturedCases() {
+  // Show first 3 cases
+  const featuredCases = cases.slice(0, 3);
+
   return (
     <section className="py-24 bg-card/30">
       <div className="container">
@@ -50,19 +30,20 @@ export function FeaturedCases() {
 
         {/* Cases Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cases.map((caseItem, index) => (
+          {featuredCases.map((caseItem, index) => (
             <Link
               key={caseItem.id}
-              to={`/cases/${caseItem.id}`}
+              to={`/cases/${caseItem.slug}`}
               className="group block glass-card rounded-2xl overflow-hidden hover-lift animate-fade-in-up"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image */}
               <div className="aspect-[4/3] bg-muted relative overflow-hidden">
                 <img
-                  src={caseItem.image}
+                  src={caseItem.thumbnail}
                   alt={caseItem.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                 
@@ -75,13 +56,13 @@ export function FeaturedCases() {
               {/* Content */}
               <div className="p-6">
                 <div className="text-xs text-primary font-medium uppercase tracking-wider mb-2">
-                  {caseItem.category}
+                  {caseItem.categoryLabel}
                 </div>
                 <h3 className="text-xl font-display font-semibold mb-2 group-hover:text-gradient transition-colors">
                   {caseItem.title}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {caseItem.description}
+                  {caseItem.shortDescription}
                 </p>
               </div>
             </Link>
