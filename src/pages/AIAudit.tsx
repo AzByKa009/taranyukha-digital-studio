@@ -41,11 +41,30 @@ const AIAudit = () => {
     setIsLoading(true);
     
     try {
+      // Get current session or sign in anonymously
+      let session = (await supabase.auth.getSession()).data.session;
+      
+      if (!session) {
+        // Sign in anonymously for the audit
+        const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
+        if (anonError) {
+          console.error("Anonymous auth error:", anonError);
+          throw new Error("Не удалось авторизоваться");
+        }
+        session = anonData.session;
+      }
+
       const { data, error } = await supabase.functions.invoke('ai-audit', {
         body: formData
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle specific error codes
+        if (error.message?.includes("401")) {
+          throw new Error("Ошибка авторизации. Попробуйте обновить страницу.");
+        }
+        throw error;
+      }
       
       if (data.plan) {
         setPlan(data.plan);
@@ -56,7 +75,8 @@ const AIAudit = () => {
       }
     } catch (error) {
       console.error("Error generating audit:", error);
-      toast.error("Не удалось сгенерировать план. Попробуйте позже.");
+      const message = error instanceof Error ? error.message : "Не удалось сгенерировать план";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
