@@ -220,9 +220,12 @@ serve(async (req) => {
     );
 
   } catch (error) {
+    // Log detailed error server-side only for debugging
     console.error("Error in ai-audit function:", error);
+    
+    // Return generic message to client - never expose internal error details
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Произошла ошибка" }),
+      JSON.stringify({ error: "Произошла ошибка. Попробуйте позже." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
