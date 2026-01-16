@@ -1,13 +1,25 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect } from "react";
+import { Layout } from "@/components/layout/Layout";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { FeaturedCases } from "@/components/sections/FeaturedCases";
+import { ServicesPreview } from "@/components/sections/ServicesPreview";
+import { CTASection } from "@/components/sections/CTASection";
 
 const Index = () => {
+  useEffect(() => {
+    document.title = "Aleksey Taranukha — AI & Digital Production";
+    document.querySelector('meta[name="description"]')?.setAttribute("content", 
+      "Эксперт в области AI и цифрового продакшена. Создаю инновационные цифровые решения для трансформации бизнеса."
+    );
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <Layout>
+      <HeroSection />
+      <FeaturedCases />
+      <ServicesPreview />
+      <CTASection />
+    </Layout>
   );
 };
 
