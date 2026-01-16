@@ -7,6 +7,13 @@ const navigation = {
     { name: "Услуги", href: "/services" },
     { name: "AI-продукты", href: "/ai-products" },
     { name: "Блог", href: "/blog" },
+    { name: "Калькулятор", href: "/calculator" },
+  ],
+  services: [
+    { name: "Монтаж Reels", href: "/montazh-reels" },
+    { name: "Продюсер Reels", href: "/produser-reels" },
+    { name: "AI-бот для бизнеса", href: "/ai-bot-dlya-biznesa" },
+    { name: "Сайт под услуги", href: "/razrabotka-sayta-pod-uslugi" },
   ],
   company: [
     { name: "Обо мне", href: "/about" },
@@ -24,7 +31,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-card/30">
       <div className="container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
@@ -53,6 +60,23 @@ export function Footer() {
             <h3 className="font-display font-semibold text-sm mb-4">Разделы</h3>
             <ul className="space-y-3">
               {navigation.main.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    to={item.href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Services Links */}
+          <div>
+            <h3 className="font-display font-semibold text-sm mb-4">Услуги</h3>
+            <ul className="space-y-3">
+              {navigation.services.map((item) => (
                 <li key={item.name}>
                   <Link
                     to={item.href}
