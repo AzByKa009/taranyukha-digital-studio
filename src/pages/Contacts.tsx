@@ -89,13 +89,13 @@ const Contacts = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="pt-12 pb-12">
+      <section className="pt-16 pb-14">
         <div className="container">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 animate-fade-in-up">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-5 animate-fade-in-up">
               Давайте обсудим ваш проект
             </h1>
-            <p className="text-xl text-muted-foreground animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <p className="text-lg md:text-xl text-muted-foreground animate-fade-in-up leading-relaxed" style={{ animationDelay: "0.1s" }}>
               Напишите мне — отвечу в течение 24 часов. Без обязательств, просто разберёмся, чем могу помочь.
             </p>
           </div>
@@ -103,75 +103,75 @@ const Contacts = () => {
       </section>
 
       {/* Quick Contact Buttons */}
-      <section className="pb-12">
+      <section className="pb-14">
         <div className="container">
           <div className="flex flex-wrap gap-4 animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
             <a
               href="https://t.me/alekseytaranukha"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3 px-6 py-4 rounded-2xl bg-[#229ED9]/10 border border-[#229ED9]/20 hover:bg-[#229ED9]/20 hover:border-[#229ED9]/40 transition-all duration-300"
+              className="group flex items-center gap-4 px-6 py-5 rounded-2xl bg-[#229ED9]/10 border border-[#229ED9]/20 hover:bg-[#229ED9]/15 hover:border-[#229ED9]/40 transition-all duration-400"
             >
-              <div className="w-10 h-10 rounded-xl bg-[#229ED9] flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-[#229ED9] flex items-center justify-center shadow-lg shadow-[#229ED9]/30">
                 <Send className="h-5 w-5 text-white" />
               </div>
               <div>
                 <div className="font-medium">Telegram</div>
                 <div className="text-sm text-muted-foreground">Быстрый ответ</div>
               </div>
-              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform duration-300" />
             </a>
 
             <a
               href="https://instagram.com/alekseytaranukha"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#833AB4]/10 via-[#FD1D1D]/10 to-[#F77737]/10 border border-[#833AB4]/20 hover:from-[#833AB4]/20 hover:via-[#FD1D1D]/20 hover:to-[#F77737]/20 transition-all duration-300"
+              className="group flex items-center gap-4 px-6 py-5 rounded-2xl bg-gradient-to-r from-[#833AB4]/10 via-[#FD1D1D]/10 to-[#F77737]/10 border border-[#833AB4]/20 hover:from-[#833AB4]/15 hover:via-[#FD1D1D]/15 hover:to-[#F77737]/15 transition-all duration-400"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] flex items-center justify-center shadow-lg shadow-[#FD1D1D]/30">
                 <MessageCircle className="h-5 w-5 text-white" />
               </div>
               <div>
                 <div className="font-medium">Instagram</div>
                 <div className="text-sm text-muted-foreground">Direct сообщения</div>
               </div>
-              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform duration-300" />
             </a>
 
             <a
               href="mailto:hello@taranukha.dev"
-              className="group flex items-center gap-3 px-6 py-4 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 hover:border-primary/40 transition-all duration-300"
+              className="group flex items-center gap-4 px-6 py-5 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/15 hover:border-primary/40 transition-all duration-400"
             >
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
                 <Mail className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
                 <div className="font-medium">Email</div>
                 <div className="text-sm text-muted-foreground">hello@taranukha.dev</div>
               </div>
-              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform duration-300" />
             </a>
           </div>
         </div>
       </section>
 
       {/* Contact Form + Info */}
-      <section className="pb-16">
+      <section className="pb-20">
         <div className="container">
-          <div className="grid lg:grid-cols-5 gap-12">
+          <div className="grid lg:grid-cols-5 gap-10 lg:gap-12">
             {/* Contact Form */}
             <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-              <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-8">
+              <form onSubmit={handleSubmit} className="premium-card p-8 md:p-10">
                 <h2 className="text-2xl font-display font-semibold mb-2">
                   Оставить заявку
                 </h2>
-                <p className="text-muted-foreground mb-6">
+                <p className="text-muted-foreground mb-8 leading-relaxed">
                   Расскажите о задаче — я свяжусь для обсуждения деталей
                 </p>
                 
-                <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                <div className="grid sm:grid-cols-2 gap-5 mb-5">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium mb-2.5">
                       Как вас зовут? *
                     </label>
                     <Input
@@ -181,11 +181,11 @@ const Contacts = () => {
                       placeholder="Имя"
                       required
                       maxLength={100}
-                      className="bg-background"
+                      className="bg-background/60 border-border/50 h-12"
                     />
                   </div>
                   <div>
-                    <label htmlFor="contact" className="block text-sm font-medium mb-2">
+                    <label htmlFor="contact" className="block text-sm font-medium mb-2.5">
                       Как связаться? *
                     </label>
                     <Input
@@ -195,13 +195,13 @@ const Contacts = () => {
                       placeholder="Telegram, email или телефон"
                       required
                       maxLength={100}
-                      className="bg-background"
+                      className="bg-background/60 border-border/50 h-12"
                     />
                   </div>
                 </div>
                 
-                <div className="mb-6">
-                  <label htmlFor="task" className="block text-sm font-medium mb-2">
+                <div className="mb-8">
+                  <label htmlFor="task" className="block text-sm font-medium mb-2.5">
                     Расскажите о задаче *
                   </label>
                   <Textarea
@@ -212,9 +212,9 @@ const Contacts = () => {
                     rows={5}
                     required
                     maxLength={2000}
-                    className="bg-background resize-none"
+                    className="bg-background/60 border-border/50 resize-none"
                   />
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <p className="text-xs text-muted-foreground mt-2.5">
                     Чем подробнее опишете — тем точнее смогу оценить
                   </p>
                 </div>
@@ -222,7 +222,7 @@ const Contacts = () => {
                 <Button 
                   type="submit" 
                   variant="hero" 
-                  className="w-full"
+                  className="w-full shadow-xl shadow-primary/20"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Отправка..." : "Отправить заявку"}
@@ -232,10 +232,10 @@ const Contacts = () => {
             </div>
 
             {/* Side Info */}
-            <div className="lg:col-span-2 space-y-6 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-              <div className="glass-card rounded-2xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <div className="lg:col-span-2 space-y-5 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+              <div className="premium-card p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
                     <Clock className="h-5 w-5 text-primary" />
                   </div>
                   <div>
@@ -243,14 +243,14 @@ const Contacts = () => {
                     <p className="text-sm text-muted-foreground">до 24 часов</p>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Обычно отвечаю быстрее. В выходные возможна задержка.
                 </p>
               </div>
               
-              <div className="glass-card rounded-2xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <div className="premium-card p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
                     <MapPin className="h-5 w-5 text-primary" />
                   </div>
                   <div>
@@ -258,17 +258,17 @@ const Contacts = () => {
                     <p className="text-sm text-muted-foreground">Удалённо</p>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   Работаю с клиентами по всему миру. Созвоны в удобное для вас время.
                 </p>
               </div>
               
-              <div className="p-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
-                <div className="flex items-start gap-3">
+              <div className="p-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/8 to-primary/4">
+                <div className="flex items-start gap-4">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium mb-1">Без обязательств</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-medium mb-1.5">Без обязательств</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       Первый разговор — это просто знакомство. Вы ничего не должны, 
                       пока сами не решите работать.
                     </p>
@@ -281,18 +281,18 @@ const Contacts = () => {
       </section>
 
       {/* How Work Happens */}
-      <section className="py-16 bg-card/30">
+      <section className="py-20 bg-card/20 border-y border-border/30">
         <div className="container">
-          <div className="text-center mb-12">
+          <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
               Как происходит работа
             </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
+            <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
               Простой и прозрачный процесс от первого контакта до результата
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-10 max-w-4xl mx-auto">
             {workProcess.map((item, index) => (
               <div 
                 key={item.step}
@@ -300,15 +300,15 @@ const Contacts = () => {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {index < workProcess.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-full w-full h-px bg-gradient-to-r from-border to-transparent -translate-x-1/2" />
+                  <div className="hidden md:block absolute top-10 left-full w-full h-px bg-gradient-to-r from-border to-transparent -translate-x-1/2" />
                 )}
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-primary/10">
                     <item.icon className="h-7 w-7 text-primary" />
                   </div>
-                  <div className="text-sm font-medium text-primary mb-2">Шаг {item.step}</div>
-                  <h3 className="text-xl font-display font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                  <div className="text-sm font-medium text-primary mb-2.5">Шаг {item.step}</div>
+                  <h3 className="text-xl font-display font-semibold mb-2.5">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -317,34 +317,34 @@ const Contacts = () => {
       </section>
 
       {/* What to Prepare */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container">
-          <div className="text-center mb-12">
+          <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
               Что подготовить до старта
             </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
+            <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
               Эти вещи помогут быстрее понять задачу и дать точную оценку
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto">
             {whatToPrepare.map((item, index) => (
               <div 
                 key={item.title}
-                className="glass-card rounded-2xl p-6 animate-fade-in-up"
+                className="premium-card p-7 animate-fade-in-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
                   <item.icon className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-lg font-display font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                <h3 className="text-lg font-display font-semibold mb-2.5">{item.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
           
-          <div className="text-center mt-8">
+          <div className="text-center mt-10">
             <p className="text-muted-foreground">
               Не переживайте, если чего-то нет — разберёмся вместе
             </p>

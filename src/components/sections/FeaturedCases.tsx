@@ -11,16 +11,16 @@ export function FeaturedCases() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="py-24 bg-card/30">
+    <section className="py-28 bg-card/20 border-y border-border/30">
       <div className="container">
         {/* Header */}
         <FadeIn>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div>
               <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
                 Избранные кейсы
               </h2>
-              <p className="text-muted-foreground max-w-xl">
+              <p className="text-muted-foreground max-w-xl leading-relaxed">
                 Проекты, которые демонстрируют мой подход к созданию цифровых продуктов
               </p>
             </div>
@@ -32,7 +32,7 @@ export function FeaturedCases() {
               >
                 <Button variant="outline" className="group">
                   Все кейсы
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </motion.div>
             </Link>
@@ -45,7 +45,7 @@ export function FeaturedCases() {
             <StaggerItem key={caseItem.id}>
               <Link to={`/cases/${caseItem.slug}`}>
                 <PremiumCard 
-                  className="group block glass-card rounded-2xl overflow-hidden cursor-pointer"
+                  className="group block premium-card overflow-hidden cursor-pointer"
                   hoverScale={1.02}
                   hoverY={-6}
                   glowOnHover
@@ -58,30 +58,30 @@ export function FeaturedCases() {
                       className="w-full h-full object-cover"
                       loading="lazy"
                       whileHover={!prefersReducedMotion ? { scale: 1.05 } : undefined}
-                      transition={{ duration: 0.5, ease: [0.25, 0.4, 0.25, 1] }}
+                      transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent opacity-80" />
                     
                     {/* Arrow */}
                     <motion.div 
-                      className="absolute top-4 right-4 w-10 h-10 rounded-full bg-foreground/10 backdrop-blur flex items-center justify-center"
+                      className="absolute top-5 right-5 w-10 h-10 rounded-full bg-foreground/10 backdrop-blur-sm flex items-center justify-center"
                       initial={{ opacity: 0, y: 8 }}
                       whileHover={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: 0.3 }}
                     >
                       <ArrowUpRight className="h-5 w-5" />
                     </motion.div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
-                    <div className="text-xs text-primary font-medium uppercase tracking-wider mb-2">
+                  <div className="p-7">
+                    <div className="text-xs text-primary font-medium uppercase tracking-wider mb-3">
                       {caseItem.categoryLabel}
                     </div>
-                    <h3 className="text-xl font-display font-semibold mb-2 group-hover:text-gradient transition-colors duration-300">
+                    <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-gradient transition-colors duration-400">
                       {caseItem.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {caseItem.shortDescription}
                     </p>
                   </div>

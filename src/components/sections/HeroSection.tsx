@@ -19,27 +19,27 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background layers */}
-      <div className="absolute inset-0 bg-gradient-glow opacity-20" />
+      <div className="absolute inset-0 bg-gradient-glow opacity-30" />
       <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-primary/5 to-transparent" />
       
       {/* 3D Scene */}
       <Scene3D />
       
-      <div className="container relative z-10 pt-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container relative z-10 pt-24 pb-16">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left side - Content */}
           <div className="max-w-2xl">
             {/* Badge */}
             <FadeIn delay={0}>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50 backdrop-blur-sm mb-8">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full border border-border/40 bg-card/40 backdrop-blur-sm mb-10">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-sm text-muted-foreground">AI & Digital Production Expert</span>
+                <span className="text-sm text-muted-foreground font-medium">AI & Digital Production Expert</span>
               </div>
             </FadeIn>
 
             {/* Heading */}
             <FadeIn delay={0.1}>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] mb-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.08] mb-7">
                 Превращаю идеи в{" "}
                 <span className="text-gradient">AI-продукты</span>{" "}
                 и цифровой контент
@@ -48,7 +48,7 @@ export function HeroSection() {
 
             {/* Subheading */}
             <FadeIn delay={0.2}>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-10 leading-relaxed">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-12 leading-relaxed">
                 Помогаю бизнесу внедрять нейросети, автоматизировать процессы 
                 и создавать продукты, которые решают реальные задачи
               </p>
@@ -63,7 +63,7 @@ export function HeroSection() {
                     whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                   >
-                    <Button variant="hero" size="lg">
+                    <Button variant="hero" size="lg" className="shadow-xl shadow-primary/25">
                       Обсудить проект
                       <ArrowRight className="h-5 w-5" />
                     </Button>
@@ -91,7 +91,7 @@ export function HeroSection() {
 
         {/* Stats Row */}
         <FadeIn delay={0.4}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-12 border-t border-border/50">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 pt-12 border-t border-border/40">
             {[
               { value: "10+", label: "Лет в digital" },
               { value: "50+", label: "Проектов" },
@@ -109,7 +109,7 @@ export function HeroSection() {
                   ease: [0.25, 0.4, 0.25, 1]
                 }}
               >
-                <div className="text-3xl md:text-4xl font-display font-bold text-gradient mb-1">
+                <div className="text-3xl md:text-4xl font-display font-bold text-gradient mb-2">
                   {stat.value}
                 </div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
@@ -120,11 +120,11 @@ export function HeroSection() {
 
         {/* How I Work */}
         <FadeIn delay={0.5}>
-          <div className="mt-20">
-            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-8">
+          <div className="mt-24">
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-10">
               Как я работаю
             </h3>
-            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" staggerDelay={0.1}>
+            <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5" staggerDelay={0.1}>
               {processSteps.map((step) => (
                 <StaggerItem key={step.number}>
                   <motion.div
@@ -132,15 +132,15 @@ export function HeroSection() {
                       y: -4, 
                       transition: { type: "spring", stiffness: 400, damping: 25 } 
                     } : undefined}
-                    className="group p-6 rounded-2xl border border-border/50 bg-card/20 backdrop-blur-sm hover:bg-card/40 hover:border-primary/30 transition-colors duration-300"
+                    className="group p-7 rounded-2xl border border-border/40 bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-primary/30 transition-all duration-400"
                   >
-                    <div className="text-3xl font-display font-bold text-primary/50 mb-3">
+                    <div className="text-3xl font-display font-bold text-primary/50 mb-4 group-hover:text-primary/70 transition-colors duration-400">
                       {step.number}
                     </div>
-                    <h4 className="text-lg font-display font-semibold mb-1">
+                    <h4 className="text-lg font-display font-semibold mb-2">
                       {step.title}
                     </h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {step.description}
                     </p>
                   </motion.div>
