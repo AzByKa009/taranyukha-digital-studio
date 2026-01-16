@@ -16,6 +16,10 @@ import About from "./pages/About";
 import Contacts from "./pages/Contacts";
 import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
+import ReelsMontage from "./pages/landings/ReelsMontage";
+import ReelsProducer from "./pages/landings/ReelsProducer";
+import AIBotCreation from "./pages/landings/AIBotCreation";
+import WebsiteForServices from "./pages/landings/WebsiteForServices";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +42,11 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/faq" element={<FAQ />} />
+          {/* SEO Landing Pages */}
+          <Route path="/montazh-reels" element={<ReelsMontage />} />
+          <Route path="/produser-reels" element={<ReelsProducer />} />
+          <Route path="/ai-bot-dlya-biznesa" element={<AIBotCreation />} />
+          <Route path="/razrabotka-sayta-pod-uslugi" element={<WebsiteForServices />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Plus, Minus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -51,6 +51,38 @@ const FAQ = () => {
     document.querySelector('meta[name="description"]')?.setAttribute("content", 
       "Ответы на часто задаваемые вопросы об услугах AI-разработки, ценах, сроках и процессе работы."
     );
+
+    // Add FAQPage Schema
+    const faqSchema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    };
+
+    const existingScript = document.querySelector('script[data-schema="faq"]');
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.setAttribute('data-schema', 'faq');
+    script.textContent = JSON.stringify(faqSchema);
+    document.head.appendChild(script);
+
+    return () => {
+      const schemaScript = document.querySelector('script[data-schema="faq"]');
+      if (schemaScript) {
+        schemaScript.remove();
+      }
+    };
   }, []);
 
   return (
