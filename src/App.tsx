@@ -20,6 +20,7 @@ import ReelsMontage from "./pages/landings/ReelsMontage";
 import ReelsProducer from "./pages/landings/ReelsProducer";
 import AIBotCreation from "./pages/landings/AIBotCreation";
 import WebsiteForServices from "./pages/landings/WebsiteForServices";
+import Calculator from "./pages/Calculator";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/calculator" element={<Calculator />} />
           {/* SEO Landing Pages */}
           <Route path="/montazh-reels" element={<ReelsMontage />} />
           <Route path="/produser-reels" element={<ReelsProducer />} />
