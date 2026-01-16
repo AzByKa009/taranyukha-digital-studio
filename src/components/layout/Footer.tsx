@@ -47,11 +47,11 @@ export function Footer() {
               которые трансформируют бизнес.
             </p>
             <a
-              href="mailto:hello@taranukha.dev"
+              href="mailto:taranyha1245@gmail.com"
               className="inline-flex items-center gap-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
             >
               <Mail className="h-4 w-4" />
-              hello@taranukha.dev
+              taranyha1245@gmail.com
             </a>
           </div>
 
