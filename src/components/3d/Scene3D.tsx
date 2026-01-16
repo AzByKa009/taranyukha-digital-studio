@@ -1,7 +1,12 @@
-import { Suspense, lazy, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Suspense, lazy, useRef, useState, useEffect } from "react";
+import { useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
+
+// Lazy load the Canvas component
+const Canvas = lazy(() => 
+  import("@react-three/fiber").then(module => ({ default: module.Canvas }))
+);
 
 function AnimatedSphere() {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -68,26 +73,62 @@ function Fallback() {
   );
 }
 
+// Check if device is likely mobile/tablet for performance
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => {
+      // Check for touch device and screen size
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isLargeScreen = window.innerWidth >= 768;
+      const hasGoodGPU = !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+      
+      setIsDesktop(isLargeScreen && !isTouchDevice && hasGoodGPU);
+    };
+
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
+
+  return isDesktop;
+}
+
 export function Scene3D() {
+  const isDesktop = useIsDesktop();
+  const [shouldRender, setShouldRender] = useState(false);
+
+  // Delay 3D rendering to prioritize LCP
+  useEffect(() => {
+    if (isDesktop) {
+      const timer = setTimeout(() => setShouldRender(true), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isDesktop]);
+
   return (
     <div className="absolute inset-0 pointer-events-none">
-      {/* Static fallback for mobile and loading */}
-      <div className="block md:hidden absolute inset-0">
-        <Fallback />
-      </div>
+      {/* Static fallback for mobile and initial load */}
+      {!shouldRender && <Fallback />}
       
-      {/* 3D Canvas for desktop */}
-      <div className="hidden md:block absolute inset-0">
+      {/* 3D Canvas for desktop only */}
+      {shouldRender && isDesktop && (
         <Suspense fallback={<Fallback />}>
           <Canvas
             camera={{ position: [0, 0, 5], fov: 45 }}
             dpr={[1, 1.5]}
-            gl={{ antialias: true, alpha: true }}
+            gl={{ 
+              antialias: true, 
+              alpha: true,
+              powerPreference: "high-performance"
+            }}
+            performance={{ min: 0.5 }}
           >
             <Scene />
           </Canvas>
         </Suspense>
-      </div>
+      )}
     </div>
   );
 }
