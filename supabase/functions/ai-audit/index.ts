@@ -2,6 +2,33 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
+// Rate limiting configuration
+const RATE_LIMIT_MAX_REQUESTS = 5;
+const RATE_LIMIT_ENDPOINT = "ai-audit";
+
+// Extract client IP from request headers
+function getClientIp(req: Request): string {
+  // Check common proxy headers
+  const xForwardedFor = req.headers.get("x-forwarded-for");
+  if (xForwardedFor) {
+    // Take the first IP in the chain (original client)
+    return xForwardedFor.split(",")[0].trim();
+  }
+  
+  const xRealIp = req.headers.get("x-real-ip");
+  if (xRealIp) {
+    return xRealIp.trim();
+  }
+  
+  const cfConnectingIp = req.headers.get("cf-connecting-ip");
+  if (cfConnectingIp) {
+    return cfConnectingIp.trim();
+  }
+  
+  // Fallback - should rarely happen in production
+  return "unknown";
+}
+
 // Restrict CORS to known frontend origins (prevents cross-site abuse)
 const allowedOrigins = new Set<string>([
   // Lovable preview
@@ -97,6 +124,9 @@ serve(async (req) => {
   }
 
   try {
+    // 0. Get client IP for rate limiting
+    const clientIp = getClientIp(req);
+    
     // 1. Authentication check
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
@@ -109,14 +139,19 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
       throw new Error("Supabase configuration is missing");
     }
 
+    // Client for user auth (with user's token)
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } }
     });
+
+    // Admin client for rate limiting (bypasses RLS)
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey);
 
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     
@@ -129,6 +164,40 @@ serve(async (req) => {
     }
 
     console.log("Authenticated user:", user.id);
+
+    // 2. Rate limiting check (using service role to bypass RLS)
+    const { data: rateLimitAllowed, error: rateLimitError } = await supabaseAdmin.rpc(
+      "check_rate_limit",
+      {
+        _ip_address: clientIp,
+        _endpoint: RATE_LIMIT_ENDPOINT,
+        _max_requests: RATE_LIMIT_MAX_REQUESTS,
+        _window_minutes: 60
+      }
+    );
+
+    if (rateLimitError) {
+      console.error("Rate limit check failed:", rateLimitError.message);
+      // Don't block request on rate limit errors, just log
+    } else if (rateLimitAllowed === false) {
+      console.log("Rate limit exceeded for IP:", clientIp);
+      return new Response(
+        JSON.stringify({ 
+          error: "Превышен лимит запросов. Попробуйте через час.",
+          retryAfter: 3600
+        }),
+        { 
+          status: 429, 
+          headers: { 
+            ...corsHeaders, 
+            "Content-Type": "application/json",
+            "Retry-After": "3600"
+          } 
+        }
+      );
+    }
+
+    // 3. Parse and validate input
 
     // 2. Parse and validate input
     let requestBody;
