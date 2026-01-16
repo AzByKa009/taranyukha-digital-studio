@@ -2,9 +2,44 @@ import { useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle, HelpCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, HelpCircle, Film, Users, Bot, Globe, Sparkles } from "lucide-react";
 import { services } from "@/data/services";
 import { cn } from "@/lib/utils";
+
+const popularServices = [
+  {
+    title: "Монтаж Reels",
+    description: "Профессиональный монтаж коротких видео для Instagram и TikTok",
+    href: "/montazh-reels",
+    icon: Film,
+    gradient: "from-pink-500/20 to-rose-500/20",
+    borderGradient: "hover:border-pink-500/50",
+  },
+  {
+    title: "Продюсер Reels",
+    description: "Полный цикл создания Reels контента для вашего бизнеса",
+    href: "/produser-reels",
+    icon: Users,
+    gradient: "from-violet-500/20 to-purple-500/20",
+    borderGradient: "hover:border-violet-500/50",
+  },
+  {
+    title: "AI-бот для бизнеса",
+    description: "Создание умных ботов для автоматизации общения с клиентами",
+    href: "/ai-bot-dlya-biznesa",
+    icon: Bot,
+    gradient: "from-cyan-500/20 to-blue-500/20",
+    borderGradient: "hover:border-cyan-500/50",
+  },
+  {
+    title: "Сайт под услуги",
+    description: "Разработка продающего сайта для сферы услуг",
+    href: "/razrabotka-sayta-pod-uslugi",
+    icon: Globe,
+    gradient: "from-emerald-500/20 to-green-500/20",
+    borderGradient: "hover:border-emerald-500/50",
+  },
+];
 
 const Services = () => {
   useEffect(() => {
@@ -209,6 +244,53 @@ const Services = () => {
         </div>
       </section>
 
+      {/* Popular Services - SEO Landings */}
+      <section className="py-16">
+        <div className="container">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-medium">Популярные услуги</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Быстрый старт
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Самые востребованные услуги с подробным описанием и примерами работ
+            </p>
+          </div>
+          
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {popularServices.map((service, index) => (
+              <Link
+                key={service.href}
+                to={service.href}
+                className={cn(
+                  "group relative p-6 rounded-2xl border border-border bg-gradient-to-br transition-all duration-300 hover-lift",
+                  service.gradient,
+                  service.borderGradient
+                )}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="w-12 h-12 rounded-xl bg-background/80 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <service.icon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-display font-semibold mb-2 group-hover:text-primary transition-colors">
+                  {service.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {service.description}
+                </p>
+                <div className="flex items-center gap-1 text-primary text-sm font-medium">
+                  Подробнее
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-16 bg-card/30">
         <div className="container">
@@ -219,12 +301,19 @@ const Services = () => {
             <p className="text-muted-foreground mb-8">
               Расскажите о вашей задаче — подготовлю предложение в течение 24 часов
             </p>
-            <Link to="/contacts">
-              <Button variant="hero" size="lg">
-                Связаться
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/contacts">
+                <Button variant="hero" size="lg">
+                  Связаться
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link to="/calculator">
+                <Button variant="outline" size="lg">
+                  Рассчитать проект
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
