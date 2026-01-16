@@ -107,7 +107,7 @@ const Contacts = () => {
         <div className="container">
           <div className="flex flex-wrap gap-4 animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
             <a
-              href="https://t.me/alekseytaranukha"
+              href="https://t.me/azbyka009"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-4 px-6 py-5 rounded-2xl bg-[#229ED9]/10 border border-[#229ED9]/20 hover:bg-[#229ED9]/15 hover:border-[#229ED9]/40 transition-all duration-400"
@@ -123,7 +123,7 @@ const Contacts = () => {
             </a>
 
             <a
-              href="https://instagram.com/alekseytaranukha"
+              href="https://www.instagram.com/azbyka.offical"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-4 px-6 py-5 rounded-2xl bg-gradient-to-r from-[#833AB4]/10 via-[#FD1D1D]/10 to-[#F77737]/10 border border-[#833AB4]/20 hover:from-[#833AB4]/15 hover:via-[#FD1D1D]/15 hover:to-[#F77737]/15 transition-all duration-400"
@@ -139,7 +139,7 @@ const Contacts = () => {
             </a>
 
             <a
-              href="mailto:hello@taranukha.dev"
+              href="mailto:taranyha1245@gmail.com"
               className="group flex items-center gap-4 px-6 py-5 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/15 hover:border-primary/40 transition-all duration-400"
             >
               <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
@@ -147,7 +147,7 @@ const Contacts = () => {
               </div>
               <div>
                 <div className="font-medium">Email</div>
-                <div className="text-sm text-muted-foreground">hello@taranukha.dev</div>
+                <div className="text-sm text-muted-foreground">taranyha1245@gmail.com</div>
               </div>
               <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform duration-300" />
             </a>
