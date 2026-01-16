@@ -11,6 +11,7 @@ import ServiceDetail from "./pages/ServiceDetail";
 import AIProducts from "./pages/AIProducts";
 import AIAudit from "./pages/AIAudit";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import About from "./pages/About";
 import Contacts from "./pages/Contacts";
 import FAQ from "./pages/FAQ";
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/ai-products" element={<AIProducts />} />
           <Route path="/ai-audit" element={<AIAudit />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/about" element={<About />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/faq" element={<FAQ />} />
