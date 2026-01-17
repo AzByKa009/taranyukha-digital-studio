@@ -17,9 +17,9 @@ const AIBotCreation = () => {
   });
 
   useEffect(() => {
-    document.title = "Создание AI-бота для бизнеса — Aleksey Taranukha";
+    document.title = "Создание AI-бота для бизнеса — AI продукт под ключ | Aleksey Taranukha";
     document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Разработка умных AI-ботов для автоматизации продаж, поддержки клиентов и бизнес-процессов. Telegram, WhatsApp, веб-чат."
+      "Создание AI продукта для бизнеса: умные чат-боты, автоматизация продаж, AI-ассистенты для Telegram, WhatsApp. Разработка AI-бота под ключ."
     );
 
     const serviceSchema = {

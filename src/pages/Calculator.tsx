@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ import {
   BarChart3
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSEO } from "@/hooks/useSEO";
 
 type ServiceType = "reels" | "website" | "ai-bot" | "content-strategy" | "branding" | "consulting";
 
@@ -110,12 +111,11 @@ const Calculator = () => {
     details: "",
   });
 
-  useEffect(() => {
-    document.title = "Рассчитать проект — Aleksey Taranukha";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Калькулятор стоимости проекта. Получите предварительную оценку для вашего проекта: видео, сайт, AI-бот, контент-стратегия."
-    );
-  }, []);
+  useSEO({
+    title: "Калькулятор проекта — рассчитать стоимость | Aleksey Taranukha",
+    description: "Рассчитайте стоимость проекта онлайн: монтаж Reels, AI-бот, сайт под ключ, вайб кодинг. Получите оценку сроков и бюджета.",
+    keywords: "калькулятор проекта, рассчитать стоимость монтажа, цена AI бота, стоимость сайта под ключ",
+  });
 
   const estimate = getEstimate(formData);
   const selectedService = serviceOptions.find(s => s.value === formData.serviceType);

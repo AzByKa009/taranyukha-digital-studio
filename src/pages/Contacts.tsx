@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import {
   Rocket
 } from "lucide-react";
 import { toast } from "sonner";
+import { useSEO } from "@/hooks/useSEO";
 
 const workProcess = [
   {
@@ -66,12 +67,11 @@ const Contacts = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    document.title = "Контакты — Aleksey Taranukha";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Свяжитесь со мной для обсуждения проекта. Telegram, форма обратной связи. Ответ в течение 24 часов."
-    );
-  }, []);
+  useSEO({
+    title: "Контакты — заказать AI-продукт, монтаж, сайт | Aleksey Taranukha",
+    description: "Свяжитесь для обсуждения проекта: AI-продукты, монтаж вертикальных видео, вайб кодинг, премиальный лендинг. Ответ в течение 24 часов.",
+    keywords: "контакты, заказать монтаж Reels, заказать AI продукт, заказать сайт под ключ, вайб кодинг заказать",
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
