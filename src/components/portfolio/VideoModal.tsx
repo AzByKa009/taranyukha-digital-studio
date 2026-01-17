@@ -11,8 +11,12 @@ interface VideoModalProps {
 export function VideoModal({ video, isOpen, onClose }: VideoModalProps) {
   if (!video) return null;
 
-  // YouTube embed with controls
-  const embedUrl = `https://www.youtube.com/embed/${video.youtubeId}?rel=0&modestbranding=1&playsinline=1`;
+  // VK Video embed URL
+  // Формат vkVideoId: "oid_id" (например, "-123456789_456239123")
+  const embedUrl = `https://vk.com/video_ext.php?oid=${video.vkVideoId.split('_')[0]}&id=${video.vkVideoId.split('_')[1]}&hd=2`;
+
+  // Проверяем, установлен ли реальный VK Video ID
+  const hasValidVideo = video.vkVideoId && !video.vkVideoId.startsWith("PLACEHOLDER");
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -31,13 +35,19 @@ export function VideoModal({ video, isOpen, onClose }: VideoModalProps) {
           {/* Video */}
           <div className="lg:w-1/2 bg-black flex items-center justify-center">
             <div className="relative w-full aspect-[9/16] max-h-[70vh] lg:max-h-[80vh]">
-              <iframe
-                src={embedUrl}
-                title={video.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 w-full h-full border-0"
-              />
+              {hasValidVideo ? (
+                <iframe
+                  src={embedUrl}
+                  title={video.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full border-0"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground text-center p-4">
+                  <p>Видео скоро будет добавлено</p>
+                </div>
+              )}
             </div>
           </div>
 
