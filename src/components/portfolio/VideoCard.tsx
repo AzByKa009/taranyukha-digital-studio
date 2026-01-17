@@ -8,11 +8,10 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ video, index = 0 }: VideoCardProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [hasError, setHasError] = useState(false);
 
-  // Lazy load video when in viewport
+  // Lazy load iframe when in viewport
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -24,15 +23,19 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
       { rootMargin: "100px" }
     );
 
-    if (videoRef.current) {
-      observer.observe(videoRef.current);
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
     }
 
     return () => observer.disconnect();
   }, []);
 
+  // YouTube embed URL with autoplay, mute, loop
+  const embedUrl = `https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&mute=1&loop=1&playlist=${video.youtubeId}&controls=0&playsinline=1&rel=0&showinfo=0&modestbranding=1`;
+
   return (
     <article
+      ref={containerRef}
       className={cn(
         "group relative overflow-hidden rounded-2xl bg-card border border-border/30",
         "transition-all duration-500 hover:border-border/60",
@@ -43,45 +46,34 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
     >
       {/* Video Container - 9:16 aspect ratio for vertical video */}
       <div className="relative aspect-[9/16] max-h-[500px] overflow-hidden bg-muted">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={video.posterUrl}
-          onError={() => setHasError(true)}
-          className={cn(
-            "w-full h-full object-cover",
-            "transition-transform duration-700 ease-out",
-            "group-hover:scale-105"
-          )}
-        >
-          {isVisible && !hasError && (
-            <source src={video.videoUrl} type="video/mp4" />
-          )}
-        </video>
-
-        {/* Fallback for error */}
-        {hasError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-muted">
-            <div className="text-center text-muted-foreground p-6">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted-foreground/10 flex items-center justify-center">
-                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <p className="text-sm">{video.title}</p>
+        {isVisible ? (
+          <iframe
+            src={embedUrl}
+            title={video.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full border-0 pointer-events-none"
+            style={{ 
+              transform: 'scale(1.2)',
+              transformOrigin: 'center center'
+            }}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-muted-foreground/10 flex items-center justify-center">
+              <svg className="w-6 h-6 text-muted-foreground animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
           </div>
         )}
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent opacity-90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent opacity-90 pointer-events-none" />
 
         {/* Category badge */}
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-4 left-4 z-10">
           <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-background/80 backdrop-blur-sm text-foreground border border-border/30">
             {video.categoryLabel}
           </span>

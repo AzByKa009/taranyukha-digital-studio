@@ -1,7 +1,6 @@
 export interface PortfolioVideo {
   id: string;
-  videoUrl: string;
-  posterUrl?: string;
+  youtubeId: string;
   title: string;
   description: string;
   review?: string;
@@ -15,15 +14,14 @@ export interface PortfolioVideo {
  * To add a new case:
  * 1. Copy one of the objects below
  * 2. Change id to unique value
- * 3. Replace videoUrl with your video path (e.g., "/videos/my-video.mp4")
- * 4. Optional: add posterUrl for preview image
- * 5. Update title, description, review
- * 6. Set category and categoryLabel
+ * 3. Replace youtubeId with YouTube video ID (the part after /shorts/ or watch?v=)
+ * 4. Update title, description, review
+ * 5. Set category and categoryLabel
  */
 export const portfolioVideos: PortfolioVideo[] = [
   {
     id: "1",
-    videoUrl: "/videos/artem-brius.mp4",
+    youtubeId: "oI-8pTiEdHg",
     title: "Артём Бриус",
     description: "Монтаж Reels для блогера с аудиторией 1.1 млн подписчиков",
     category: "montage",
@@ -31,7 +29,7 @@ export const portfolioVideos: PortfolioVideo[] = [
   },
   {
     id: "2",
-    videoUrl: "/videos/mikhail-grebenyuk.mp4",
+    youtubeId: "EBNgMgWv2sA",
     title: "Михаил Гребенюк",
     description: "Монтаж Reels для эксперта с аудиторией 700 тысяч",
     category: "montage",
@@ -39,7 +37,7 @@ export const portfolioVideos: PortfolioVideo[] = [
   },
   {
     id: "3",
-    videoUrl: "/videos/leads.mp4",
+    youtubeId: "rcQr2Zd0og8",
     title: "LEADS",
     description: "Монтаж YouTube Shorts для образовательного проекта",
     category: "montage",
@@ -47,7 +45,7 @@ export const portfolioVideos: PortfolioVideo[] = [
   },
   {
     id: "4",
-    videoUrl: "/videos/simon.mp4",
+    youtubeId: "N7m2YKSSTEk",
     title: "SIMON",
     description: "Монтаж TikTok для личного бренда",
     category: "montage",
