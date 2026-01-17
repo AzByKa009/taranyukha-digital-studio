@@ -3,6 +3,8 @@ import { Layout } from "@/components/layout/Layout";
 import { ArrowUpRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cases, categoryFilters, CaseCategory } from "@/data/cases";
+import { portfolioVideos } from "@/data/portfolio-videos";
+import { VideoCard } from "@/components/portfolio/VideoCard";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -13,6 +15,9 @@ const Cases = () => {
   const filteredCases = activeFilter === "all" 
     ? cases 
     : cases.filter((c) => c.category === activeFilter);
+
+  // Show video montage cases when "all" or "montage" is selected
+  const showVideoMontage = activeFilter === "all" || activeFilter === "montage";
 
   useSEO({
     title: "Кейсы — монтаж, AI-продукты, вайб кодинг | Aleksey Taranukha",
@@ -58,9 +63,30 @@ const Cases = () => {
         </div>
       </section>
 
+      {/* Video Montage Cases */}
+      {showVideoMontage && portfolioVideos.length > 0 && (
+        <section className="py-12">
+          <div className="container">
+            <h2 className="text-2xl md:text-3xl font-display font-semibold mb-8 animate-fade-in-up">
+              Монтаж Reels & Shorts
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+              {portfolioVideos.map((video, index) => (
+                <VideoCard key={video.id} video={video} index={index} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Cases Grid */}
       <section className="py-16 pb-28">
         <div className="container">
+          {showVideoMontage && portfolioVideos.length > 0 && (
+            <h2 className="text-2xl md:text-3xl font-display font-semibold mb-8 animate-fade-in-up">
+              Комплексные проекты
+            </h2>
+          )}
           <div className="grid md:grid-cols-2 gap-8">
             {filteredCases.map((caseItem, index) => (
               <Link
@@ -148,7 +174,7 @@ const Cases = () => {
           </div>
 
           {/* Empty state */}
-          {filteredCases.length === 0 && (
+          {filteredCases.length === 0 && !showVideoMontage && (
             <div className="text-center py-20">
               <p className="text-muted-foreground text-lg">
                 Проектов в этой категории пока нет
