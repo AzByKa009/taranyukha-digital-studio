@@ -104,7 +104,7 @@ const Calculator = () => {
     quantity: 1,
     urgency: "standard",
     referenceLink: "",
-    budget: [50000, 150000],
+    budget: [10000, 100000],
     name: "",
     email: "",
     details: "",
@@ -212,7 +212,7 @@ const Calculator = () => {
                     quantity: 1,
                     urgency: "standard",
                     referenceLink: "",
-                    budget: [50000, 150000],
+                    budget: [10000, 100000],
                     name: "",
                     email: "",
                     details: "",
@@ -389,19 +389,21 @@ const Calculator = () => {
                     
                     <div>
                       <label className="block text-sm font-medium mb-3">
-                        Планируемый бюджет: <span className="text-primary font-bold">{(formData.budget[0] / 1000).toFixed(0)}K — {(formData.budget[1] / 1000).toFixed(0)}K ₽</span>
+                        Планируемый бюджет: <span className="text-primary font-bold">
+                          {formData.budget[0] >= 1000 ? `${(formData.budget[0] / 1000).toFixed(0)}K` : formData.budget[0]} — {formData.budget[1] >= 500000 ? "500K+" : `${(formData.budget[1] / 1000).toFixed(0)}K`} ₽
+                        </span>
                       </label>
                       <Slider
                         value={formData.budget}
                         onValueChange={(value) => setFormData({ ...formData, budget: value })}
-                        min={10000}
+                        min={1000}
                         max={500000}
-                        step={10000}
+                        step={1000}
                         className="py-4"
                       />
                       <div className="flex justify-between text-sm text-muted-foreground mt-1">
-                        <span>10K ₽</span>
-                        <span>500K+ ₽</span>
+                        <span>1 000 ₽</span>
+                        <span>500 000+ ₽</span>
                       </div>
                     </div>
                   </div>
