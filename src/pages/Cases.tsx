@@ -3,14 +3,16 @@ import { Layout } from "@/components/layout/Layout";
 import { ArrowUpRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cases, categoryFilters, CaseCategory } from "@/data/cases";
-import { portfolioVideos } from "@/data/portfolio-videos";
+import { portfolioVideos, PortfolioVideo } from "@/data/portfolio-videos";
 import { VideoCard } from "@/components/portfolio/VideoCard";
+import { VideoModal } from "@/components/portfolio/VideoModal";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
 
 const Cases = () => {
   const [activeFilter, setActiveFilter] = useState<CaseCategory | "all">("all");
   const [hoveredCase, setHoveredCase] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<PortfolioVideo | null>(null);
 
   const filteredCases = activeFilter === "all" 
     ? cases 
@@ -72,12 +74,24 @@ const Cases = () => {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
               {portfolioVideos.map((video, index) => (
-                <VideoCard key={video.id} video={video} index={index} />
+                <VideoCard 
+                  key={video.id} 
+                  video={video} 
+                  index={index} 
+                  onClick={() => setSelectedVideo(video)}
+                />
               ))}
             </div>
           </div>
         </section>
       )}
+
+      {/* Video Modal */}
+      <VideoModal 
+        video={selectedVideo} 
+        isOpen={!!selectedVideo} 
+        onClose={() => setSelectedVideo(null)} 
+      />
 
       {/* Cases Grid */}
       <section className="py-16 pb-28">
