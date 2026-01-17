@@ -190,8 +190,8 @@ const About = () => {
                   <Briefcase className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <div className="text-2xl font-display font-bold">10+</div>
-                  <div className="text-sm text-muted-foreground">лет в IT</div>
+                  <div className="text-2xl font-display font-bold">2+</div>
+                  <div className="text-sm text-muted-foreground">года в digital</div>
                 </div>
               </div>
               

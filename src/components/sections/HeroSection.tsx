@@ -92,8 +92,8 @@ export function HeroSection() {
         <FadeIn delay={0.4}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 pt-12 border-t border-border/40">
             {[
-              { value: "10+", label: "Лет в digital" },
-              { value: "50+", label: "Проектов" },
+              { value: "2+", label: "Года в digital" },
+              { value: "10+", label: "Проектов" },
               { value: "AI", label: "В каждом решении" },
               { value: "24ч", label: "Ответ на заявку" },
             ].map((stat, index) => (
