@@ -13,7 +13,6 @@ import NotFound from "./pages/NotFound";
 // Lazy load other pages
 const Cases = lazy(() => import("./pages/Cases"));
 const CaseDetail = lazy(() => import("./pages/CaseDetail"));
-const Portfolio = lazy(() => import("./pages/Portfolio"));
 const Services = lazy(() => import("./pages/Services"));
 const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
 const AIProducts = lazy(() => import("./pages/AIProducts"));
@@ -53,7 +52,6 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/cases" element={<Cases />} />
             <Route path="/cases/:slug" element={<CaseDetail />} />
-            <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/services" element={<Services />} />
             <Route path="/services/:slug" element={<ServiceDetail />} />
             <Route path="/ai-products" element={<AIProducts />} />
