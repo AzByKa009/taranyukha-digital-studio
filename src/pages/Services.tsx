@@ -59,12 +59,12 @@ const Services = () => {
               Услуги
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-6 animate-fade-in-up leading-relaxed" style={{ animationDelay: "0.1s" }}>
-              Беру на себя всю техническую работу — вы занимаетесь своей экспертизой, 
-              а я делаю так, чтобы она выглядела и работала на высшем уровне
+              От вертикального контента до AI-продуктов и сайтов. 
+              Беру на себя большую часть работы — вы занимаетесь своим делом.
             </p>
             <div className="flex items-center gap-2.5 text-primary animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
               <CheckCircle className="h-5 w-5" />
-              <span className="font-medium">Снимаю с вас головную боль о технической реализации</span>
+              <span className="font-medium">Финальная стоимость зависит от задачи — рассчитывается индивидуально</span>
             </div>
           </div>
         </div>
@@ -89,13 +89,18 @@ const Services = () => {
                   <h2 className="text-xl md:text-2xl font-display font-semibold mb-2 group-hover:text-gradient transition-colors duration-400">
                     {service.title}
                   </h2>
-                  <p className="text-muted-foreground mb-4 leading-relaxed">
+                  <p className="text-muted-foreground mb-3 leading-relaxed">
                     {service.tagline}
                   </p>
-                  <div className="flex flex-wrap gap-5 text-sm">
-                    <span className="text-muted-foreground">
-                      <span className="text-foreground font-medium">Для:</span> {service.idealFor}
+                  <div className="flex flex-wrap gap-5 text-sm items-center">
+                    <span className="text-primary font-semibold text-base">
+                      {service.price}
                     </span>
+                    {service.priceNote && (
+                      <span className="text-muted-foreground text-xs">
+                        {service.priceNote}
+                      </span>
+                    )}
                     <span className="text-muted-foreground">
                       <span className="text-foreground font-medium">Сроки:</span> {service.timeline}
                     </span>

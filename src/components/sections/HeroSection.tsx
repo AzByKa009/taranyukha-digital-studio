@@ -40,17 +40,16 @@ export function HeroSection() {
             {/* Heading */}
             <FadeIn delay={0.1}>
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.08] mb-7">
-                Превращаю идеи в{" "}
-                <span className="text-gradient">AI-продукты</span>{" "}
-                и цифровой контент
+                <span className="text-gradient">AI-продукты</span> и сайты,{" "}
+                которые приносят заявки
               </h1>
             </FadeIn>
 
             {/* Subheading */}
             <FadeIn delay={0.2}>
               <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-12 leading-relaxed">
-                Помогаю бизнесу внедрять нейросети, автоматизировать процессы 
-                и создавать продукты, которые решают реальные задачи
+                Создаю AI-решения и премиальные сайты под услуги. Также веду продюсирование 
+                и вертикальный контент — Reels, Shorts, TikTok. Беру на себя большую часть работы.
               </p>
             </FadeIn>
 
@@ -95,7 +94,7 @@ export function HeroSection() {
             {[
               { value: "10+", label: "Лет в digital" },
               { value: "50+", label: "Проектов" },
-              { value: "AI", label: "Технологии" },
+              { value: "AI", label: "В каждом решении" },
               { value: "24ч", label: "Ответ на заявку" },
             ].map((stat, index) => (
               <motion.div 
