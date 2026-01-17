@@ -9,8 +9,9 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ video, index = 0, onClick }: VideoCardProps) {
-  // YouTube thumbnail URL
-  const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`;
+  // VK Video thumbnail или кастомный URL
+  // Если нет кастомного превью, показываем placeholder
+  const thumbnailUrl = video.thumbnailUrl || "/placeholder.svg";
 
   return (
     <article

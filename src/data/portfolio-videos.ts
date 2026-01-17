@@ -1,6 +1,9 @@
 export interface PortfolioVideo {
   id: string;
-  youtubeId: string;
+  /** VK Video ID в формате "oid_id" (например, "-123456789_456239123") */
+  vkVideoId: string;
+  /** Опционально: прямая ссылка на превью изображение */
+  thumbnailUrl?: string;
   title: string;
   description: string;
   fullDescription?: string;
@@ -13,17 +16,22 @@ export interface PortfolioVideo {
 /**
  * PORTFOLIO VIDEOS
  * 
- * To add a new case:
- * 1. Copy one of the objects below
- * 2. Change id to unique value
- * 3. Replace youtubeId with YouTube video ID (the part after /shorts/ or watch?v=)
- * 4. Update title, description, fullDescription, stats, review
- * 5. Set category and categoryLabel
+ * Чтобы добавить новый кейс:
+ * 1. Скопируй один из объектов ниже
+ * 2. Измени id на уникальное значение
+ * 3. Замени vkVideoId на ID видео из VK (формат: "oid_id", например "-123456789_456239123")
+ *    - Открой видео на VK, в URL будет что-то вроде: vk.com/video-123456789_456239123
+ *    - Скопируй часть после /video (это и есть vkVideoId)
+ * 4. Обнови title, description, fullDescription, stats, review
+ * 5. Установи category и categoryLabel
+ * 
+ * Опционально: добавь thumbnailUrl для кастомного превью
  */
 export const portfolioVideos: PortfolioVideo[] = [
   {
     id: "1",
-    youtubeId: "oI-8pTiEdHg",
+    // TODO: Замени на реальный VK Video ID
+    vkVideoId: "PLACEHOLDER_1",
     title: "Артём Бриус",
     description: "Монтаж Reels для блогера с аудиторией 1.1 млн подписчиков",
     fullDescription: "Создание динамичных Reels для топового блогера. Работа включала разработку визуального стиля, динамичный монтаж с акцентом на удержание внимания, цветокоррекцию и добавление графических элементов.",
@@ -33,7 +41,8 @@ export const portfolioVideos: PortfolioVideo[] = [
   },
   {
     id: "2",
-    youtubeId: "EBNgMgWv2sA",
+    // TODO: Замени на реальный VK Video ID
+    vkVideoId: "PLACEHOLDER_2",
     title: "Михаил Гребенюк",
     description: "Монтаж Reels для эксперта с аудиторией 700 тысяч",
     fullDescription: "Серия экспертных Reels для бизнес-блогера. Фокус на подаче сложного контента в простой и вовлекающей форме. Использование субтитров, акцентной графики и профессиональной цветокоррекции.",
@@ -43,7 +52,8 @@ export const portfolioVideos: PortfolioVideo[] = [
   },
   {
     id: "3",
-    youtubeId: "rcQr2Zd0og8",
+    // TODO: Замени на реальный VK Video ID
+    vkVideoId: "PLACEHOLDER_3",
     title: "LEADS",
     description: "Монтаж YouTube Shorts для образовательного проекта",
     fullDescription: "Образовательный контент в формате Shorts. Задача — сделать обучающие видео максимально понятными и вовлекающими. Добавление анимированной инфографики, субтитров и динамичных переходов.",
@@ -53,7 +63,8 @@ export const portfolioVideos: PortfolioVideo[] = [
   },
   {
     id: "4",
-    youtubeId: "N7m2YKSSTEk",
+    // TODO: Замени на реальный VK Video ID
+    vkVideoId: "PLACEHOLDER_4",
     title: "SIMON",
     description: "Монтаж TikTok для личного бренда",
     fullDescription: "Контент для личного бренда в TikTok. Стилистика под платформу — быстрый темп, трендовые эффекты, цепляющие первые секунды. Работа со звуком и музыкой под тренды платформы.",
