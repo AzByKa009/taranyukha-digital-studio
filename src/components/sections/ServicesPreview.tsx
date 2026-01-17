@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Brain, Layers, Zap, Target } from "lucide-react";
+import { ArrowRight, Brain, Layers, Zap, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { motion } from "framer-motion";
@@ -7,24 +7,24 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const services = [
   {
+    icon: Code,
+    title: "Сайты под услуги",
+    description: "Премиальный сайт, который повышает доверие и собирает заявки",
+  },
+  {
     icon: Brain,
-    title: "AI-решения",
-    description: "Разработка и интеграция искусственного интеллекта в бизнес-процессы",
+    title: "AI-продукты",
+    description: "Чат-боты, ассистенты, автоматизация — меньше рутины, больше времени",
   },
   {
     icon: Layers,
-    title: "Digital Production",
-    description: "Полный цикл создания цифрового контента и продуктов",
+    title: "Вертикальный контент",
+    description: "Reels, Shorts, TikTok — от монтажа до полного продюсирования",
   },
   {
     icon: Zap,
-    title: "Автоматизация",
-    description: "Оптимизация рабочих процессов с помощью современных технологий",
-  },
-  {
-    icon: Target,
-    title: "Консалтинг",
-    description: "Стратегическое консультирование по цифровой трансформации",
+    title: "AI-видео",
+    description: "Визуал нового уровня с AI-генерацией и профессиональным монтажом",
   },
 ];
 
@@ -41,7 +41,7 @@ export function ServicesPreview() {
               Чем я могу помочь
             </h2>
             <p className="text-muted-foreground">
-              Комплексный подход к созданию цифровых решений — от стратегии до реализации
+              AI-продукты, сайты под услуги и вертикальный контент. Беру на себя большую часть работы.
             </p>
           </div>
         </FadeIn>
