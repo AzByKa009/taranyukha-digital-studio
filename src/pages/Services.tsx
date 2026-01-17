@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, HelpCircle, Film, Users, Bot, Globe, Sparkles } from "lucide-react";
 import { services } from "@/data/services";
 import { cn } from "@/lib/utils";
+import { useSEO } from "@/hooks/useSEO";
 
 const popularServices = [
   {
@@ -42,12 +42,11 @@ const popularServices = [
 ];
 
 const Services = () => {
-  useEffect(() => {
-    document.title = "Услуги — Aleksey Taranukha";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Монтаж, продюсирование, AI-видео, AI-продукты и vibe coding. Премиальные услуги для создания контента и цифровых продуктов."
-    );
-  }, []);
+  useSEO({
+    title: "Услуги — монтаж Reels, AI-продукты, вайб кодинг | Aleksey Taranukha",
+    description: "Монтаж вертикальных видео, продюсирование контента, создание AI продуктов и вайб кодинг. Премиальные услуги для бизнеса.",
+    keywords: "монтаж Reels, продюсирование контента, AI продукты, вайб кодинг, премиальный лендинг, сайт под ключ, монтаж вертикальных видео",
+  });
 
   return (
     <Layout>

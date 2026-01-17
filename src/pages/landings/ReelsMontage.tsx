@@ -17,9 +17,9 @@ const ReelsMontage = () => {
   });
 
   useEffect(() => {
-    document.title = "Монтаж Reels на заказ — Aleksey Taranukha";
+    document.title = "Монтаж Reels на заказ — монтаж вертикальных видео | Aleksey Taranukha";
     document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Профессиональный монтаж Reels для бизнеса. Динамичные ролики, которые привлекают внимание и увеличивают охваты в Instagram."
+      "Профессиональный монтаж вертикальных видео для Instagram Reels, TikTok, Shorts. Динамичные ролики, которые увеличивают охваты. Заказать монтаж Reels."
     );
 
     const serviceSchema = {

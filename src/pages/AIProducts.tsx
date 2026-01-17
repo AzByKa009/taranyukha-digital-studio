@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, Sparkles, ClipboardList } from "lucide-react";
 import { aiCategories, aiProducts, getProductsByCategory } from "@/data/ai-products";
 import { cn } from "@/lib/utils";
+import { useSEO } from "@/hooks/useSEO";
 
 const AIProducts = () => {
   const [activeCategory, setActiveCategory] = useState(aiCategories[0].id);
 
-  useEffect(() => {
-    document.title = "AI-продукты — Aleksey Taranukha";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Готовые AI-решения: чат-боты, автоматизация Make/Zapier, генерация контента, Mini-SaaS и аналитика."
-    );
-  }, []);
+  useSEO({
+    title: "AI-продукты — чат-боты, автоматизация, генерация | Aleksey Taranukha",
+    description: "Готовые AI-решения для бизнеса: чат-боты, автоматизация Make/Zapier, генерация контента. Создание AI продукта под ключ.",
+    keywords: "AI продукты, создание AI продукта, чат-бот для бизнеса, автоматизация бизнеса, AI решения",
+  });
 
   const currentCategory = aiCategories.find(c => c.id === activeCategory)!;
   const categoryProducts = getProductsByCategory(activeCategory);

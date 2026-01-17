@@ -1,16 +1,15 @@
-import { useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Briefcase, CheckCircle2, Instagram, Lightbulb, MessageCircle, Play, Rocket, Sparkles, Target, Users } from "lucide-react";
+import { useSEO, personSchema } from "@/hooks/useSEO";
 
 const About = () => {
-  useEffect(() => {
-    document.title = "Обо мне — Aleksey Taranukha";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Aleksey Taranukha — эксперт по AI-решениям и цифровому продакшену. Беру на себя полный цикл: от идеи до реализации."
-    );
-  }, []);
+  useSEO({
+    title: "Обо мне — AI продюсер, вайб кодинг специалист | Aleksey Taranukha",
+    description: "Aleksey Taranukha — AI продюсер и специалист по вайб кодингу. Создание AI продуктов, монтаж вертикальных видео, продюсирование контента, сайты под ключ.",
+    keywords: "AI продюсер, вайб кодинг специалист, монтаж Reels, продюсирование контента, создание AI продукта",
+  }, [personSchema]);
 
   const benefits = [
     "Полный цикл работы — от стратегии до готового продукта",

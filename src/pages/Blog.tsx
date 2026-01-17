@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calculator, CheckCircle2, Send } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 type ServiceType = "reels" | "website" | "ai-bot" | "consulting" | "";
 type UrgencyType = "standard" | "fast" | "urgent" | "";
@@ -15,12 +16,11 @@ const Blog = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [estimate, setEstimate] = useState<string | null>(null);
 
-  useEffect(() => {
-    document.title = "Калькулятор проекта — Aleksey Taranukha";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Рассчитайте стоимость проекта: Reels, сайты, AI-боты и консалтинг. Получите предварительную оценку онлайн."
-    );
-  }, []);
+  useSEO({
+    title: "Калькулятор стоимости — монтаж, AI-бот, сайт | Aleksey Taranukha",
+    description: "Рассчитайте стоимость проекта: монтаж Reels, AI-бот для бизнеса, сайт под ключ. Онлайн-калькулятор с оценкой сроков.",
+    keywords: "калькулятор монтажа Reels, стоимость AI бота, цена сайта, рассчитать проект онлайн",
+  });
 
   const serviceOptions = [
     { value: "reels", label: "Reels / Вертикальное видео" },

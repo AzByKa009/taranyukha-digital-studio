@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { ArrowUpRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cases, categoryFilters, CaseCategory } from "@/data/cases";
 import { cn } from "@/lib/utils";
+import { useSEO } from "@/hooks/useSEO";
 
 const Cases = () => {
   const [activeFilter, setActiveFilter] = useState<CaseCategory | "all">("all");
@@ -13,12 +14,11 @@ const Cases = () => {
     ? cases 
     : cases.filter((c) => c.category === activeFilter);
 
-  useEffect(() => {
-    document.title = "Кейсы — Aleksey Taranukha";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Портфолио проектов: монтаж, продюсирование, AI-видео, AI-продукты и vibe coding. Реальные кейсы с результатами."
-    );
-  }, []);
+  useSEO({
+    title: "Кейсы — монтаж, AI-продукты, вайб кодинг | Aleksey Taranukha",
+    description: "Портфолио проектов: монтаж вертикальных видео, продюсирование контента, AI-продукты и вайб кодинг. Реальные кейсы с результатами.",
+    keywords: "кейсы монтаж, портфолио AI, примеры вайб кодинг, кейсы продюсирование, портфолио Reels",
+  });
 
   return (
     <Layout>
