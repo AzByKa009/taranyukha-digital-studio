@@ -8,12 +8,20 @@ import aiContent from "@/assets/ai-content.jpg";
 import aiMinisaas from "@/assets/ai-minisaas.jpg";
 import aiAnalytics from "@/assets/ai-analytics.jpg";
 
+// Category pill/tab thumbnails
+import catChatbot from "@/assets/cat-chatbot.jpg";
+import catAutomation from "@/assets/cat-automation.jpg";
+import catContent from "@/assets/cat-content.jpg";
+import catAnalytics from "@/assets/cat-analytics.jpg";
+import catMinisaas from "@/assets/cat-minisaas.jpg";
+
 export interface AIProductCategory {
   id: string;
   slug: string;
   title: string;
   icon: LucideIcon;
   image: string;
+  thumbnail: string;
   description: string;
   useCases: string[];
 }
@@ -34,6 +42,7 @@ export const aiCategories: AIProductCategory[] = [
     title: "Чат-боты и ассистенты",
     icon: Bot,
     image: aiChatbot,
+    thumbnail: catChatbot,
     description: "Интеллектуальные ассистенты для автоматизации коммуникаций с клиентами, поддержки и продаж",
     useCases: [
       "Автоматизация клиентской поддержки 24/7",
@@ -49,6 +58,7 @@ export const aiCategories: AIProductCategory[] = [
     title: "Автоматизация процессов",
     icon: Workflow,
     image: aiAutomation,
+    thumbnail: catAutomation,
     description: "Интеграции с Make, Zapier, n8n для автоматизации рутинных задач и связывания разных систем",
     useCases: [
       "Автоматическая обработка заявок из форм",
@@ -64,6 +74,7 @@ export const aiCategories: AIProductCategory[] = [
     title: "Генерация контента",
     icon: Sparkles,
     image: aiContent,
+    thumbnail: catContent,
     description: "AI-системы для создания текстов, изображений и видео для маркетинга и продаж",
     useCases: [
       "Генерация статей и блог-постов",
@@ -79,6 +90,7 @@ export const aiCategories: AIProductCategory[] = [
     title: "Mini-SaaS решения",
     icon: Rocket,
     image: aiMinisaas,
+    thumbnail: catMinisaas,
     description: "Быстрые MVP и внутренние инструменты, решающие конкретные бизнес-задачи",
     useCases: [
       "Внутренние CRM и трекеры задач",
@@ -94,6 +106,7 @@ export const aiCategories: AIProductCategory[] = [
     title: "Аналитика и отчёты",
     icon: LineChart,
     image: aiAnalytics,
+    thumbnail: catAnalytics,
     description: "AI-powered аналитика данных с автоматическими insights и визуализациями",
     useCases: [
       "Автоматические бизнес-отчёты",
