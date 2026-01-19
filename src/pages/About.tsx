@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Briefcase, CheckCircle2, Instagram, Lightbulb, MessageCircle, Play, Rocket, Sparkles, Target, Users } from "lucide-react";
 import { useSEO, personSchema } from "@/hooks/useSEO";
-import alekseyPhoto from "@/assets/aleksey-photo.png";
 
 const About = () => {
   useSEO({
@@ -117,13 +116,10 @@ const About = () => {
             </div>
             
             <div className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-              <div className="relative aspect-square rounded-3xl overflow-hidden border border-border/40 shadow-2xl shadow-primary/10">
-                <img 
-                  src={alekseyPhoto} 
-                  alt="Aleksey Taranukha — AI продюсер и специалист по вайб кодингу"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+              <div className="aspect-square rounded-3xl bg-gradient-to-br from-primary/15 to-accent/10 flex items-center justify-center border border-border/40 shadow-2xl shadow-primary/10">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-xl shadow-primary/30">
+                  <span className="text-5xl font-display font-bold text-primary-foreground">AT</span>
+                </div>
               </div>
             </div>
           </div>
