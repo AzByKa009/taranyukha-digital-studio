@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import type { PortfolioVideo } from "@/data/portfolio-videos";
+import { useRef, useEffect } from "react";
 
 interface VideoModalProps {
   video: PortfolioVideo | null;
@@ -9,14 +10,20 @@ interface VideoModalProps {
 }
 
 export function VideoModal({ video, isOpen, onClose }: VideoModalProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (isOpen && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
+    };
+  }, [isOpen]);
+
   if (!video) return null;
-
-  // VK Video embed URL
-  // Формат vkVideoId: "oid_id" (например, "-123456789_456239123")
-  const embedUrl = `https://vk.com/video_ext.php?oid=${video.vkVideoId.split('_')[0]}&id=${video.vkVideoId.split('_')[1]}&hd=2`;
-
-  // Проверяем, установлен ли реальный VK Video ID
-  const hasValidVideo = video.vkVideoId && !video.vkVideoId.startsWith("PLACEHOLDER");
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -35,19 +42,14 @@ export function VideoModal({ video, isOpen, onClose }: VideoModalProps) {
           {/* Video */}
           <div className="lg:w-1/2 bg-black flex items-center justify-center">
             <div className="relative w-full aspect-[9/16] max-h-[70vh] lg:max-h-[80vh]">
-              {hasValidVideo ? (
-                <iframe
-                  src={embedUrl}
-                  title={video.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full border-0"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground text-center p-4">
-                  <p>Видео скоро будет добавлено</p>
-                </div>
-              )}
+              <video
+                ref={videoRef}
+                src={video.videoUrl}
+                controls
+                autoPlay
+                playsInline
+                className="absolute inset-0 w-full h-full object-contain"
+              />
             </div>
           </div>
 
