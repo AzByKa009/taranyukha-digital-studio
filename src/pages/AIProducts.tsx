@@ -130,9 +130,9 @@ const AIProducts = () => {
                 {/* Product Image */}
                 <div className="aspect-[16/9] overflow-hidden">
                   <img 
-                    src={currentCategory.thumbnail}
+                    src={product.image}
                     alt={product.title}
-                    className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                     loading="lazy"
                   />
                 </div>

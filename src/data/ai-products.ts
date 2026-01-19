@@ -8,12 +8,18 @@ import aiContent from "@/assets/ai-content.jpg";
 import aiMinisaas from "@/assets/ai-minisaas.jpg";
 import aiAnalytics from "@/assets/ai-analytics.jpg";
 
-// Category pill/tab thumbnails
-import catChatbot from "@/assets/cat-chatbot.jpg";
-import catAutomation from "@/assets/cat-automation.jpg";
-import catContent from "@/assets/cat-content.jpg";
-import catAnalytics from "@/assets/cat-analytics.jpg";
-import catMinisaas from "@/assets/cat-minisaas.jpg";
+// Product images
+import productSupportBot from "@/assets/product-support-bot.jpg";
+import productSalesBot from "@/assets/product-sales-bot.jpg";
+import productBookingBot from "@/assets/product-booking-bot.jpg";
+import productLeadAutomation from "@/assets/product-lead-automation.jpg";
+import productReportAutomation from "@/assets/product-report-automation.jpg";
+import productContentGenerator from "@/assets/product-content-generator.jpg";
+import productImageGenerator from "@/assets/product-image-generator.jpg";
+import productClientPortal from "@/assets/product-client-portal.jpg";
+import productCalculator from "@/assets/product-calculator.jpg";
+import productReviewAnalyzer from "@/assets/product-review-analyzer.jpg";
+import productCompetitorMonitor from "@/assets/product-competitor-monitor.jpg";
 
 export interface AIProductCategory {
   id: string;
@@ -21,7 +27,6 @@ export interface AIProductCategory {
   title: string;
   icon: LucideIcon;
   image: string;
-  thumbnail: string;
   description: string;
   useCases: string[];
 }
@@ -33,6 +38,7 @@ export interface AIProduct {
   description: string;
   features: string[];
   status: "available" | "beta" | "coming";
+  image: string;
 }
 
 export const aiCategories: AIProductCategory[] = [
@@ -42,7 +48,6 @@ export const aiCategories: AIProductCategory[] = [
     title: "Чат-боты и ассистенты",
     icon: Bot,
     image: aiChatbot,
-    thumbnail: catChatbot,
     description: "Интеллектуальные ассистенты для автоматизации коммуникаций с клиентами, поддержки и продаж",
     useCases: [
       "Автоматизация клиентской поддержки 24/7",
@@ -58,7 +63,6 @@ export const aiCategories: AIProductCategory[] = [
     title: "Автоматизация процессов",
     icon: Workflow,
     image: aiAutomation,
-    thumbnail: catAutomation,
     description: "Интеграции с Make, Zapier, n8n для автоматизации рутинных задач и связывания разных систем",
     useCases: [
       "Автоматическая обработка заявок из форм",
@@ -74,7 +78,6 @@ export const aiCategories: AIProductCategory[] = [
     title: "Генерация контента",
     icon: Sparkles,
     image: aiContent,
-    thumbnail: catContent,
     description: "AI-системы для создания текстов, изображений и видео для маркетинга и продаж",
     useCases: [
       "Генерация статей и блог-постов",
@@ -90,7 +93,6 @@ export const aiCategories: AIProductCategory[] = [
     title: "Mini-SaaS решения",
     icon: Rocket,
     image: aiMinisaas,
-    thumbnail: catMinisaas,
     description: "Быстрые MVP и внутренние инструменты, решающие конкретные бизнес-задачи",
     useCases: [
       "Внутренние CRM и трекеры задач",
@@ -106,7 +108,6 @@ export const aiCategories: AIProductCategory[] = [
     title: "Аналитика и отчёты",
     icon: LineChart,
     image: aiAnalytics,
-    thumbnail: catAnalytics,
     description: "AI-powered аналитика данных с автоматическими insights и визуализациями",
     useCases: [
       "Автоматические бизнес-отчёты",
@@ -126,7 +127,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "chatbots",
     description: "Бот для автоматизации первой линии поддержки с интеграцией в CRM",
     features: ["GPT-4 / Claude", "Интеграция с HelpDesk", "Мультиканальность", "Эскалация операторам"],
-    status: "available"
+    status: "available",
+    image: productSupportBot
   },
   {
     id: "sales-bot",
@@ -134,7 +136,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "chatbots",
     description: "Бот для квалификации лидов и первичной консультации по продуктам",
     features: ["Квалификация лидов", "Интеграция с CRM", "Скрипты продаж", "Аналитика конверсий"],
-    status: "available"
+    status: "available",
+    image: productSalesBot
   },
   {
     id: "booking-bot",
@@ -142,7 +145,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "chatbots",
     description: "Бот для автоматической записи клиентов через мессенджеры",
     features: ["Синхронизация с календарём", "Напоминания", "Перенос записей", "Telegram / WhatsApp"],
-    status: "available"
+    status: "available",
+    image: productBookingBot
   },
   
   // Automation
@@ -152,7 +156,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "automation",
     description: "Автоматический сбор лидов из форм, обогащение данных и передача в CRM",
     features: ["Make / Zapier / n8n", "Обогащение данных", "Дедупликация", "Скоринг лидов"],
-    status: "available"
+    status: "available",
+    image: productLeadAutomation
   },
   {
     id: "report-automation",
@@ -160,7 +165,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "automation",
     description: "Автоматическое формирование отчётов из разных источников данных",
     features: ["Google Sheets", "Email-рассылка", "Telegram-уведомления", "Настраиваемый формат"],
-    status: "available"
+    status: "available",
+    image: productReportAutomation
   },
   
   // Content
@@ -170,7 +176,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "content",
     description: "Генерация текстов для сайта, соцсетей и рекламы в вашем tone of voice",
     features: ["Тон бренда", "SEO-оптимизация", "A/B варианты", "Мультиязычность"],
-    status: "available"
+    status: "available",
+    image: productContentGenerator
   },
   {
     id: "image-generator",
@@ -178,7 +185,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "content",
     description: "Генерация изображений и креативов для маркетинга",
     features: ["Midjourney / DALL-E", "Брендовые шаблоны", "Адаптация размеров", "Пакетная генерация"],
-    status: "beta"
+    status: "beta",
+    image: productImageGenerator
   },
   
   // Mini-SaaS
@@ -188,7 +196,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "minisaas",
     description: "Личный кабинет для клиентов с доступом к документам и истории",
     features: ["Авторизация", "Документы", "История заказов", "Чат с поддержкой"],
-    status: "available"
+    status: "available",
+    image: productClientPortal
   },
   {
     id: "calculator",
@@ -196,7 +205,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "minisaas",
     description: "Интерактивный калькулятор стоимости с AI-рекомендациями",
     features: ["Динамический расчёт", "AI-рекомендации", "Интеграция с CRM", "Виджет для сайта"],
-    status: "available"
+    status: "available",
+    image: productCalculator
   },
   
   // Analytics
@@ -206,7 +216,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "analytics",
     description: "AI-анализ отзывов клиентов с выявлением трендов и проблем",
     features: ["Sentiment analysis", "Категоризация", "Тренды", "Алерты"],
-    status: "available"
+    status: "available",
+    image: productReviewAnalyzer
   },
   {
     id: "competitor-monitor",
@@ -214,7 +225,8 @@ export const aiProducts: AIProduct[] = [
     categoryId: "analytics",
     description: "Отслеживание активности конкурентов и автоматические отчёты",
     features: ["Мониторинг цен", "Соцсети", "Новости", "Еженедельные отчёты"],
-    status: "beta"
+    status: "beta",
+    image: productCompetitorMonitor
   }
 ];
 
