@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Briefcase, CheckCircle2, Instagram, Lightbulb, MessageCircle, Play, Rocket, Sparkles, Target, Users } from "lucide-react";
 import { useSEO, personSchema } from "@/hooks/useSEO";
 import alekseyPhoto from "@/assets/aleksey-photo.png";
+import digitalExperience from "@/assets/digital-experience.jpg";
 
 const About = () => {
   useSEO({
@@ -192,26 +193,39 @@ const About = () => {
               </div>
             </div>
             
-            <div className="premium-card p-8 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Briefcase className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <div className="text-2xl font-display font-bold">2+</div>
-                  <div className="text-sm text-muted-foreground">года в digital</div>
-                </div>
+            <div className="premium-card p-0 overflow-hidden animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+              {/* Image */}
+              <div className="aspect-video overflow-hidden">
+                <img 
+                  src={digitalExperience}
+                  alt="2+ года опыта в digital-сфере"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </div>
               
-              <div className="space-y-4 text-muted-foreground">
-                <p>
-                  За это время я работал с разными нишами: от локального бизнеса до 
-                  технологических стартапов. Понимаю, как устроен бизнес изнутри.
-                </p>
-                <p>
-                  Мой подход — делать просто и эффективно. Без лишнего усложнения, 
-                  с фокусом на результат, который можно измерить.
-                </p>
+              {/* Content */}
+              <div className="p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Briefcase className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-display font-bold">2+</div>
+                    <div className="text-sm text-muted-foreground">года в digital</div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4 text-muted-foreground">
+                  <p>
+                    За это время я работал с разными нишами: от локального бизнеса до 
+                    технологических стартапов. Понимаю, как устроен бизнес изнутри.
+                  </p>
+                  <p>
+                    Мой подход — делать просто и эффективно. Без лишнего усложнения, 
+                    с фокусом на результат, который можно измерить.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
