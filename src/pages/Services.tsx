@@ -77,38 +77,51 @@ const Services = () => {
               <Link
                 key={service.id}
                 to={`/services/${service.slug}`}
-                className="group premium-card p-7 md:p-8 animate-fade-in-up flex flex-col lg:flex-row lg:items-center gap-6"
+                className="group premium-card overflow-hidden animate-fade-in-up flex flex-col lg:flex-row"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-400 group-hover:scale-105">
-                  <service.icon className="h-7 w-7 text-primary" />
+                {/* Image */}
+                <div className="lg:w-64 h-48 lg:h-auto shrink-0 overflow-hidden">
+                  <img 
+                    src={service.image} 
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
                 </div>
                 
-                <div className="flex-1">
-                  <h2 className="text-xl md:text-2xl font-display font-semibold mb-2 group-hover:text-gradient transition-colors duration-400">
-                    {service.title}
-                  </h2>
-                  <p className="text-muted-foreground mb-3 leading-relaxed">
-                    {service.tagline}
-                  </p>
-                  <div className="flex flex-wrap gap-5 text-sm items-center">
-                    <span className="text-primary font-semibold text-base">
-                      {service.price}
-                    </span>
-                    {service.priceNote && (
-                      <span className="text-muted-foreground text-xs">
-                        {service.priceNote}
-                      </span>
-                    )}
-                    <span className="text-muted-foreground">
-                      <span className="text-foreground font-medium">Сроки:</span> {service.timeline}
-                    </span>
+                {/* Content */}
+                <div className="flex-1 p-7 md:p-8 flex flex-col lg:flex-row lg:items-center gap-6">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-400 group-hover:scale-105">
+                    <service.icon className="h-7 w-7 text-primary" />
                   </div>
-                </div>
+                  
+                  <div className="flex-1">
+                    <h2 className="text-xl md:text-2xl font-display font-semibold mb-2 group-hover:text-gradient transition-colors duration-400">
+                      {service.title}
+                    </h2>
+                    <p className="text-muted-foreground mb-3 leading-relaxed">
+                      {service.tagline}
+                    </p>
+                    <div className="flex flex-wrap gap-5 text-sm items-center">
+                      <span className="text-primary font-semibold text-base">
+                        {service.price}
+                      </span>
+                      {service.priceNote && (
+                        <span className="text-muted-foreground text-xs">
+                          {service.priceNote}
+                        </span>
+                      )}
+                      <span className="text-muted-foreground">
+                        <span className="text-foreground font-medium">Сроки:</span> {service.timeline}
+                      </span>
+                    </div>
+                  </div>
 
-                <div className="flex items-center gap-2 text-primary font-medium shrink-0 group-hover:gap-3 transition-all duration-300">
-                  Подробнее
-                  <ArrowRight className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-primary font-medium shrink-0 group-hover:gap-3 transition-all duration-300">
+                    Подробнее
+                    <ArrowRight className="h-4 w-4" />
+                  </div>
                 </div>
               </Link>
             ))}

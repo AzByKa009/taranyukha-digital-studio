@@ -3,29 +3,41 @@ import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
+// Direction images
+import serviceWeb from "@/assets/service-web.jpg";
+import serviceBot from "@/assets/service-bot.jpg";
+import serviceReels from "@/assets/service-reels.jpg";
+import serviceAiVideo from "@/assets/service-ai-video.jpg";
+import aiAnalytics from "@/assets/ai-analytics.jpg";
+
 const directions = [
   {
     icon: Code,
+    image: serviceWeb,
     title: "Сайты под услуги",
     description: "Премиальные сайты, которые повышают доверие и собирают заявки. Быстро и без лишней сложности.",
   },
   {
     icon: Brain,
+    image: serviceBot,
     title: "AI-продукты",
     description: "Чат-боты, ассистенты, автоматизация. Снимаю рутину и ускоряю работу вашей команды.",
   },
   {
     icon: Video,
+    image: serviceReels,
     title: "Вертикальный контент",
     description: "Reels, Shorts, TikTok — монтаж и продюсирование роликов, которые удерживают внимание.",
   },
   {
     icon: Sparkles,
+    image: serviceAiVideo,
     title: "AI-видео",
     description: "Визуал нового уровня с AI-генерацией. Включает продюсирование и профессиональный монтаж.",
   },
   {
     icon: LineChart,
+    image: aiAnalytics,
     title: "Консалтинг",
     description: "Аудит процессов и стратегия внедрения AI. Помогаю понять, где технологии принесут максимум пользы.",
   },
@@ -60,26 +72,39 @@ export function WhatIDo() {
           {directions.map((direction) => (
             <StaggerItem key={direction.title}>
               <PremiumCard
-                className="group p-8 rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full"
+                className="group rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full overflow-hidden"
                 hoverScale={1.02}
                 hoverY={-6}
               >
-                <motion.div 
-                  className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6"
-                  whileHover={!prefersReducedMotion ? { 
-                    scale: 1.1,
-                    backgroundColor: "hsl(var(--primary) / 0.2)"
-                  } : undefined}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                >
-                  <direction.icon className="h-7 w-7 text-primary" />
-                </motion.div>
-                <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-gradient transition-colors duration-300">
-                  {direction.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {direction.description}
-                </p>
+                {/* Image */}
+                <div className="aspect-video overflow-hidden">
+                  <img 
+                    src={direction.image}
+                    alt={direction.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                
+                {/* Content */}
+                <div className="p-8">
+                  <motion.div 
+                    className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6"
+                    whileHover={!prefersReducedMotion ? { 
+                      scale: 1.1,
+                      backgroundColor: "hsl(var(--primary) / 0.2)"
+                    } : undefined}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  >
+                    <direction.icon className="h-7 w-7 text-primary" />
+                  </motion.div>
+                  <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-gradient transition-colors duration-300">
+                    {direction.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {direction.description}
+                  </p>
+                </div>
               </PremiumCard>
             </StaggerItem>
           ))}

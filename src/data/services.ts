@@ -1,6 +1,12 @@
 import { Video, Film, Sparkles, Cpu, Code } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
+// Service images
+import serviceMontage from "@/assets/service-montage-banner.jpg";
+import serviceProducing from "@/assets/service-producing.jpg";
+import serviceAiVideo from "@/assets/service-ai-video.jpg";
+import serviceAiProduct from "@/assets/service-ai-product.jpg";
+import serviceWeb from "@/assets/service-web.jpg";
 export interface ServiceFAQ {
   question: string;
   answer: string;
@@ -12,6 +18,7 @@ export interface ServiceItem {
   title: string;
   shortTitle: string;
   icon: LucideIcon;
+  image: string;
   tagline: string;
   description: string;
   price: string;
@@ -37,6 +44,7 @@ export const services: ServiceItem[] = [
     title: "Монтаж вертикальных видео",
     shortTitle: "Монтаж",
     icon: Video,
+    image: serviceMontage,
     tagline: "Reels, Shorts, TikTok — динамичный монтаж, который удерживает внимание",
     description: "Превращаю сырой материал в цепляющий контент для соцсетей. Вы занимаетесь экспертизой — я делаю так, чтобы её смотрели до конца.",
     price: "от 3 000 ₽ / ролик",
@@ -84,6 +92,7 @@ export const services: ServiceItem[] = [
     title: "Продюсирование + монтаж",
     shortTitle: "Продюсирование",
     icon: Film,
+    image: serviceProducing,
     tagline: "Контент под результат: от идеи до готового ролика с монтажом",
     description: "Полный цикл производства вертикального контента. Придумываю, что снимать, как подать, и монтирую — вы только записываете.",
     price: "от 5 000 ₽ / ролик",
@@ -131,6 +140,7 @@ export const services: ServiceItem[] = [
     title: "AI-видео",
     shortTitle: "AI-видео",
     icon: Sparkles,
+    image: serviceAiVideo,
     tagline: "Визуал нового уровня: AI-генерация + профессиональный продакшен",
     description: "Создаю ролики с AI-визуалами, которые невозможно снять традиционно. Сильная подача + ускорение производства. Включает продюсирование и монтаж.",
     price: "от 7 000 ₽ / ролик",
@@ -178,6 +188,7 @@ export const services: ServiceItem[] = [
     title: "AI-продукт / автоматизация",
     shortTitle: "AI-продукт",
     icon: Cpu,
+    image: serviceAiProduct,
     tagline: "AI-решение под конкретную задачу — снять рутину и ускорить работу",
     description: "Создаю AI-инструменты для бизнеса: чат-боты, ассистенты, автоматизация процессов. Полный цикл — от идеи до внедрения.",
     price: "от 8 000 ₽",
@@ -225,6 +236,7 @@ export const services: ServiceItem[] = [
     title: "Сайт под услуги / Vibe Coding",
     shortTitle: "Сайт под услуги",
     icon: Code,
+    image: serviceWeb,
     tagline: "Премиальный сайт, который повышает доверие и собирает заявки",
     description: "Создаю современные сайты для экспертов и бизнеса услуг. Быстрая разработка с AI-инструментами — работающий продукт за дни, а не месяцы.",
     price: "от 25 000 ₽",

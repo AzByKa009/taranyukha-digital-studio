@@ -5,24 +5,34 @@ import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
+// Service images
+import serviceWeb from "@/assets/service-web.jpg";
+import serviceBot from "@/assets/service-bot.jpg";
+import serviceReels from "@/assets/service-reels.jpg";
+import serviceAiVideo from "@/assets/service-ai-video.jpg";
+
 const services = [
   {
     icon: Code,
+    image: serviceWeb,
     title: "Сайты под услуги",
     description: "Премиальный сайт, который повышает доверие и собирает заявки",
   },
   {
     icon: Brain,
+    image: serviceBot,
     title: "AI-продукты",
     description: "Чат-боты, ассистенты, автоматизация — меньше рутины, больше времени",
   },
   {
     icon: Layers,
+    image: serviceReels,
     title: "Вертикальный контент",
     description: "Reels, Shorts, TikTok — от монтажа до полного продюсирования",
   },
   {
     icon: Zap,
+    image: serviceAiVideo,
     title: "AI-видео",
     description: "Визуал нового уровня с AI-генерацией и профессиональным монтажом",
   },
@@ -51,26 +61,39 @@ export function ServicesPreview() {
           {services.map((service) => (
             <StaggerItem key={service.title}>
               <PremiumCard
-                className="group p-6 rounded-2xl border border-border bg-card/30 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full"
+                className="group rounded-2xl border border-border bg-card/30 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full overflow-hidden"
                 hoverScale={1.03}
                 hoverY={-4}
               >
-                <motion.div 
-                  className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4"
-                  whileHover={!prefersReducedMotion ? { 
-                    scale: 1.1,
-                    backgroundColor: "hsl(var(--primary) / 0.2)"
-                  } : undefined}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                >
-                  <service.icon className="h-6 w-6 text-primary" />
-                </motion.div>
-                <h3 className="text-lg font-display font-semibold mb-2">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {service.description}
-                </p>
+                {/* Image */}
+                <div className="aspect-video overflow-hidden">
+                  <img 
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                
+                {/* Content */}
+                <div className="p-6">
+                  <motion.div 
+                    className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4"
+                    whileHover={!prefersReducedMotion ? { 
+                      scale: 1.1,
+                      backgroundColor: "hsl(var(--primary) / 0.2)"
+                    } : undefined}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  >
+                    <service.icon className="h-6 w-6 text-primary" />
+                  </motion.div>
+                  <h3 className="text-lg font-display font-semibold mb-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {service.description}
+                  </p>
+                </div>
               </PremiumCard>
             </StaggerItem>
           ))}

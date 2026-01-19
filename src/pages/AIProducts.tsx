@@ -74,7 +74,7 @@ const AIProducts = () => {
       {/* Category Description */}
       <section className="py-12">
         <div className="container">
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
                 <currentCategory.icon className="h-8 w-8 text-primary" />
@@ -87,17 +87,29 @@ const AIProducts = () => {
               </p>
             </div>
             
-            <div className="p-6 rounded-2xl bg-card/50 border border-border">
-              <h3 className="font-display font-semibold mb-4">Примеры использования</h3>
-              <ul className="space-y-3">
-                {currentCategory.useCases.map((useCase, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/90">{useCase}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* Category Image */}
+            <div className="relative aspect-video rounded-2xl overflow-hidden border border-border/40 shadow-2xl shadow-primary/10">
+              <img 
+                src={currentCategory.image}
+                alt={currentCategory.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
             </div>
+          </div>
+          
+          {/* Use Cases */}
+          <div className="mt-12 p-6 rounded-2xl bg-card/50 border border-border">
+            <h3 className="font-display font-semibold mb-4">Примеры использования</h3>
+            <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {currentCategory.useCases.map((useCase, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <span className="text-foreground/90">{useCase}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
