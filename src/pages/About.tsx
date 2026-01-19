@@ -5,6 +5,10 @@ import { ArrowRight, Briefcase, CheckCircle2, Instagram, Lightbulb, MessageCircl
 import { useSEO, personSchema } from "@/hooks/useSEO";
 import alekseyPhoto from "@/assets/aleksey-photo.png";
 import digitalExperience from "@/assets/digital-experience.jpg";
+import expertiseAi from "@/assets/expertise-ai.jpg";
+import expertiseProduction from "@/assets/expertise-production.jpg";
+import expertiseWeb from "@/assets/expertise-web.jpg";
+import expertiseConsulting from "@/assets/expertise-consulting.jpg";
 
 const About = () => {
   useSEO({
@@ -27,21 +31,25 @@ const About = () => {
       icon: Rocket,
       title: "AI-продукты",
       description: "Чат-боты, автоматизация процессов, интеграция нейросетей в бизнес-процессы",
+      image: expertiseAi,
     },
     {
       icon: Lightbulb,
       title: "Digital Production",
       description: "Контент-стратегия, Reels, вертикальный контент для привлечения клиентов",
+      image: expertiseProduction,
     },
     {
       icon: Target,
       title: "Веб-разработка",
       description: "Сайты-визитки, лендинги, корпоративные порталы под ключ",
+      image: expertiseWeb,
     },
     {
       icon: Users,
       title: "Консалтинг",
       description: "AI-аудит бизнеса, стратегии автоматизации, обучение команды",
+      image: expertiseConsulting,
     },
   ];
 
@@ -152,14 +160,26 @@ const About = () => {
             {expertise.map((item, index) => (
               <div 
                 key={item.title}
-                className="premium-card p-7 animate-fade-in-up"
+                className="premium-card p-0 overflow-hidden animate-fade-in-up"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
-                  <item.icon className="h-7 w-7 text-primary" />
+                {/* Image */}
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img 
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover opacity-70"
+                    loading="lazy"
+                  />
                 </div>
-                <h3 className="text-lg font-display font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                {/* Content */}
+                <div className="p-5">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 -mt-10 relative z-10 border border-border/50 shadow-lg">
+                    <item.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-display font-semibold mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                </div>
               </div>
             ))}
           </div>

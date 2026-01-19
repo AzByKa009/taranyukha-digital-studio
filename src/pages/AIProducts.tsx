@@ -51,20 +51,29 @@ const AIProducts = () => {
       {/* Category Tabs */}
       <section className="pb-8 sticky top-20 z-20 bg-background/80 backdrop-blur-lg border-b border-border/50">
         <div className="container">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             {aiCategories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                  "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
                   activeCategory === category.id
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                     : "bg-card/50 text-muted-foreground hover:bg-card hover:text-foreground border border-border"
                 )}
               >
-                <category.icon className="h-4 w-4" />
-                {category.title}
+                {/* Thumbnail */}
+                <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0">
+                  <img 
+                    src={category.thumbnail}
+                    alt={category.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <span className="hidden sm:inline">{category.title}</span>
+                <category.icon className="h-4 w-4 sm:hidden" />
               </button>
             ))}
           </div>
