@@ -1,3 +1,10 @@
+import caseAiFintech from "@/assets/case-ai-fintech.jpg";
+import caseProduction from "@/assets/case-production.jpg";
+import caseAnalytics from "@/assets/case-analytics.jpg";
+import caseAiVideo from "@/assets/case-ai-video.jpg";
+import caseMvp from "@/assets/case-mvp.jpg";
+import caseMontage from "@/assets/case-montage.jpg";
+
 export type CaseCategory = "montage" | "producing" | "ai-video" | "ai-products" | "vibe-coding";
 
 export interface CaseItem {
@@ -38,7 +45,7 @@ export const cases: CaseItem[] = [
     categoryLabel: "AI-продукты",
     shortDescription: "Чат-бот для автоматизации поддержки — быстрые ответы 24/7",
     year: "2024",
-    thumbnail: "/placeholder.svg",
+    thumbnail: caseAiFintech,
     challenge: "Растущий поток обращений в поддержку. Команда не справлялась, время ответа увеличивалось, клиенты уходили к конкурентам.",
     solution: "Разработал AI-ассистента на базе GPT-4, интегрированного с CRM и базой знаний. Система обрабатывает типовые запросы и передаёт сложные кейсы операторам.",
     result: "Клиенты получают помощь мгновенно в любое время. Операторы сфокусировались на сложных кейсах. Лучшее удержание клиентов.",
@@ -61,7 +68,7 @@ export const cases: CaseItem[] = [
     categoryLabel: "Продюсирование",
     shortDescription: "Единая система производства контента — больше публикаций, меньше хаоса",
     year: "2024",
-    thumbnail: "/placeholder.svg",
+    thumbnail: caseProduction,
     challenge: "Хаотичное производство маркетингового контента. Разрозненные процессы, нестабильное качество, много ручной работы.",
     solution: "Создал систему управления циклом производства контента: от планирования до публикации. AI-генерация текстов, автоматический ресайзинг, интеграции с рекламными платформами.",
     result: "Команда производит контент значительно быстрее. Единый стиль коммуникаций, меньше рутины, больше времени на стратегию.",
@@ -84,7 +91,7 @@ export const cases: CaseItem[] = [
     categoryLabel: "AI-продукты",
     shortDescription: "AI-система прогнозирования — меньше простоев, лучше планирование",
     year: "2023",
-    thumbnail: "/placeholder.svg",
+    thumbnail: caseAnalytics,
     challenge: "Реактивное управление — проблемы решались по факту. Не было инструментов для прогнозирования загрузки и оптимизации маршрутов.",
     solution: "Построил систему предиктивной аналитики на ML. Модель анализирует данные, сезонность, внешние факторы и выдаёт рекомендации по оптимизации.",
     result: "Переход от реактивного управления к проактивному. Более точное планирование, меньше простоев, эффективнее использование ресурсов.",
@@ -107,8 +114,8 @@ export const cases: CaseItem[] = [
     categoryLabel: "AI-видео",
     shortDescription: "Серия роликов с AI-визуалами — вау-эффект без дорогих съёмок",
     year: "2024",
-    thumbnail: "/placeholder.svg",
-    videoPreview: "/placeholder.svg",
+    thumbnail: caseAiVideo,
+    videoPreview: caseAiVideo,
     challenge: "Нужна серия рекламных видео для соцсетей, но бюджет не позволял организовать съёмки с моделями и локациями.",
     solution: "Применил AI-инструменты: сценарии с GPT-4, визуалы с Midjourney и Runway, озвучка с ElevenLabs. Финальный продакшен — в профессиональном редакторе.",
     result: "12 видеороликов с качеством дорогого продакшена. Контент, который выделяется в ленте и привлекает внимание к бренду.",
@@ -131,7 +138,7 @@ export const cases: CaseItem[] = [
     categoryLabel: "Vibe coding",
     shortDescription: "Рабочий прототип за 14 дней — быстрая проверка идеи",
     year: "2024",
-    thumbnail: "/placeholder.svg",
+    thumbnail: caseMvp,
     challenge: "Основатели хотели проверить идею на рынке. Традиционная разработка заняла бы месяцы и потребовала больших инвестиций.",
     solution: "Применил vibe coding — разработка с AI-ассистентами. Cursor, GPT-4, v0.dev для интерфейсов. Фокус на скорости и проверке идеи.",
     result: "Работающий MVP за 2 недели. Стартап показал продукт инвесторам и собрал первую обратную связь от реальных пользователей.",
@@ -154,7 +161,7 @@ export const cases: CaseItem[] = [
     categoryLabel: "Монтаж",
     shortDescription: "40 часов материала → 25 модулей с высоким completion rate",
     year: "2023",
-    thumbnail: "/placeholder.svg",
+    thumbnail: caseMontage,
     challenge: "Эксперт записал 40 часов сырого материала. Нужно превратить это в структурированный, вовлекающий курс с современной подачей.",
     solution: "Полный цикл постпродакшена: структурирование, динамичная нарезка, графика и анимации, цветокоррекция, работа со звуком.",
     result: "Готовый курс из 25 модулей. Профессиональная подача, которая удерживает внимание учеников. Высокий процент прохождения курса.",
