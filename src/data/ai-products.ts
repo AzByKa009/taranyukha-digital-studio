@@ -1,11 +1,19 @@
 import { Bot, Workflow, Sparkles, Rocket, LineChart } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
+// Category images
+import aiChatbot from "@/assets/ai-chatbot.jpg";
+import aiAutomation from "@/assets/ai-automation.jpg";
+import aiContent from "@/assets/ai-content.jpg";
+import aiMinisaas from "@/assets/ai-minisaas.jpg";
+import aiAnalytics from "@/assets/ai-analytics.jpg";
+
 export interface AIProductCategory {
   id: string;
   slug: string;
   title: string;
   icon: LucideIcon;
+  image: string;
   description: string;
   useCases: string[];
 }
@@ -25,6 +33,7 @@ export const aiCategories: AIProductCategory[] = [
     slug: "chatbots",
     title: "Чат-боты и ассистенты",
     icon: Bot,
+    image: aiChatbot,
     description: "Интеллектуальные ассистенты для автоматизации коммуникаций с клиентами, поддержки и продаж",
     useCases: [
       "Автоматизация клиентской поддержки 24/7",
@@ -39,6 +48,7 @@ export const aiCategories: AIProductCategory[] = [
     slug: "automation",
     title: "Автоматизация процессов",
     icon: Workflow,
+    image: aiAutomation,
     description: "Интеграции с Make, Zapier, n8n для автоматизации рутинных задач и связывания разных систем",
     useCases: [
       "Автоматическая обработка заявок из форм",
@@ -53,6 +63,7 @@ export const aiCategories: AIProductCategory[] = [
     slug: "content-generation",
     title: "Генерация контента",
     icon: Sparkles,
+    image: aiContent,
     description: "AI-системы для создания текстов, изображений и видео для маркетинга и продаж",
     useCases: [
       "Генерация статей и блог-постов",
@@ -67,6 +78,7 @@ export const aiCategories: AIProductCategory[] = [
     slug: "mini-saas",
     title: "Mini-SaaS решения",
     icon: Rocket,
+    image: aiMinisaas,
     description: "Быстрые MVP и внутренние инструменты, решающие конкретные бизнес-задачи",
     useCases: [
       "Внутренние CRM и трекеры задач",
@@ -81,6 +93,7 @@ export const aiCategories: AIProductCategory[] = [
     slug: "analytics",
     title: "Аналитика и отчёты",
     icon: LineChart,
+    image: aiAnalytics,
     description: "AI-powered аналитика данных с автоматическими insights и визуализациями",
     useCases: [
       "Автоматические бизнес-отчёты",
