@@ -5,6 +5,10 @@ import { ArrowRight, CheckCircle, HelpCircle, Film, Users, Bot, Globe, Sparkles 
 import { services } from "@/data/services";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
+import serviceReels from "@/assets/service-reels.jpg";
+import serviceBot from "@/assets/service-bot.jpg";
+import serviceWeb from "@/assets/service-web.jpg";
+import serviceAi from "@/assets/service-ai.jpg";
 
 const popularServices = [
   {
@@ -14,6 +18,7 @@ const popularServices = [
     icon: Film,
     gradient: "from-pink-500/20 to-rose-500/20",
     borderGradient: "hover:border-pink-500/50",
+    image: serviceReels,
   },
   {
     title: "Продюсер Reels",
@@ -22,6 +27,7 @@ const popularServices = [
     icon: Users,
     gradient: "from-violet-500/20 to-purple-500/20",
     borderGradient: "hover:border-violet-500/50",
+    image: serviceAi,
   },
   {
     title: "AI-бот для бизнеса",
@@ -30,6 +36,7 @@ const popularServices = [
     icon: Bot,
     gradient: "from-cyan-500/20 to-blue-500/20",
     borderGradient: "hover:border-cyan-500/50",
+    image: serviceBot,
   },
   {
     title: "Сайт под услуги",
@@ -38,6 +45,7 @@ const popularServices = [
     icon: Globe,
     gradient: "from-emerald-500/20 to-green-500/20",
     borderGradient: "hover:border-emerald-500/50",
+    image: serviceWeb,
   },
 ];
 
@@ -272,26 +280,38 @@ const Services = () => {
                 key={service.href}
                 to={service.href}
                 className={cn(
-                  "group relative p-6 rounded-2xl border transition-all duration-400",
-                  "bg-gradient-to-br hover:shadow-xl",
-                  service.gradient,
+                  "group relative rounded-2xl border transition-all duration-400 overflow-hidden",
+                  "hover:shadow-xl",
                   "border-border/40",
                   service.borderGradient
                 )}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-12 h-12 rounded-xl bg-background/90 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-400 shadow-lg">
-                  <service.icon className="h-6 w-6 text-primary" />
+                {/* Image */}
+                <div className="relative h-32 overflow-hidden">
+                  <img 
+                    src={service.image} 
+                    alt={service.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                  <div className="absolute bottom-3 left-4 w-10 h-10 rounded-xl bg-background/90 flex items-center justify-center shadow-lg">
+                    <service.icon className="h-5 w-5 text-primary" />
+                  </div>
                 </div>
-                <h3 className="text-lg font-display font-semibold mb-2.5 group-hover:text-primary transition-colors duration-300">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
-                  {service.description}
-                </p>
-                <div className="flex items-center gap-1.5 text-primary text-sm font-medium group-hover:gap-2.5 transition-all duration-300">
-                  Подробнее
-                  <ArrowRight className="h-4 w-4" />
+                
+                {/* Content */}
+                <div className={cn("p-5 bg-gradient-to-br", service.gradient)}>
+                  <h3 className="text-lg font-display font-semibold mb-2 group-hover:text-primary transition-colors duration-300">
+                    {service.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                    {service.description}
+                  </p>
+                  <div className="flex items-center gap-1.5 text-primary text-sm font-medium group-hover:gap-2.5 transition-all duration-300">
+                    Подробнее
+                    <ArrowRight className="h-4 w-4" />
+                  </div>
                 </div>
               </Link>
             ))}
