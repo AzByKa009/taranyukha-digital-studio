@@ -51,29 +51,20 @@ const AIProducts = () => {
       {/* Category Tabs */}
       <section className="pb-8 sticky top-20 z-20 bg-background/80 backdrop-blur-lg border-b border-border/50">
         <div className="container">
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             {aiCategories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+                  "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                   activeCategory === category.id
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                    ? "bg-primary text-primary-foreground"
                     : "bg-card/50 text-muted-foreground hover:bg-card hover:text-foreground border border-border"
                 )}
               >
-                {/* Thumbnail */}
-                <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0">
-                  <img 
-                    src={category.thumbnail}
-                    alt={category.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-                <span className="hidden sm:inline">{category.title}</span>
-                <category.icon className="h-4 w-4 sm:hidden" />
+                <category.icon className="h-4 w-4" />
+                {category.title}
               </button>
             ))}
           </div>
@@ -133,44 +124,57 @@ const AIProducts = () => {
             {categoryProducts.map((product, index) => (
               <div
                 key={product.id}
-                className="group glass-card rounded-2xl p-6 hover-lift animate-fade-in-up"
+                className="group glass-card rounded-2xl overflow-hidden hover-lift animate-fade-in-up"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <h4 className="text-xl font-display font-semibold">
-                    {product.title}
-                  </h4>
-                  <span className={cn(
-                    "px-3 py-1 rounded-full text-xs font-medium",
-                    product.status === "available" && "bg-green-500/10 text-green-400",
-                    product.status === "beta" && "bg-yellow-500/10 text-yellow-400",
-                    product.status === "coming" && "bg-muted text-muted-foreground"
-                  )}>
-                    {product.status === "available" ? "Доступен" : product.status === "beta" ? "Бета" : "Скоро"}
-                  </span>
+                {/* Product Image */}
+                <div className="aspect-[16/9] overflow-hidden">
+                  <img 
+                    src={currentCategory.thumbnail}
+                    alt={product.title}
+                    className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-500"
+                    loading="lazy"
+                  />
                 </div>
                 
-                <p className="text-sm text-muted-foreground mb-4">
-                  {product.description}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {product.features.map((feature) => (
-                    <span
-                      key={feature}
-                      className="px-2 py-1 rounded text-xs bg-muted/50 text-muted-foreground"
-                    >
-                      {feature}
+                {/* Content */}
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <h4 className="text-xl font-display font-semibold">
+                      {product.title}
+                    </h4>
+                    <span className={cn(
+                      "px-3 py-1 rounded-full text-xs font-medium",
+                      product.status === "available" && "bg-green-500/10 text-green-400",
+                      product.status === "beta" && "bg-yellow-500/10 text-yellow-400",
+                      product.status === "coming" && "bg-muted text-muted-foreground"
+                    )}>
+                      {product.status === "available" ? "Доступен" : product.status === "beta" ? "Бета" : "Скоро"}
                     </span>
-                  ))}
+                  </div>
+                  
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {product.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {product.features.map((feature) => (
+                      <span
+                        key={feature}
+                        className="px-2 py-1 rounded text-xs bg-muted/50 text-muted-foreground"
+                      >
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <Link to="/contacts?product=demo">
+                    <Button variant="outline" size="sm" className="w-full group/btn">
+                      Получить демо
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                    </Button>
+                  </Link>
                 </div>
-                
-                <Link to="/contacts?product=demo">
-                  <Button variant="outline" size="sm" className="w-full group/btn">
-                    Получить демо
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                  </Button>
-                </Link>
               </div>
             ))}
           </div>
