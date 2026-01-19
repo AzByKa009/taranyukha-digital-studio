@@ -6,6 +6,11 @@ import { services } from "@/data/services";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
 
+import popularReelsMontage from "@/assets/popular-reels-montage.jpg";
+import popularReelsProducer from "@/assets/popular-reels-producer.jpg";
+import popularAiBot from "@/assets/popular-ai-bot.jpg";
+import popularWebsite from "@/assets/popular-website.jpg";
+
 const popularServices = [
   {
     title: "Монтаж Reels",
@@ -14,6 +19,7 @@ const popularServices = [
     icon: Film,
     gradient: "from-pink-500/20 to-rose-500/20",
     borderGradient: "hover:border-pink-500/50",
+    image: popularReelsMontage,
   },
   {
     title: "Продюсер Reels",
@@ -22,6 +28,7 @@ const popularServices = [
     icon: Users,
     gradient: "from-violet-500/20 to-purple-500/20",
     borderGradient: "hover:border-violet-500/50",
+    image: popularReelsProducer,
   },
   {
     title: "AI-бот для бизнеса",
@@ -30,6 +37,7 @@ const popularServices = [
     icon: Bot,
     gradient: "from-cyan-500/20 to-blue-500/20",
     borderGradient: "hover:border-cyan-500/50",
+    image: popularAiBot,
   },
   {
     title: "Сайт под услуги",
@@ -38,6 +46,7 @@ const popularServices = [
     icon: Globe,
     gradient: "from-emerald-500/20 to-green-500/20",
     borderGradient: "hover:border-emerald-500/50",
+    image: popularWebsite,
   },
 ];
 
@@ -285,7 +294,7 @@ const Services = () => {
                 key={service.href}
                 to={service.href}
                 className={cn(
-                  "group relative p-6 rounded-2xl border transition-all duration-400",
+                  "group relative rounded-2xl border transition-all duration-400 overflow-hidden",
                   "bg-gradient-to-br hover:shadow-xl",
                   service.gradient,
                   "border-border/40",
@@ -293,18 +302,31 @@ const Services = () => {
                 )}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-12 h-12 rounded-xl bg-background/90 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-400 shadow-lg">
-                  <service.icon className="h-6 w-6 text-primary" />
+                {/* Image */}
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img 
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
                 </div>
-                <h3 className="text-lg font-display font-semibold mb-2.5 group-hover:text-primary transition-colors duration-300">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
-                  {service.description}
-                </p>
-                <div className="flex items-center gap-1.5 text-primary text-sm font-medium group-hover:gap-2.5 transition-all duration-300">
-                  Подробнее
-                  <ArrowRight className="h-4 w-4" />
+                
+                {/* Content */}
+                <div className="p-6">
+                  <div className="w-10 h-10 rounded-lg bg-background/90 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-400 shadow-lg">
+                    <service.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-display font-semibold mb-2 group-hover:text-primary transition-colors duration-300">
+                    {service.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                    {service.description}
+                  </p>
+                  <div className="flex items-center gap-1.5 text-primary text-sm font-medium group-hover:gap-2.5 transition-all duration-300">
+                    Подробнее
+                    <ArrowRight className="h-4 w-4" />
+                  </div>
                 </div>
               </Link>
             ))}
