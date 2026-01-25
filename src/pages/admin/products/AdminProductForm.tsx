@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { AIImageGenerator } from "@/components/admin/AIImageGenerator";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, Save } from "lucide-react";
 import { z } from "zod";
@@ -287,6 +288,12 @@ export default function AdminProductForm() {
               folder="products"
             />
           </div>
+
+          <AIImageGenerator
+            onImageGenerated={(url) => setForm({ ...form, thumbnail: url })}
+            placeholder="Например: AI-бот для автоматизации поддержки клиентов"
+            folder="products"
+          />
         </div>
 
         <div className="premium-card p-6 space-y-6">

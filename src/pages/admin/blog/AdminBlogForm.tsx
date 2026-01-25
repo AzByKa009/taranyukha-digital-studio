@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { AIImageGenerator } from "@/components/admin/AIImageGenerator";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, Save } from "lucide-react";
 import { z } from "zod";
@@ -236,6 +237,12 @@ export default function AdminBlogForm() {
           <ImageUpload
             value={form.thumbnail}
             onChange={(url) => setForm({ ...form, thumbnail: url })}
+            folder="blog"
+          />
+
+          <AIImageGenerator
+            onImageGenerated={(url) => setForm({ ...form, thumbnail: url })}
+            placeholder="Например: Технологичный баннер про AI и автоматизацию бизнеса"
             folder="blog"
           />
         </div>
