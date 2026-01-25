@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { AIImageGenerator } from "@/components/admin/AIImageGenerator";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, Save } from "lucide-react";
 import { z } from "zod";
@@ -258,6 +259,12 @@ export default function AdminServiceForm() {
               folder="services"
             />
           </div>
+
+          <AIImageGenerator
+            onImageGenerated={(url) => setForm({ ...form, thumbnail: url })}
+            placeholder="Например: Профессиональный монтаж видео для соцсетей"
+            folder="services"
+          />
 
           <div className="space-y-2">
             <Label htmlFor="icon">Иконка (название Lucide)</Label>

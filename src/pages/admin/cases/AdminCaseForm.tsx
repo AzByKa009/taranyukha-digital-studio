@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { AIImageGenerator } from "@/components/admin/AIImageGenerator";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, Save } from "lucide-react";
 import { z } from "zod";
@@ -290,6 +291,12 @@ export default function AdminCaseForm() {
               folder="cases"
             />
           </div>
+
+          <AIImageGenerator
+            onImageGenerated={(url) => setForm({ ...form, thumbnail: url })}
+            placeholder="Например: Интерфейс AI-чат-бота для финтеха"
+            folder="cases"
+          />
 
           <div className="space-y-2">
             <Label htmlFor="video_preview">URL видео-превью</Label>
