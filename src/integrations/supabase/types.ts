@@ -14,6 +14,209 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_product_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_published: boolean | null
+          slug: string
+          sort_order: number | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean | null
+          slug: string
+          sort_order?: number | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean | null
+          slug?: string
+          sort_order?: number | null
+          title?: string
+        }
+        Relationships: []
+      }
+      ai_products: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description: string
+          features: string[] | null
+          id: string
+          is_published: boolean | null
+          price_from: number | null
+          slug: string
+          sort_order: number | null
+          thumbnail: string | null
+          timeline: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description: string
+          features?: string[] | null
+          id?: string
+          is_published?: boolean | null
+          price_from?: number | null
+          slug: string
+          sort_order?: number | null
+          thumbnail?: string | null
+          timeline?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description?: string
+          features?: string[] | null
+          id?: string
+          is_published?: boolean | null
+          price_from?: number | null
+          slug?: string
+          sort_order?: number | null
+          thumbnail?: string | null
+          timeline?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "ai_product_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_posts: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          is_published: boolean | null
+          published_at: string | null
+          read_time: number | null
+          slug: string
+          tags: string[] | null
+          thumbnail: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean | null
+          published_at?: string | null
+          read_time?: number | null
+          slug: string
+          tags?: string[] | null
+          thumbnail?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean | null
+          published_at?: string | null
+          read_time?: number | null
+          slug?: string
+          tags?: string[] | null
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cases: {
+        Row: {
+          category: string
+          category_label: string
+          challenge: string | null
+          created_at: string
+          deliverables: string[] | null
+          gallery: string[] | null
+          id: string
+          is_published: boolean | null
+          result: string | null
+          short_description: string
+          slug: string
+          solution: string | null
+          sort_order: number | null
+          tags: string[] | null
+          thumbnail: string | null
+          title: string
+          updated_at: string
+          video_preview: string | null
+          year: string
+        }
+        Insert: {
+          category: string
+          category_label: string
+          challenge?: string | null
+          created_at?: string
+          deliverables?: string[] | null
+          gallery?: string[] | null
+          id?: string
+          is_published?: boolean | null
+          result?: string | null
+          short_description: string
+          slug: string
+          solution?: string | null
+          sort_order?: number | null
+          tags?: string[] | null
+          thumbnail?: string | null
+          title: string
+          updated_at?: string
+          video_preview?: string | null
+          year: string
+        }
+        Update: {
+          category?: string
+          category_label?: string
+          challenge?: string | null
+          created_at?: string
+          deliverables?: string[] | null
+          gallery?: string[] | null
+          id?: string
+          is_published?: boolean | null
+          result?: string | null
+          short_description?: string
+          slug?: string
+          solution?: string | null
+          sort_order?: number | null
+          tags?: string[] | null
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+          video_preview?: string | null
+          year?: string
+        }
+        Relationships: []
+      }
       rate_limits: {
         Row: {
           created_at: string
@@ -41,6 +244,84 @@ export type Database = {
         }
         Relationships: []
       }
+      services: {
+        Row: {
+          created_at: string
+          faq: Json | null
+          features: string[] | null
+          full_description: string | null
+          icon: string | null
+          id: string
+          is_published: boolean | null
+          price_from: number | null
+          price_label: string | null
+          process_steps: Json | null
+          short_description: string
+          slug: string
+          sort_order: number | null
+          thumbnail: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          faq?: Json | null
+          features?: string[] | null
+          full_description?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean | null
+          price_from?: number | null
+          price_label?: string | null
+          process_steps?: Json | null
+          short_description: string
+          slug: string
+          sort_order?: number | null
+          thumbnail?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          faq?: Json | null
+          features?: string[] | null
+          full_description?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean | null
+          price_from?: number | null
+          price_label?: string | null
+          process_steps?: Json | null
+          short_description?: string
+          slug?: string
+          sort_order?: number | null
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -56,9 +337,16 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_rate_limits: { Args: never; Returns: number }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -185,6 +473,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
