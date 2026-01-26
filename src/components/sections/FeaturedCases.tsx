@@ -1,14 +1,60 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cases } from "@/data/cases";
+import { supabase } from "@/integrations/supabase/client";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
+interface CaseItem {
+  id: string;
+  slug: string;
+  title: string;
+  category_label: string;
+  short_description: string;
+  thumbnail: string | null;
+}
+
 export function FeaturedCases() {
-  const featuredCases = cases.slice(0, 3);
+  const [cases, setCases] = useState<CaseItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      const { data, error } = await supabase
+        .from("cases")
+        .select("id, slug, title, category_label, short_description, thumbnail")
+        .eq("is_published", true)
+        .is("video_preview", null)
+        .order("sort_order", { ascending: true })
+        .limit(3);
+
+      if (!error && data) {
+        setCases(data);
+      }
+      setLoading(false);
+    };
+
+    fetchCases();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-28 bg-card/20 border-y border-border/30">
+        <div className="container">
+          <div className="flex justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (cases.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-28 bg-card/20 border-y border-border/30">
@@ -41,7 +87,7 @@ export function FeaturedCases() {
 
         {/* Cases Grid */}
         <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={0.15}>
-          {featuredCases.map((caseItem) => (
+          {cases.map((caseItem) => (
             <StaggerItem key={caseItem.id}>
               <Link to={`/cases/${caseItem.slug}`}>
                 <PremiumCard 
@@ -52,14 +98,18 @@ export function FeaturedCases() {
                 >
                   {/* Image */}
                   <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                    <motion.img
-                      src={caseItem.thumbnail}
-                      alt={caseItem.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      whileHover={!prefersReducedMotion ? { scale: 1.05 } : undefined}
-                      transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
-                    />
+                    {caseItem.thumbnail ? (
+                      <motion.img
+                        src={caseItem.thumbnail}
+                        alt={caseItem.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        whileHover={!prefersReducedMotion ? { scale: 1.05 } : undefined}
+                        transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent opacity-80" />
                     
                     {/* Arrow */}
@@ -76,13 +126,13 @@ export function FeaturedCases() {
                   {/* Content */}
                   <div className="p-7">
                     <div className="text-xs text-primary font-medium uppercase tracking-wider mb-3">
-                      {caseItem.categoryLabel}
+                      {caseItem.category_label}
                     </div>
                     <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-gradient transition-colors duration-400">
                       {caseItem.title}
                     </h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      {caseItem.shortDescription}
+                      {caseItem.short_description}
                     </p>
                   </div>
                 </PremiumCard>

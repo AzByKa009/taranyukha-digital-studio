@@ -11,7 +11,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, Loader2, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Eye, EyeOff, Video } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -29,10 +29,12 @@ interface Case {
   id: string;
   slug: string;
   title: string;
+  category: string;
   category_label: string;
   year: string;
   is_published: boolean;
   thumbnail: string | null;
+  video_preview: string | null;
 }
 
 export default function AdminCasesList() {
@@ -42,7 +44,7 @@ export default function AdminCasesList() {
   const fetchCases = async () => {
     const { data, error } = await supabase
       .from("cases")
-      .select("id, slug, title, category_label, year, is_published, thumbnail")
+      .select("id, slug, title, category, category_label, year, is_published, thumbnail, video_preview")
       .order("sort_order", { ascending: true });
 
     if (error) {
@@ -127,18 +129,27 @@ export default function AdminCasesList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {cases.map((caseItem) => (
+                {cases.map((caseItem) => (
                 <TableRow key={caseItem.id}>
                   <TableCell>
-                    {caseItem.thumbnail ? (
-                      <img 
-                        src={caseItem.thumbnail} 
-                        alt={caseItem.title}
-                        className="w-12 h-12 object-cover rounded-lg"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 bg-muted rounded-lg" />
-                    )}
+                    <div className="relative">
+                      {caseItem.thumbnail ? (
+                        <img 
+                          src={caseItem.thumbnail} 
+                          alt={caseItem.title}
+                          className="w-12 h-12 object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                          {caseItem.video_preview && <Video className="w-5 h-5 text-muted-foreground" />}
+                        </div>
+                      )}
+                      {caseItem.video_preview && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                          <Video className="w-2.5 h-2.5 text-primary-foreground" />
+                        </div>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="font-medium">{caseItem.title}</TableCell>
                   <TableCell>
