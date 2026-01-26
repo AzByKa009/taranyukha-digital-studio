@@ -1,8 +1,9 @@
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle, HelpCircle, Film, Users, Bot, Globe, Sparkles } from "lucide-react";
-import { services } from "@/data/services";
+import { ArrowRight, CheckCircle, HelpCircle, Film, Users, Bot, Globe, Sparkles, Loader2, Video, Cpu, Code } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
 
@@ -10,6 +11,29 @@ import popularReelsMontage from "@/assets/popular-reels-montage.jpg";
 import popularReelsProducer from "@/assets/popular-reels-producer.jpg";
 import popularAiBot from "@/assets/popular-ai-bot.jpg";
 import popularWebsite from "@/assets/popular-website.jpg";
+
+interface ServiceItem {
+  id: string;
+  slug: string;
+  title: string;
+  short_description: string;
+  full_description: string | null;
+  icon: string | null;
+  thumbnail: string | null;
+  price_from: number | null;
+  price_label: string | null;
+  features: string[] | null;
+}
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Film,
+  Users,
+  Video,
+  Cpu,
+  Code,
+  Bot,
+  Globe,
+};
 
 const popularServices = [
   {
@@ -51,11 +75,46 @@ const popularServices = [
 ];
 
 const Services = () => {
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      const { data, error } = await supabase
+        .from("services")
+        .select("id, slug, title, short_description, full_description, icon, thumbnail, price_from, price_label, features")
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true });
+
+      if (!error && data) {
+        setServices(data);
+      }
+      setLoading(false);
+    };
+
+    fetchServices();
+  }, []);
+
   useSEO({
     title: "Услуги — монтаж Reels, AI-продукты, вайб кодинг | Aleksey Taranukha",
     description: "Монтаж вертикальных видео, продюсирование контента, создание AI продуктов и вайб кодинг. Премиальные услуги для бизнеса.",
     keywords: "монтаж Reels, продюсирование контента, AI продукты, вайб кодинг, премиальный лендинг, сайт под ключ, монтаж вертикальных видео",
   });
+
+  const getIcon = (iconName: string | null) => {
+    if (!iconName) return Film;
+    return iconMap[iconName] || Film;
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -82,58 +141,64 @@ const Services = () => {
       <section className="pb-20">
         <div className="container">
           <div className="grid gap-5">
-            {services.map((service, index) => (
-              <Link
-                key={service.id}
-                to={`/services/${service.slug}`}
-                className="group premium-card overflow-hidden animate-fade-in-up flex flex-col lg:flex-row"
-                style={{ animationDelay: `${index * 0.05}s` }}
-              >
-                {/* Image */}
-                <div className="lg:w-64 h-48 lg:h-auto shrink-0 overflow-hidden">
-                  <img 
-                    src={service.image} 
-                    alt={service.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                
-                {/* Content */}
-                <div className="flex-1 p-7 md:p-8 flex flex-col lg:flex-row lg:items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-400 group-hover:scale-105">
-                    <service.icon className="h-7 w-7 text-primary" />
+            {services.map((service, index) => {
+              const IconComponent = getIcon(service.icon);
+              return (
+                <Link
+                  key={service.id}
+                  to={`/services/${service.slug}`}
+                  className="group premium-card overflow-hidden animate-fade-in-up flex flex-col lg:flex-row"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  {/* Image */}
+                  <div className="lg:w-64 h-48 lg:h-auto shrink-0 overflow-hidden">
+                    {service.thumbnail ? (
+                      <img 
+                        src={service.thumbnail} 
+                        alt={service.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
+                    )}
                   </div>
                   
-                  <div className="flex-1">
-                    <h2 className="text-xl md:text-2xl font-display font-semibold mb-2 group-hover:text-gradient transition-colors duration-400">
-                      {service.title}
-                    </h2>
-                    <p className="text-muted-foreground mb-3 leading-relaxed">
-                      {service.tagline}
-                    </p>
-                    <div className="flex flex-wrap gap-5 text-sm items-center">
-                      <span className="text-primary font-semibold text-base">
-                        {service.price}
-                      </span>
-                      {service.priceNote && (
-                        <span className="text-muted-foreground text-xs">
-                          {service.priceNote}
-                        </span>
-                      )}
-                      <span className="text-muted-foreground">
-                        <span className="text-foreground font-medium">Сроки:</span> {service.timeline}
-                      </span>
+                  {/* Content */}
+                  <div className="flex-1 p-7 md:p-8 flex flex-col lg:flex-row lg:items-center gap-6">
+                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-400 group-hover:scale-105">
+                      <IconComponent className="h-7 w-7 text-primary" />
+                    </div>
+                    
+                    <div className="flex-1">
+                      <h2 className="text-xl md:text-2xl font-display font-semibold mb-2 group-hover:text-gradient transition-colors duration-400">
+                        {service.title}
+                      </h2>
+                      <p className="text-muted-foreground mb-3 leading-relaxed">
+                        {service.short_description}
+                      </p>
+                      <div className="flex flex-wrap gap-5 text-sm items-center">
+                        {service.price_from && (
+                          <span className="text-primary font-semibold text-base">
+                            от {service.price_from.toLocaleString()} ₽
+                          </span>
+                        )}
+                        {service.price_label && (
+                          <span className="text-muted-foreground text-xs">
+                            {service.price_label}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-primary font-medium shrink-0 group-hover:gap-3 transition-all duration-300">
+                      Подробнее
+                      <ArrowRight className="h-4 w-4" />
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-2 text-primary font-medium shrink-0 group-hover:gap-3 transition-all duration-300">
-                    Подробнее
-                    <ArrowRight className="h-4 w-4" />
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -213,61 +278,6 @@ const Services = () => {
                 Связаться →
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Comparison Table */}
-      <section className="py-20">
-        <div className="container">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-10 text-center">
-            Сравнение услуг
-          </h2>
-          
-          <div className="overflow-x-auto rounded-2xl border border-border/40">
-            <table className="w-full min-w-[800px]">
-              <thead>
-                <tr className="border-b border-border/40 bg-card/30">
-                  <th className="text-left py-5 px-6 font-display font-semibold text-sm">Услуга</th>
-                  <th className="text-left py-5 px-6 font-display font-semibold text-sm">Для кого</th>
-                  <th className="text-left py-5 px-6 font-display font-semibold text-sm">Сроки</th>
-                  <th className="text-left py-5 px-6 font-display font-semibold text-sm">Сложность</th>
-                  <th className="text-left py-5 px-6 font-display font-semibold text-sm"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {services.map((service) => (
-                  <tr key={service.id} className="border-b border-border/30 last:border-b-0 hover:bg-card/20 transition-colors duration-300">
-                    <td className="py-5 px-6">
-                      <div className="flex items-center gap-3">
-                        <service.icon className="h-5 w-5 text-primary" />
-                        <span className="font-medium">{service.shortTitle}</span>
-                      </div>
-                    </td>
-                    <td className="py-5 px-6 text-muted-foreground text-sm">{service.idealFor}</td>
-                    <td className="py-5 px-6 text-muted-foreground text-sm">{service.timeline}</td>
-                    <td className="py-5 px-6">
-                      <span className={cn(
-                        "px-2.5 py-1 rounded-lg text-xs font-medium",
-                        service.complexity === "базовый" && "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
-                        service.complexity === "средний" && "bg-amber-500/10 text-amber-400 border border-amber-500/20",
-                        service.complexity === "продвинутый" && "bg-primary/10 text-primary border border-primary/20"
-                      )}>
-                        {service.complexity}
-                      </span>
-                    </td>
-                    <td className="py-5 px-6">
-                      <Link 
-                        to={`/services/${service.slug}`}
-                        className="text-primary text-sm font-medium hover:underline"
-                      >
-                        Подробнее →
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
       </section>
@@ -352,7 +362,7 @@ const Services = () => {
                 </Button>
               </Link>
               <Link to="/calculator">
-                <Button variant="outline" size="lg">
+                <Button variant="hero-outline" size="lg">
                   Рассчитать проект
                 </Button>
               </Link>

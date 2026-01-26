@@ -1,31 +1,97 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
-import { ArrowUpRight, Play } from "lucide-react";
+import { ArrowUpRight, Play, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { cases, categoryFilters, CaseCategory } from "@/data/cases";
-import { portfolioVideos, PortfolioVideo } from "@/data/portfolio-videos";
+import { supabase } from "@/integrations/supabase/client";
 import { VideoCard } from "@/components/portfolio/VideoCard";
 import { VideoModal } from "@/components/portfolio/VideoModal";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
+import { PortfolioVideo } from "@/data/portfolio-videos";
+
+interface CaseItem {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  category_label: string;
+  short_description: string;
+  year: string;
+  thumbnail: string | null;
+  video_preview: string | null;
+  tags: string[] | null;
+}
+
+const categoryFilters = [
+  { value: "all", label: "Все проекты" },
+  { value: "montage", label: "Монтаж" },
+  { value: "producing", label: "Продюсирование" },
+  { value: "ai-video", label: "AI-видео" },
+  { value: "ai-products", label: "AI-продукты" },
+  { value: "vibe-coding", label: "Vibe coding" },
+];
 
 const Cases = () => {
-  const [activeFilter, setActiveFilter] = useState<CaseCategory | "all">("all");
+  const [activeFilter, setActiveFilter] = useState<string>("all");
   const [hoveredCase, setHoveredCase] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<PortfolioVideo | null>(null);
+  const [cases, setCases] = useState<CaseItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      const { data, error } = await supabase
+        .from("cases")
+        .select("id, slug, title, category, category_label, short_description, year, thumbnail, video_preview, tags")
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true });
+
+      if (!error && data) {
+        setCases(data);
+      }
+      setLoading(false);
+    };
+
+    fetchCases();
+  }, []);
+
+  // Separate video cases (vertical montage) from regular cases
+  const videoCases = cases.filter(c => c.video_preview && c.category === "montage");
+  const regularCases = cases.filter(c => !c.video_preview || c.category !== "montage");
 
   const filteredCases = activeFilter === "all" 
-    ? cases 
-    : cases.filter((c) => c.category === activeFilter);
+    ? regularCases 
+    : regularCases.filter((c) => c.category === activeFilter);
 
   // Show video montage cases when "all" or "montage" is selected
   const showVideoMontage = activeFilter === "all" || activeFilter === "montage";
+  const filteredVideoCases = showVideoMontage ? videoCases : [];
+
+  // Convert case to PortfolioVideo format for modal
+  const caseToPortfolioVideo = (caseItem: CaseItem): PortfolioVideo => ({
+    id: caseItem.id,
+    videoUrl: caseItem.video_preview || "",
+    title: caseItem.title,
+    description: caseItem.short_description,
+    category: caseItem.category as any,
+    categoryLabel: caseItem.category_label,
+  });
 
   useSEO({
     title: "Кейсы — монтаж, AI-продукты, вайб кодинг | Aleksey Taranukha",
     description: "Портфолио проектов: монтаж вертикальных видео, продюсирование контента, AI-продукты и вайб кодинг. Реальные кейсы с результатами.",
     keywords: "кейсы монтаж, портфолио AI, примеры вайб кодинг, кейсы продюсирование, портфолио Reels",
   });
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -66,19 +132,19 @@ const Cases = () => {
       </section>
 
       {/* Video Montage Cases */}
-      {showVideoMontage && portfolioVideos.length > 0 && (
+      {filteredVideoCases.length > 0 && (
         <section className="py-12">
           <div className="container">
             <h2 className="text-2xl md:text-3xl font-display font-semibold mb-8 animate-fade-in-up">
               Монтаж Reels & Shorts
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
-              {portfolioVideos.map((video, index) => (
+              {filteredVideoCases.map((caseItem, index) => (
                 <VideoCard 
-                  key={video.id} 
-                  video={video} 
+                  key={caseItem.id} 
+                  video={caseToPortfolioVideo(caseItem)} 
                   index={index} 
-                  onClick={() => setSelectedVideo(video)}
+                  onClick={() => setSelectedVideo(caseToPortfolioVideo(caseItem))}
                 />
               ))}
             </div>
@@ -96,7 +162,7 @@ const Cases = () => {
       {/* Cases Grid */}
       <section className="py-16 pb-28">
         <div className="container">
-          {showVideoMontage && portfolioVideos.length > 0 && (
+          {filteredVideoCases.length > 0 && (
             <h2 className="text-2xl md:text-3xl font-display font-semibold mb-8 animate-fade-in-up">
               Комплексные проекты
             </h2>
@@ -113,18 +179,22 @@ const Cases = () => {
               >
                 {/* Video/Image Preview */}
                 <div className="aspect-video relative overflow-hidden bg-muted">
-                  <img
-                    src={caseItem.thumbnail}
-                    alt={caseItem.title}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
+                  {caseItem.thumbnail ? (
+                    <img
+                      src={caseItem.thumbnail}
+                      alt={caseItem.title}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
+                  )}
                   
                   {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent opacity-70" />
                   
                   {/* Play button for video cases */}
-                  {caseItem.videoPreview && (
+                  {caseItem.video_preview && (
                     <div className={cn(
                       "absolute inset-0 flex items-center justify-center transition-all duration-400",
                       hoveredCase === caseItem.id ? "opacity-100" : "opacity-0"
@@ -138,7 +208,7 @@ const Cases = () => {
                   {/* Category badge */}
                   <div className="absolute top-5 left-5">
                     <span className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-background/90 backdrop-blur-sm text-foreground border border-border/30">
-                      {caseItem.categoryLabel}
+                      {caseItem.category_label}
                     </span>
                   </div>
 
@@ -164,11 +234,11 @@ const Cases = () => {
                   </h2>
                   
                   <p className="text-muted-foreground mb-5 line-clamp-2 leading-relaxed">
-                    {caseItem.shortDescription}
+                    {caseItem.short_description}
                   </p>
                   
                   <div className="flex flex-wrap gap-2">
-                    {caseItem.tags.slice(0, 3).map((tag) => (
+                    {(caseItem.tags || []).slice(0, 3).map((tag) => (
                       <span
                         key={tag}
                         className="px-3 py-1.5 rounded-lg text-xs bg-muted/60 text-muted-foreground border border-border/30"
@@ -176,9 +246,9 @@ const Cases = () => {
                         {tag}
                       </span>
                     ))}
-                    {caseItem.tags.length > 3 && (
+                    {(caseItem.tags || []).length > 3 && (
                       <span className="px-3 py-1.5 rounded-lg text-xs bg-muted/60 text-muted-foreground border border-border/30">
-                        +{caseItem.tags.length - 3}
+                        +{(caseItem.tags || []).length - 3}
                       </span>
                     )}
                   </div>
@@ -188,7 +258,7 @@ const Cases = () => {
           </div>
 
           {/* Empty state */}
-          {filteredCases.length === 0 && !showVideoMontage && (
+          {filteredCases.length === 0 && filteredVideoCases.length === 0 && (
             <div className="text-center py-20">
               <p className="text-muted-foreground text-lg">
                 Проектов в этой категории пока нет
