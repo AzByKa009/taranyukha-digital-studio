@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
-import { Volume2, Loader2, Play, Square, Headphones } from "lucide-react";
+import { Volume2, Loader2, Play, Square, Headphones, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function TTSPanel() {
   const [ttsText, setTtsText] = useState("");
@@ -16,11 +16,21 @@ export default function TTSPanel() {
   const [rate, setRate] = useState(1);
   const [pitch, setPitch] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
 
+  // Filter voices - handle different lang code formats (en, en-US, en_US, etc.)
   const visibleVoices = allVoices.filter((v) => {
     if (voiceFilter === "all") return true;
-    return v.lang?.toLowerCase().startsWith(voiceFilter);
+    const lang = (v.lang || "").toLowerCase().replace("_", "-");
+    return lang.startsWith(voiceFilter);
   });
+
+  // Count by language for debug info
+  const langCounts = allVoices.reduce((acc, v) => {
+    const lang = (v.lang || "unknown").split(/[-_]/)[0].toLowerCase();
+    acc[lang] = (acc[lang] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
   const selectedVoiceObj = visibleVoices.find((v) => v.name === selectedVoice);
 
@@ -29,10 +39,14 @@ export default function TTSPanel() {
       if (voices.length === 0) return;
       if (selectedVoice && voices.some((v) => v.name === selectedVoice)) return;
 
-      // Prefer Google/Microsoft voices when available
+      // Prefer Google/Microsoft/Apple voices when available
       const preferred =
-        voices.find((v) => v.name.includes("Google") || v.name.includes("Microsoft")) ||
-        voices[0];
+        voices.find((v) => 
+          v.name.includes("Google") || 
+          v.name.includes("Microsoft") ||
+          v.name.includes("Samantha") ||
+          v.name.includes("Alex")
+        ) || voices[0];
       setSelectedVoice(preferred.name);
     },
     [selectedVoice]
@@ -40,38 +54,59 @@ export default function TTSPanel() {
 
   // Load voices
   const loadVoices = useCallback(() => {
+    if (!window.speechSynthesis) {
+      console.error("Speech Synthesis not supported");
+      return;
+    }
     const availableVoices = window.speechSynthesis.getVoices();
+    console.log("Loaded voices:", availableVoices.length, availableVoices.map(v => `${v.name} (${v.lang})`));
     setAllVoices(availableVoices);
   }, []);
 
   useEffect(() => {
+    // Check if speech synthesis is supported
+    if (!window.speechSynthesis) {
+      toast.error("Ваш браузер не поддерживает синтез речи");
+      return;
+    }
+
     // Initial load
     loadVoices();
     
     // Chrome loads voices async
-    if (window.speechSynthesis.onvoiceschanged !== undefined) {
-      window.speechSynthesis.onvoiceschanged = loadVoices;
-    }
+    window.speechSynthesis.onvoiceschanged = loadVoices;
 
-    // Fallback for browsers that don't fire the event
+    // Fallback polling for browsers that don't fire the event
+    let attempts = 0;
     const interval = setInterval(() => {
-      if (allVoices.length === 0) {
-        loadVoices();
+      attempts++;
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        setAllVoices(voices);
+        clearInterval(interval);
+      }
+      if (attempts > 50) {
+        clearInterval(interval);
       }
     }, 100);
-
-    setTimeout(() => clearInterval(interval), 2000);
 
     return () => {
       clearInterval(interval);
       window.speechSynthesis.cancel();
+      window.speechSynthesis.onvoiceschanged = null;
     };
-  }, [loadVoices, allVoices.length]);
+  }, [loadVoices]);
 
   // Ensure we always have a selected voice for the current filter
   useEffect(() => {
     pickDefaultVoice(visibleVoices);
   }, [pickDefaultVoice, visibleVoices, voiceFilter]);
+
+  // Manual refresh
+  const handleRefreshVoices = () => {
+    loadVoices();
+    toast.success(`Загружено ${window.speechSynthesis.getVoices().length} голосов`);
+  };
 
   // Preview voice with sample text
   const previewVoice = (voiceName: string) => {
@@ -80,7 +115,8 @@ export default function TTSPanel() {
     const voice = visibleVoices.find(v => v.name === voiceName);
     if (!voice) return;
 
-    const sample = voice.lang?.toLowerCase().startsWith("ru")
+    const lang = (voice.lang || "").toLowerCase();
+    const sample = lang.startsWith("ru")
       ? "Привет! Это пример звучания этого голоса."
       : "Hello! This is a preview of this voice.";
 
@@ -150,17 +186,24 @@ export default function TTSPanel() {
         {/* Voice Selection */}
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-3">
-            <Label>Голос ({visibleVoices.length} доступно)</Label>
+            <Label>Голос ({visibleVoices.length} из {allVoices.length})</Label>
             <div className="flex items-center gap-2">
-              <Label className="text-xs text-muted-foreground">Язык</Label>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRefreshVoices}
+                title="Обновить список голосов"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </Button>
               <select
                 className="p-1.5 border rounded-md bg-card text-foreground"
                 value={voiceFilter}
                 onChange={(e) => setVoiceFilter(e.target.value as typeof voiceFilter)}
               >
-                <option value="all">Все</option>
-                <option value="ru">RU</option>
-                <option value="en">EN</option>
+                <option value="all">Все ({allVoices.length})</option>
+                <option value="ru">RU ({langCounts["ru"] || 0})</option>
+                <option value="en">EN ({langCounts["en"] || 0})</option>
               </select>
             </div>
           </div>
@@ -172,7 +215,7 @@ export default function TTSPanel() {
             >
               {visibleVoices.length === 0 ? (
                 <option>
-                  Нет голосов (установите голоса в системе/браузере)
+                  Нет голосов для выбранного языка
                 </option>
               ) : (
                 visibleVoices.map((voice) => (
@@ -255,10 +298,50 @@ export default function TTSPanel() {
           )}
         </div>
 
-        {/* Info */}
-        <p className="text-xs text-muted-foreground">
-          Использует встроенный синтез речи браузера. Если список пустой — это значит, что в вашей ОС/браузере не установлены голоса.
-        </p>
+        {/* Debug Info */}
+        <div className="border-t pt-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowDebug(!showDebug)}
+            className="gap-2 text-muted-foreground"
+          >
+            {showDebug ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            Отладка ({allVoices.length} голосов в системе)
+          </Button>
+          
+          {showDebug && (
+            <div className="mt-3 p-3 bg-muted/50 rounded-lg text-xs space-y-2">
+              <p><strong>Голоса по языкам:</strong></p>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(langCounts).sort((a, b) => b[1] - a[1]).map(([lang, count]) => (
+                  <span key={lang} className="px-2 py-1 bg-card rounded border">
+                    {lang.toUpperCase()}: {count}
+                  </span>
+                ))}
+              </div>
+              
+              {allVoices.length === 0 && (
+                <div className="mt-3 p-3 bg-destructive/10 rounded text-destructive">
+                  <p><strong>Голоса не найдены!</strong></p>
+                  <p className="mt-1">Возможные причины:</p>
+                  <ul className="list-disc list-inside mt-1 space-y-1">
+                    <li>В системе не установлены голоса TTS</li>
+                    <li>Браузер не поддерживает Web Speech API</li>
+                    <li>Попробуйте другой браузер (Chrome рекомендуется)</li>
+                  </ul>
+                  <p className="mt-2"><strong>Windows:</strong> Параметры → Время и язык → Речь → Добавить голоса</p>
+                  <p><strong>macOS:</strong> Системные настройки → Универсальный доступ → Речь</p>
+                </div>
+              )}
+              
+              <p className="text-muted-foreground mt-2">
+                Web Speech API — единственный бесплатный вариант без API-ключей. 
+                Для профессиональных голосов нужен ElevenLabs API.
+              </p>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
