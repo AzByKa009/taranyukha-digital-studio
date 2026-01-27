@@ -73,6 +73,7 @@ const App = () => (
           <AnalyticsTracker />
           <Suspense fallback={<PageLoader />}>
             <Routes>
+              <Route path="/" element={<Index />} />
               <Route path="/cases" element={<Cases />} />
               <Route path="/cases/:slug" element={<CaseDetail />} />
               <Route path="/services" element={<Services />} />
