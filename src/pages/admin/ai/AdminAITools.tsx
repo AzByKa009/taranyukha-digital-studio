@@ -156,27 +156,56 @@ export default function AdminAITools() {
     }, 2000);
   };
 
-  // TTS handler
-  const handleTTS = async () => {
-    if (!ttsText.trim()) return;
+  // TTS state extended
+  const [ttsVoices, setTtsVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<string>("");
 
+  // Load available voices
+  useState(() => {
+    const loadVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      setTtsVoices(voices);
+      // Default to first English voice
+      const englishVoice = voices.find(v => v.lang.startsWith("en"));
+      if (englishVoice) setSelectedVoice(englishVoice.name);
+    };
+    
+    loadVoices();
+    speechSynthesis.onvoiceschanged = loadVoices;
+  });
+
+  // TTS handler using Web Speech API
+  const handleTTS = () => {
+    if (!ttsText.trim()) return;
+    
+    // Stop any current speech
+    speechSynthesis.cancel();
+    
     setTtsLoading(true);
     setTtsResult(null);
 
-    try {
-      const { data, error } = await supabase.functions.invoke("ai-tts", {
-        body: { text: ttsText, voice: "neutral" }
-      });
-
-      if (error) throw error;
-      setTtsResult(data.message || "Озвучка подготовлена");
-      toast.success("TTS обработан");
-    } catch (error) {
-      console.error("TTS error:", error);
-      toast.error("Ошибка озвучки");
-    } finally {
+    const utterance = new SpeechSynthesisUtterance(ttsText);
+    const voice = ttsVoices.find(v => v.name === selectedVoice);
+    if (voice) utterance.voice = voice;
+    
+    utterance.onend = () => {
       setTtsLoading(false);
-    }
+      setTtsResult("Озвучка завершена");
+      toast.success("Текст озвучен!");
+    };
+    
+    utterance.onerror = (e) => {
+      console.error("TTS error:", e);
+      setTtsLoading(false);
+      toast.error("Ошибка озвучки");
+    };
+
+    speechSynthesis.speak(utterance);
+  };
+
+  const stopTTS = () => {
+    speechSynthesis.cancel();
+    setTtsLoading(false);
   };
 
   const copyToClipboard = (text: string) => {
@@ -395,39 +424,58 @@ export default function AdminAITools() {
                 Озвучка текста
               </CardTitle>
               <CardDescription>
-                Преобразуйте текст в речь
+                Преобразуйте текст в речь (Web Speech API — работает в браузере)
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Голос</Label>
+                <select
+                  className="w-full p-2 border rounded-lg bg-background"
+                  value={selectedVoice}
+                  onChange={(e) => setSelectedVoice(e.target.value)}
+                >
+                  {ttsVoices.map((voice) => (
+                    <option key={voice.name} value={voice.name}>
+                      {voice.name} ({voice.lang})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="space-y-2">
                 <Label>Текст для озвучки</Label>
                 <Textarea
                   value={ttsText}
                   onChange={(e) => setTtsText(e.target.value)}
-                  placeholder="Введите текст, который нужно озвучить..."
+                  placeholder="Введите текст на любом языке..."
                   rows={5}
                 />
               </div>
 
-              <Button 
-                onClick={handleTTS} 
-                disabled={ttsLoading || !ttsText.trim()}
-                className="gap-2"
-              >
-                {ttsLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Volume2 className="w-4 h-4" />
+              <div className="flex gap-2">
+                <Button 
+                  onClick={handleTTS} 
+                  disabled={ttsLoading || !ttsText.trim()}
+                  className="gap-2"
+                >
+                  {ttsLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Volume2 className="w-4 h-4" />
+                  )}
+                  Озвучить
+                </Button>
+                {ttsLoading && (
+                  <Button variant="outline" onClick={stopTTS}>
+                    Остановить
+                  </Button>
                 )}
-                Озвучить
-              </Button>
+              </div>
 
               {ttsResult && (
                 <div className="p-4 bg-muted rounded-lg">
                   <p className="text-sm">{ttsResult}</p>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Для полноценной озвучки с голосами рекомендуется подключить ElevenLabs
-                  </p>
                 </div>
               )}
             </CardContent>
