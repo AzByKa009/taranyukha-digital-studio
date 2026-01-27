@@ -156,18 +156,19 @@ export default function AdminAITools() {
     }, 2000);
   };
 
-  // TTS state extended
+  // TTS state extended - English voices only
   const [ttsVoices, setTtsVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<string>("");
 
-  // Load available voices
+  // Load available English voices
   useState(() => {
     const loadVoices = () => {
-      const voices = speechSynthesis.getVoices();
-      setTtsVoices(voices);
+      const allVoices = speechSynthesis.getVoices();
+      // Filter only English voices
+      const englishVoices = allVoices.filter(v => v.lang.startsWith("en"));
+      setTtsVoices(englishVoices);
       // Default to first English voice
-      const englishVoice = voices.find(v => v.lang.startsWith("en"));
-      if (englishVoice) setSelectedVoice(englishVoice.name);
+      if (englishVoices.length > 0) setSelectedVoice(englishVoices[0].name);
     };
     
     loadVoices();
