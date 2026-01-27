@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -161,19 +161,25 @@ export default function AdminAITools() {
   const [selectedVoice, setSelectedVoice] = useState<string>("");
 
   // Load available English voices
-  useState(() => {
+  useEffect(() => {
     const loadVoices = () => {
       const allVoices = speechSynthesis.getVoices();
       // Filter only English voices
       const englishVoices = allVoices.filter(v => v.lang.startsWith("en"));
       setTtsVoices(englishVoices);
       // Default to first English voice
-      if (englishVoices.length > 0) setSelectedVoice(englishVoices[0].name);
+      if (englishVoices.length > 0 && !selectedVoice) {
+        setSelectedVoice(englishVoices[0].name);
+      }
     };
     
     loadVoices();
     speechSynthesis.onvoiceschanged = loadVoices;
-  });
+    
+    return () => {
+      speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
 
   // TTS handler using Web Speech API
   const handleTTS = () => {
