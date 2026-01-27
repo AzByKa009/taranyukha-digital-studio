@@ -30,6 +30,9 @@ const ReelsMontage = lazy(() => import("./pages/landings/ReelsMontage"));
 const ReelsProducer = lazy(() => import("./pages/landings/ReelsProducer"));
 const AIBotCreation = lazy(() => import("./pages/landings/AIBotCreation"));
 const WebsiteForServices = lazy(() => import("./pages/landings/WebsiteForServices"));
+const AIVideoProduction = lazy(() => import("./pages/landings/AIVideoProduction"));
+const VibeCodingLanding = lazy(() => import("./pages/landings/VibeCodingLanding"));
+const AIAutomation = lazy(() => import("./pages/landings/AIAutomation"));
 
 // Lazy load Admin Pages
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -92,6 +95,9 @@ const App = () => (
               <Route path="/produser-reels" element={<ReelsProducer />} />
               <Route path="/ai-bot-dlya-biznesa" element={<AIBotCreation />} />
               <Route path="/razrabotka-sayta-pod-uslugi" element={<WebsiteForServices />} />
+              <Route path="/ai-video-production" element={<AIVideoProduction />} />
+              <Route path="/vibe-coding" element={<VibeCodingLanding />} />
+              <Route path="/ai-automation" element={<AIAutomation />} />
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminLayout />}>
