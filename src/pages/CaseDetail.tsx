@@ -4,7 +4,6 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CaseItem {
   id: string;
@@ -30,7 +29,6 @@ const CaseDetail = () => {
   const [nextCase, setNextCase] = useState<{ slug: string; title: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchCase = async () => {
@@ -126,7 +124,7 @@ const CaseDetail = () => {
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          {t("case_detail.all_cases")}
+          Все кейсы
         </Link>
       </div>
 
@@ -177,7 +175,7 @@ const CaseDetail = () => {
               {caseItem.challenge && (
                 <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
                   <h2 className="text-sm font-medium text-primary uppercase tracking-wider mb-4">
-                    {t("case_detail.task")}
+                    Задача
                   </h2>
                   <p className="text-lg text-foreground/90 leading-relaxed">
                     {caseItem.challenge}
@@ -189,7 +187,7 @@ const CaseDetail = () => {
               {caseItem.solution && (
                 <div className="animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
                   <h2 className="text-sm font-medium text-primary uppercase tracking-wider mb-4">
-                    {t("case_detail.solution")}
+                    Решение
                   </h2>
                   <p className="text-lg text-foreground/90 leading-relaxed">
                     {caseItem.solution}
@@ -201,7 +199,7 @@ const CaseDetail = () => {
               {caseItem.result && (
                 <div className="p-8 rounded-2xl bg-card/50 border border-border animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
                   <h2 className="text-sm font-medium text-primary uppercase tracking-wider mb-4">
-                    {t("case_detail.result")}
+                    Результат
                   </h2>
                   <p className="text-lg text-foreground leading-relaxed">
                     {caseItem.result}
@@ -213,7 +211,7 @@ const CaseDetail = () => {
               {caseItem.gallery && caseItem.gallery.length > 1 && (
                 <div className="animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
                   <h2 className="text-sm font-medium text-primary uppercase tracking-wider mb-6">
-                    {t("case_detail.gallery")}
+                    Галерея
                   </h2>
                   <div className="grid sm:grid-cols-2 gap-4">
                     {caseItem.gallery.map((image, index) => (
@@ -223,7 +221,7 @@ const CaseDetail = () => {
                       >
                         <img
                           src={image}
-                          alt={`${caseItem.title} - ${index + 1}`}
+                          alt={`${caseItem.title} - изображение ${index + 1}`}
                           className="w-full h-full object-cover"
                           loading="lazy"
                         />
@@ -241,7 +239,7 @@ const CaseDetail = () => {
                 {caseItem.deliverables && caseItem.deliverables.length > 0 && (
                   <div className="p-6 rounded-2xl bg-card/50 border border-border animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
                     <h3 className="text-sm font-medium text-primary uppercase tracking-wider mb-4">
-                      {t("case_detail.deliverables")}
+                      Что было сделано
                     </h3>
                     <ul className="space-y-3">
                       {caseItem.deliverables.map((item, index) => (
@@ -258,7 +256,7 @@ const CaseDetail = () => {
                 {caseItem.tags && caseItem.tags.length > 0 && (
                   <div className="animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
                     <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-                      {t("case_detail.technologies")}
+                      Технологии
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {caseItem.tags.map((tag) => (
@@ -276,14 +274,14 @@ const CaseDetail = () => {
                 {/* CTA */}
                 <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
                   <h3 className="font-display font-semibold text-lg mb-2">
-                    {t("case_detail.want_same")}
+                    Хотите так же?
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    {t("case_detail.want_same_desc")}
+                    Обсудим ваш проект и найдём лучшее решение
                   </p>
                   <Link to="/contacts">
                     <Button variant="hero" className="w-full">
-                      {t("cta.primary")}
+                      Обсудить проект
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -305,7 +303,7 @@ const CaseDetail = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                   <span className="text-sm text-muted-foreground mb-2 block">
-                    {t("case_detail.next_case")}
+                    Следующий кейс
                   </span>
                   <h3 className="text-2xl md:text-3xl font-display font-bold group-hover:text-gradient transition-colors">
                     {nextCase.title}

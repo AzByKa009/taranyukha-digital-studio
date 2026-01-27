@@ -6,7 +6,6 @@ import { ArrowRight, CheckCircle, Sparkles, ClipboardList, Loader2, MessageSquar
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Category {
   id: string;
@@ -41,16 +40,17 @@ const AIProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const { t, language } = useLanguage();
 
   useEffect(() => {
     const fetchData = async () => {
+      // Fetch categories
       const { data: categoriesData } = await supabase
         .from("ai_product_categories")
         .select("id, slug, title, description, icon")
         .eq("is_published", true)
         .order("sort_order", { ascending: true });
 
+      // Fetch products
       const { data: productsData } = await supabase
         .from("ai_products")
         .select("id, slug, title, description, thumbnail, features, price_from, timeline, category_id")
@@ -75,12 +75,8 @@ const AIProducts = () => {
   }, []);
 
   useSEO({
-    title: language === "ru"
-      ? "AI-продукты — чат-боты, автоматизация, генерация | Aleksey Taranukha"
-      : "AI Products — chatbots, automation, generation | Aleksey Taranukha",
-    description: language === "ru"
-      ? "Готовые AI-решения для бизнеса: чат-боты, автоматизация Make/Zapier, генерация контента. Создание AI продукта под ключ."
-      : "Ready-made AI solutions for business: chatbots, Make/Zapier automation, content generation. Turnkey AI product creation.",
+    title: "AI-продукты — чат-боты, автоматизация, генерация | Aleksey Taranukha",
+    description: "Готовые AI-решения для бизнеса: чат-боты, автоматизация Make/Zapier, генерация контента. Создание AI продукта под ключ.",
     keywords: "AI продукты, создание AI продукта, чат-бот для бизнеса, автоматизация бизнеса, AI решения",
   });
 
@@ -105,24 +101,26 @@ const AIProducts = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="pt-12 sm:pt-16 pb-12 sm:pb-16">
+      <section className="pt-12 pb-16">
         <div className="container">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-primary/30 bg-primary/5 mb-4 sm:mb-6 animate-fade-in">
-              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-              <span className="text-xs sm:text-sm text-primary">Powered by AI</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-6 animate-fade-in">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-sm text-primary">Powered by AI</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-4 sm:mb-6 animate-fade-in-up">
-              {t("ai_products.title")}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 animate-fade-in-up">
+              AI-продукты
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8 animate-fade-in-up leading-relaxed" style={{ animationDelay: "0.1s" }}>
-              {t("ai_products.subtitle")}
+            <p className="text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              Готовые решения на основе искусственного интеллекта. 
+              Не нужно изобретать велосипед — берите работающие инструменты и адаптируйте под себя.
             </p>
             
+            {/* AI Audit CTA */}
             <Link to="/ai-audit" className="inline-flex">
               <Button variant="hero" className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-                <ClipboardList className="h-4 w-4 sm:h-5 sm:w-5" />
-                {t("ai_products.free_audit")}
+                <ClipboardList className="h-5 w-5" />
+                Бесплатный AI-аудит
               </Button>
             </Link>
           </div>
@@ -131,7 +129,7 @@ const AIProducts = () => {
 
       {/* Category Tabs */}
       {categories.length > 0 && (
-        <section className="pb-6 sm:pb-8 sticky top-14 sm:top-16 lg:top-20 z-20 bg-background/80 backdrop-blur-lg border-b border-border/50">
+        <section className="pb-8 sticky top-20 z-20 bg-background/80 backdrop-blur-lg border-b border-border/50">
           <div className="container">
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => {
@@ -141,13 +139,13 @@ const AIProducts = () => {
                     key={category.id}
                     onClick={() => setActiveCategory(category.id)}
                     className={cn(
-                      "flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300",
+                      "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                       activeCategory === category.id
                         ? "bg-primary text-primary-foreground"
                         : "bg-card/50 text-muted-foreground hover:bg-card hover:text-foreground border border-border"
                     )}
                   >
-                    <IconComponent className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    <IconComponent className="h-4 w-4" />
                     {category.title}
                   </button>
                 );
@@ -159,22 +157,22 @@ const AIProducts = () => {
 
       {/* Category Description */}
       {currentCategory && (
-        <section className="py-8 sm:py-12">
+        <section className="py-12">
           <div className="container">
             <div className="max-w-3xl">
               {(() => {
                 const IconComponent = getIcon(currentCategory.icon);
                 return (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-6">
-                    <IconComponent className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+                    <IconComponent className="h-8 w-8 text-primary" />
                   </div>
                 );
               })()}
-              <h2 className="text-2xl sm:text-3xl font-display font-bold mb-3 sm:mb-4">
+              <h2 className="text-3xl font-display font-bold mb-4">
                 {currentCategory.title}
               </h2>
               {currentCategory.description && (
-                <p className="text-base sm:text-lg text-muted-foreground">
+                <p className="text-lg text-muted-foreground">
                   {currentCategory.description}
                 </p>
               )}
@@ -184,19 +182,20 @@ const AIProducts = () => {
       )}
 
       {/* Products Grid */}
-      <section className="pb-12 sm:pb-16">
+      <section className="pb-16">
         <div className="container">
-          <h3 className="text-xl sm:text-2xl font-display font-bold mb-6 sm:mb-8">
-            {t("ai_products.products_in_category")}
+          <h3 className="text-2xl font-display font-bold mb-8">
+            Продукты в категории
           </h3>
           {categoryProducts.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {categoryProducts.map((product, index) => (
                 <div
                   key={product.id}
-                  className="group glass-card rounded-xl sm:rounded-2xl overflow-hidden hover-lift animate-fade-in-up"
+                  className="group glass-card rounded-2xl overflow-hidden hover-lift animate-fade-in-up"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
+                  {/* Product Image */}
                   <div className="aspect-[16/9] overflow-hidden">
                     {product.thumbnail ? (
                       <img 
@@ -210,23 +209,24 @@ const AIProducts = () => {
                     )}
                   </div>
                   
-                  <div className="p-5 sm:p-6">
-                    <div className="flex items-start justify-between mb-3 sm:mb-4">
-                      <h4 className="text-lg sm:text-xl font-display font-semibold">
+                  {/* Content */}
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <h4 className="text-xl font-display font-semibold">
                         {product.title}
                       </h4>
                     </div>
                     
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+                    <p className="text-sm text-muted-foreground mb-4">
                       {product.description}
                     </p>
                     
                     {product.features && product.features.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+                      <div className="flex flex-wrap gap-2 mb-6">
                         {product.features.slice(0, 3).map((feature) => (
                           <span
                             key={feature}
-                            className="px-2 py-1 rounded text-[10px] sm:text-xs bg-muted/50 text-muted-foreground"
+                            className="px-2 py-1 rounded text-xs bg-muted/50 text-muted-foreground"
                           >
                             {feature}
                           </span>
@@ -236,14 +236,14 @@ const AIProducts = () => {
 
                     <div className="flex items-center justify-between">
                       {product.price_from && (
-                        <span className="text-primary font-semibold text-sm sm:text-base">
-                          {t("common.from")} {product.price_from.toLocaleString()} ₽
+                        <span className="text-primary font-semibold">
+                          от {product.price_from.toLocaleString()} ₽
                         </span>
                       )}
                       <Link to="/contacts?product=demo">
-                        <Button variant="outline" size="sm" className="group/btn text-xs sm:text-sm">
-                          {t("ai_products.get_demo")}
-                          <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover/btn:translate-x-1" />
+                        <Button variant="outline" size="sm" className="group/btn">
+                          Получить демо
+                          <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                         </Button>
                       </Link>
                     </div>
@@ -252,27 +252,28 @@ const AIProducts = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-10 sm:py-12">
-              <p className="text-sm sm:text-base text-muted-foreground">{t("ai_products.coming_soon")}</p>
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Продукты в этой категории скоро появятся</p>
             </div>
           )}
         </div>
       </section>
 
       {/* AI Audit Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-br from-primary/10 to-primary/5 border-y border-primary/20">
+      <section className="py-16 bg-gradient-to-br from-primary/10 to-primary/5 border-y border-primary/20">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <ClipboardList className="h-10 w-10 sm:h-12 sm:w-12 text-primary mx-auto mb-4 sm:mb-6" />
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-3 sm:mb-4">
-              {t("ai_products.dont_know_where_to_start")}
+            <ClipboardList className="h-12 w-12 text-primary mx-auto mb-6" />
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Не знаете, с чего начать?
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-              {t("ai_products.audit_desc")}
+            <p className="text-lg text-muted-foreground mb-8">
+              Пройдите бесплатный AI-аудит — заполните короткую анкету о вашем бизнесе, 
+              и я подготовлю персональный план автоматизации с конкретными рекомендациями.
             </p>
             <Link to="/ai-audit">
               <Button variant="hero" size="lg">
-                {t("ai_products.take_audit")}
+                Пройти AI-аудит
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
@@ -281,18 +282,18 @@ const AIProducts = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-12 sm:py-16">
+      <section className="py-16">
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-3 sm:mb-4">
-              {t("ai_products.need_custom")}
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Нужно кастомное решение?
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8">
-              {t("ai_products.custom_desc")}
+            <p className="text-muted-foreground mb-8">
+              Разработаем AI-продукт под ваши специфические задачи
             </p>
             <Link to="/contacts">
               <Button variant="hero-outline">
-                {t("ai_products.discuss_project")}
+                Обсудить проект
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
