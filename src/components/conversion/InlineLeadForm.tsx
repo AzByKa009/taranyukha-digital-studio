@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useABTest } from "@/hooks/useABTest";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InlineLeadFormProps {
   variant?: "default" | "compact";
@@ -18,6 +19,7 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
   const [isSubmitting, setIsSubmitting] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const { variant: ctaVariant, trackConversion } = useABTest("cta_lead_form");
+  const { language } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,21 +28,27 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
     setIsSubmitting(true);
     trackConversion();
     await new Promise((r) => setTimeout(r, 800));
-    toast.success("Заявка отправлена! Свяжусь в течение 24 часов");
+    toast.success(language === "ru" 
+      ? "Заявка отправлена! Свяжусь в течение 24 часов" 
+      : "Request sent! I'll contact you within 24 hours"
+    );
     setIsSubmitting(false);
     setName("");
     setContact("");
   };
 
   const ctaText = ctaVariant === "A" 
-    ? "Получить предложение" 
-    : "Начать проект";
+    ? (language === "ru" ? "Получить предложение" : "Get proposal")
+    : (language === "ru" ? "Начать проект" : "Start project");
+
+  const namePlaceholder = language === "ru" ? "Ваше имя" : "Your name";
+  const contactPlaceholder = language === "ru" ? "Telegram или Email" : "Telegram or Email";
 
   if (variant === "compact") {
     return (
       <motion.form
         onSubmit={handleSubmit}
-        className={`flex flex-col sm:flex-row gap-3 ${className}`}
+        className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${className}`}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -48,21 +56,21 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
       >
         <Input
           type="text"
-          placeholder="Ваше имя"
+          placeholder={namePlaceholder}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
           maxLength={50}
-          className="bg-card/50 border-border/60 h-12 flex-1"
+          className="bg-card/50 border-border/60 h-10 sm:h-12 flex-1 text-sm sm:text-base"
         />
         <Input
           type="text"
-          placeholder="Telegram или Email"
+          placeholder={contactPlaceholder}
           value={contact}
           onChange={(e) => setContact(e.target.value)}
           required
           maxLength={100}
-          className="bg-card/50 border-border/60 h-12 flex-1"
+          className="bg-card/50 border-border/60 h-10 sm:h-12 flex-1 text-sm sm:text-base"
         />
         <motion.div
           whileHover={!prefersReducedMotion ? { scale: 1.02 } : undefined}
@@ -71,11 +79,11 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
           <Button
             type="submit"
             variant="hero"
-            className="h-12 whitespace-nowrap"
+            className="h-10 sm:h-12 whitespace-nowrap w-full sm:w-auto text-sm sm:text-base"
             disabled={isSubmitting}
           >
             {isSubmitting ? "..." : ctaText}
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
         </motion.div>
       </motion.form>
@@ -84,37 +92,40 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
 
   return (
     <motion.div
-      className={`p-8 rounded-2xl border border-border/60 bg-card/40 backdrop-blur-sm ${className}`}
+      className={`p-5 sm:p-8 rounded-xl sm:rounded-2xl border border-border/60 bg-card/40 backdrop-blur-sm ${className}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <h3 className="text-xl font-display font-bold mb-2">
-        Готовы обсудить проект?
+      <h3 className="text-lg sm:text-xl font-display font-bold mb-1.5 sm:mb-2">
+        {language === "ru" ? "Готовы обсудить проект?" : "Ready to discuss a project?"}
       </h3>
-      <p className="text-muted-foreground mb-6">
-        Оставьте контакт — свяжусь в течение 24 часов
+      <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
+        {language === "ru" 
+          ? "Оставьте контакт — свяжусь в течение 24 часов" 
+          : "Leave your contact — I'll reach out within 24 hours"
+        }
       </p>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid sm:grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+        <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
           <Input
             type="text"
-            placeholder="Ваше имя"
+            placeholder={namePlaceholder}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
             maxLength={50}
-            className="bg-background/50 h-12"
+            className="bg-background/50 h-10 sm:h-12 text-sm sm:text-base"
           />
           <Input
             type="text"
-            placeholder="Telegram или Email"
+            placeholder={contactPlaceholder}
             value={contact}
             onChange={(e) => setContact(e.target.value)}
             required
             maxLength={100}
-            className="bg-background/50 h-12"
+            className="bg-background/50 h-10 sm:h-12 text-sm sm:text-base"
           />
         </div>
         <motion.div
@@ -124,11 +135,14 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
           <Button
             type="submit"
             variant="hero"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto text-sm sm:text-base"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Отправка..." : ctaText}
-            <Send className="h-4 w-4" />
+            {isSubmitting 
+              ? (language === "ru" ? "Отправка..." : "Sending...") 
+              : ctaText
+            }
+            <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
         </motion.div>
       </form>

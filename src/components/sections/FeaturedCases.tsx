@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CaseItem {
   id: string;
@@ -20,6 +21,7 @@ export function FeaturedCases() {
   const [cases, setCases] = useState<CaseItem[]>([]);
   const [loading, setLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -42,7 +44,7 @@ export function FeaturedCases() {
 
   if (loading) {
     return (
-      <section className="py-28 bg-card/20 border-y border-border/30">
+      <section className="py-20 sm:py-28 bg-card/20 border-y border-border/30">
         <div className="container">
           <div className="flex justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -57,17 +59,17 @@ export function FeaturedCases() {
   }
 
   return (
-    <section className="py-28 bg-card/20 border-y border-border/30">
+    <section className="py-20 sm:py-28 bg-card/20 border-y border-border/30">
       <div className="container">
         {/* Header */}
         <FadeIn>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-10 sm:mb-14">
             <div>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-                Избранные кейсы
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-3 sm:mb-4">
+                {t("cases.featured_title")}
               </h2>
-              <p className="text-muted-foreground max-w-xl leading-relaxed">
-                Проекты, которые демонстрируют мой подход к созданию цифровых продуктов
+              <p className="text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">
+                {t("cases.featured_subtitle")}
               </p>
             </div>
             <Link to="/cases">
@@ -76,8 +78,8 @@ export function FeaturedCases() {
                 whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
-                <Button variant="outline" className="group">
-                  Все кейсы
+                <Button variant="outline" className="group text-sm">
+                  {t("cases.all")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </motion.div>
@@ -86,7 +88,7 @@ export function FeaturedCases() {
         </FadeIn>
 
         {/* Cases Grid */}
-        <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" staggerDelay={0.15}>
+        <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" staggerDelay={0.15}>
           {cases.map((caseItem) => (
             <StaggerItem key={caseItem.id}>
               <Link to={`/cases/${caseItem.slug}`}>
@@ -114,24 +116,24 @@ export function FeaturedCases() {
                     
                     {/* Arrow */}
                     <motion.div 
-                      className="absolute top-5 right-5 w-10 h-10 rounded-full bg-foreground/10 backdrop-blur-sm flex items-center justify-center"
+                      className="absolute top-4 sm:top-5 right-4 sm:right-5 w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-foreground/10 backdrop-blur-sm flex items-center justify-center"
                       initial={{ opacity: 0, y: 8 }}
                       whileHover={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <ArrowUpRight className="h-5 w-5" />
+                      <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5" />
                     </motion.div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-7">
-                    <div className="text-xs text-primary font-medium uppercase tracking-wider mb-3">
+                  <div className="p-5 sm:p-7">
+                    <div className="text-xs text-primary font-medium uppercase tracking-wider mb-2 sm:mb-3">
                       {caseItem.category_label}
                     </div>
-                    <h3 className="text-xl font-display font-semibold mb-3 group-hover:text-gradient transition-colors duration-400">
+                    <h3 className="text-lg sm:text-xl font-display font-semibold mb-2 sm:mb-3 group-hover:text-gradient transition-colors duration-400">
                       {caseItem.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-2">
                       {caseItem.short_description}
                     </p>
                   </div>

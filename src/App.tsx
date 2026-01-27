@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { HeroSkeleton } from "@/components/ui/section-skeleton";
 import { AuthProvider } from "@/hooks/useAuth";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 
 // Eager load main pages for better UX
 import Index from "./pages/Index";
@@ -65,71 +67,71 @@ function PageLoader() {
   );
 }
 
-import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AnalyticsTracker />
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/cases" element={<Cases />} />
-              <Route path="/cases/:slug" element={<CaseDetail />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services/:slug" element={<ServiceDetail />} />
-              <Route path="/ai-products" element={<AIProducts />} />
-              <Route path="/ai-audit" element={<AIAudit />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contacts" element={<Contacts />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/calculator" element={<Calculator />} />
-              {/* SEO Landing Pages */}
-              <Route path="/montazh-reels" element={<ReelsMontage />} />
-              <Route path="/produser-reels" element={<ReelsProducer />} />
-              <Route path="/ai-bot-dlya-biznesa" element={<AIBotCreation />} />
-              <Route path="/razrabotka-sayta-pod-uslugi" element={<WebsiteForServices />} />
-              <Route path="/ai-video-production" element={<AIVideoProduction />} />
-              <Route path="/vibe-coding" element={<VibeCodingLanding />} />
-              <Route path="/ai-automation" element={<AIAutomation />} />
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="cases" element={<AdminCasesList />} />
-                <Route path="cases/new" element={<AdminCaseForm />} />
-                <Route path="cases/:id" element={<AdminCaseForm />} />
-                <Route path="services" element={<AdminServicesList />} />
-                <Route path="services/new" element={<AdminServiceForm />} />
-                <Route path="services/:id" element={<AdminServiceForm />} />
-                <Route path="ai-products" element={<AdminProductsList />} />
-                <Route path="ai-products/new" element={<AdminProductForm />} />
-                <Route path="ai-products/:id" element={<AdminProductForm />} />
-                <Route path="ai-products/categories" element={<AdminCategoriesList />} />
-                <Route path="blog" element={<AdminBlogList />} />
-                <Route path="blog/new" element={<AdminBlogForm />} />
-                <Route path="blog/:id" element={<AdminBlogForm />} />
-                <Route path="portfolio" element={<AdminPortfolioList />} />
-                <Route path="portfolio/new" element={<AdminPortfolioForm />} />
-                <Route path="portfolio/:id" element={<AdminPortfolioForm />} />
-                <Route path="settings" element={<AdminSiteSettings />} />
-                <Route path="seo" element={<AdminSEOSettings />} />
-                <Route path="media" element={<AdminMediaLibrary />} />
-                <Route path="ai-tools" element={<AdminAITools />} />
-              </Route>
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AnalyticsTracker />
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/cases" element={<Cases />} />
+                <Route path="/cases/:slug" element={<CaseDetail />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/services/:slug" element={<ServiceDetail />} />
+                <Route path="/ai-products" element={<AIProducts />} />
+                <Route path="/ai-audit" element={<AIAudit />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contacts" element={<Contacts />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/calculator" element={<Calculator />} />
+                {/* SEO Landing Pages */}
+                <Route path="/montazh-reels" element={<ReelsMontage />} />
+                <Route path="/produser-reels" element={<ReelsProducer />} />
+                <Route path="/ai-bot-dlya-biznesa" element={<AIBotCreation />} />
+                <Route path="/razrabotka-sayta-pod-uslugi" element={<WebsiteForServices />} />
+                <Route path="/ai-video-production" element={<AIVideoProduction />} />
+                <Route path="/vibe-coding" element={<VibeCodingLanding />} />
+                <Route path="/ai-automation" element={<AIAutomation />} />
+                {/* Admin Routes */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="cases" element={<AdminCasesList />} />
+                  <Route path="cases/new" element={<AdminCaseForm />} />
+                  <Route path="cases/:id" element={<AdminCaseForm />} />
+                  <Route path="services" element={<AdminServicesList />} />
+                  <Route path="services/new" element={<AdminServiceForm />} />
+                  <Route path="services/:id" element={<AdminServiceForm />} />
+                  <Route path="ai-products" element={<AdminProductsList />} />
+                  <Route path="ai-products/new" element={<AdminProductForm />} />
+                  <Route path="ai-products/:id" element={<AdminProductForm />} />
+                  <Route path="ai-products/categories" element={<AdminCategoriesList />} />
+                  <Route path="blog" element={<AdminBlogList />} />
+                  <Route path="blog/new" element={<AdminBlogForm />} />
+                  <Route path="blog/:id" element={<AdminBlogForm />} />
+                  <Route path="portfolio" element={<AdminPortfolioList />} />
+                  <Route path="portfolio/new" element={<AdminPortfolioForm />} />
+                  <Route path="portfolio/:id" element={<AdminPortfolioForm />} />
+                  <Route path="settings" element={<AdminSiteSettings />} />
+                  <Route path="seo" element={<AdminSEOSettings />} />
+                  <Route path="media" element={<AdminMediaLibrary />} />
+                  <Route path="ai-tools" element={<AdminAITools />} />
+                </Route>
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </LanguageProvider>
   </QueryClientProvider>
 );
 
