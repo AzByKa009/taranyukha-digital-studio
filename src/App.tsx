@@ -61,6 +61,8 @@ function PageLoader() {
   );
 }
 
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -68,9 +70,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <AnalyticsTracker />
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<Index />} />
               <Route path="/cases" element={<Cases />} />
               <Route path="/cases/:slug" element={<CaseDetail />} />
               <Route path="/services" element={<Services />} />

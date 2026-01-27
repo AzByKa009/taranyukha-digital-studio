@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { FolderOpen, Wrench, Bot, FileText, Plus, Video, Image, Settings, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const AnalyticsSection = lazy(() => import("./analytics/AnalyticsSection"));
 
 interface Stats {
   cases: number;
@@ -91,6 +94,10 @@ export default function AdminDashboard() {
           Управление контентом сайта
         </p>
       </div>
+
+      <Suspense fallback={<Skeleton className="h-64 w-full mb-6" />}>
+        <AnalyticsSection />
+      </Suspense>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         {cards.map((card) => (

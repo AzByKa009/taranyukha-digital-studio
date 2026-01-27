@@ -247,6 +247,48 @@ export type Database = {
         }
         Relationships: []
       }
+      page_views: {
+        Row: {
+          browser: string | null
+          country: string | null
+          created_at: string
+          device_type: string | null
+          id: string
+          page_path: string
+          page_title: string | null
+          referrer: string | null
+          session_id: string
+          user_agent: string | null
+          visitor_id: string
+        }
+        Insert: {
+          browser?: string | null
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          page_path: string
+          page_title?: string | null
+          referrer?: string | null
+          session_id: string
+          user_agent?: string | null
+          visitor_id: string
+        }
+        Update: {
+          browser?: string | null
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          page_path?: string
+          page_title?: string | null
+          referrer?: string | null
+          session_id?: string
+          user_agent?: string | null
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       portfolio_videos: {
         Row: {
           category: string
@@ -418,6 +460,69 @@ export type Database = {
         }
         Relationships: []
       }
+      sessions: {
+        Row: {
+          browser: string | null
+          country: string | null
+          device_type: string | null
+          duration_seconds: number | null
+          ended_at: string | null
+          entry_page: string
+          exit_page: string | null
+          id: string
+          is_active: boolean | null
+          last_activity_at: string
+          page_count: number | null
+          referrer: string | null
+          session_id: string
+          started_at: string
+          traffic_source: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          visitor_id: string
+        }
+        Insert: {
+          browser?: string | null
+          country?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          ended_at?: string | null
+          entry_page: string
+          exit_page?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_activity_at?: string
+          page_count?: number | null
+          referrer?: string | null
+          session_id: string
+          started_at?: string
+          traffic_source?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          visitor_id: string
+        }
+        Update: {
+          browser?: string | null
+          country?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          ended_at?: string | null
+          entry_page?: string
+          exit_page?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_activity_at?: string
+          page_count?: number | null
+          referrer?: string | null
+          session_id?: string
+          started_at?: string
+          traffic_source?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           id: string
@@ -475,6 +580,7 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_rate_limits: { Args: never; Returns: number }
+      get_analytics_summary: { Args: never; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
