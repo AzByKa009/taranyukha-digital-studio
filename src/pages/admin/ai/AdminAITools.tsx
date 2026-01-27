@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +18,7 @@ import {
   Copy
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import TTSPanel from "@/components/admin/TTSPanel";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -37,10 +38,7 @@ export default function AdminAITools() {
   const [videoLoading, setVideoLoading] = useState(false);
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
 
-  // TTS state
-  const [ttsText, setTtsText] = useState("");
-  const [ttsLoading, setTtsLoading] = useState(false);
-  const [ttsResult, setTtsResult] = useState<string | null>(null);
+  // Removed TTS state - now handled by TTSPanel component
 
   // Chat handler with streaming
   const handleChat = async () => {
@@ -154,65 +152,6 @@ export default function AdminAITools() {
       setVideoLoading(false);
       toast.success("Для генерации видео используйте встроенный инструмент Lovable");
     }, 2000);
-  };
-
-  // TTS state extended - English voices only
-  const [ttsVoices, setTtsVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState<string>("");
-
-  // Load available English voices
-  useEffect(() => {
-    const loadVoices = () => {
-      const allVoices = speechSynthesis.getVoices();
-      // Filter only English voices
-      const englishVoices = allVoices.filter(v => v.lang.startsWith("en"));
-      setTtsVoices(englishVoices);
-      // Default to first English voice
-      if (englishVoices.length > 0 && !selectedVoice) {
-        setSelectedVoice(englishVoices[0].name);
-      }
-    };
-    
-    loadVoices();
-    speechSynthesis.onvoiceschanged = loadVoices;
-    
-    return () => {
-      speechSynthesis.onvoiceschanged = null;
-    };
-  }, []);
-
-  // TTS handler using Web Speech API
-  const handleTTS = () => {
-    if (!ttsText.trim()) return;
-    
-    // Stop any current speech
-    speechSynthesis.cancel();
-    
-    setTtsLoading(true);
-    setTtsResult(null);
-
-    const utterance = new SpeechSynthesisUtterance(ttsText);
-    const voice = ttsVoices.find(v => v.name === selectedVoice);
-    if (voice) utterance.voice = voice;
-    
-    utterance.onend = () => {
-      setTtsLoading(false);
-      setTtsResult("Озвучка завершена");
-      toast.success("Текст озвучен!");
-    };
-    
-    utterance.onerror = (e) => {
-      console.error("TTS error:", e);
-      setTtsLoading(false);
-      toast.error("Ошибка озвучки");
-    };
-
-    speechSynthesis.speak(utterance);
-  };
-
-  const stopTTS = () => {
-    speechSynthesis.cancel();
-    setTtsLoading(false);
   };
 
   const copyToClipboard = (text: string) => {
@@ -424,69 +363,7 @@ export default function AdminAITools() {
 
         {/* TTS Tab */}
         <TabsContent value="tts">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Volume2 className="w-5 h-5" />
-                Озвучка текста
-              </CardTitle>
-              <CardDescription>
-                Преобразуйте текст в речь (Web Speech API — работает в браузере)
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Голос</Label>
-                <select
-                  className="w-full p-2 border rounded-lg bg-background"
-                  value={selectedVoice}
-                  onChange={(e) => setSelectedVoice(e.target.value)}
-                >
-                  {ttsVoices.map((voice) => (
-                    <option key={voice.name} value={voice.name}>
-                      {voice.name} ({voice.lang})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Текст для озвучки</Label>
-                <Textarea
-                  value={ttsText}
-                  onChange={(e) => setTtsText(e.target.value)}
-                  placeholder="Введите текст на любом языке..."
-                  rows={5}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Button 
-                  onClick={handleTTS} 
-                  disabled={ttsLoading || !ttsText.trim()}
-                  className="gap-2"
-                >
-                  {ttsLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Volume2 className="w-4 h-4" />
-                  )}
-                  Озвучить
-                </Button>
-                {ttsLoading && (
-                  <Button variant="outline" onClick={stopTTS}>
-                    Остановить
-                  </Button>
-                )}
-              </div>
-
-              {ttsResult && (
-                <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm">{ttsResult}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <TTSPanel />
         </TabsContent>
       </Tabs>
     </div>
