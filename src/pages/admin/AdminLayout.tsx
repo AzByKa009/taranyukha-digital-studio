@@ -20,7 +20,6 @@ import {
   X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const navItems = [
@@ -89,7 +88,7 @@ export default function AdminLayout() {
           {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
         <span className="font-semibold text-sm">Админ-панель</span>
-        <LanguageSwitcher />
+        <div className="w-9" />
       </div>
 
       {/* Mobile sidebar overlay */}
@@ -107,14 +106,9 @@ export default function AdminLayout() {
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="p-4 lg:p-6 border-b border-border mt-14 lg:mt-0">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-lg lg:text-xl font-bold">{t("admin.dashboard")}</h1>
-              <p className="text-xs lg:text-sm text-muted-foreground mt-1 truncate">{user.email}</p>
-            </div>
-            <div className="hidden lg:block">
-              <LanguageSwitcher />
-            </div>
+          <div>
+            <h1 className="text-lg lg:text-xl font-bold">{t("admin.dashboard")}</h1>
+            <p className="text-xs lg:text-sm text-muted-foreground mt-1 truncate">{user.email}</p>
           </div>
         </div>
         

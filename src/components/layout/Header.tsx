@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Header() {
@@ -52,10 +51,8 @@ export function Header() {
           ))}
         </div>
 
-        {/* Right side: Language Switcher + CTA */}
+        {/* Right side: CTA */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <LanguageSwitcher />
-          
           <div className="hidden lg:block">
             <Link to="/contacts">
               <Button variant="premium" size="sm" className="shadow-lg shadow-primary/20">
