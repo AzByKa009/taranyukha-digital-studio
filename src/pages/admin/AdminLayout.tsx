@@ -10,7 +10,11 @@ import {
   Bot, 
   FileText, 
   LogOut,
-  Home
+  Home,
+  Settings,
+  Search,
+  Image,
+  Video
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +24,10 @@ const navItems = [
   { href: "/admin/services", label: "Услуги", icon: Wrench },
   { href: "/admin/ai-products", label: "AI-продукты", icon: Bot },
   { href: "/admin/blog", label: "Блог", icon: FileText },
+  { href: "/admin/portfolio", label: "Портфолио", icon: Video },
+  { href: "/admin/media", label: "Медиа", icon: Image },
+  { href: "/admin/settings", label: "Настройки", icon: Settings },
+  { href: "/admin/seo", label: "SEO", icon: Search },
 ];
 
 export default function AdminLayout() {
