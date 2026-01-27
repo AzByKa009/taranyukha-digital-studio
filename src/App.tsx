@@ -49,6 +49,7 @@ const AdminSEOSettings = lazy(() => import("./pages/admin/settings/AdminSEOSetti
 const AdminMediaLibrary = lazy(() => import("./pages/admin/media/AdminMediaLibrary"));
 const AdminPortfolioList = lazy(() => import("./pages/admin/portfolio/AdminPortfolioList"));
 const AdminPortfolioForm = lazy(() => import("./pages/admin/portfolio/AdminPortfolioForm"));
+const AdminAITools = lazy(() => import("./pages/admin/ai/AdminAITools"));
 
 const queryClient = new QueryClient();
 
@@ -114,6 +115,7 @@ const App = () => (
                 <Route path="settings" element={<AdminSiteSettings />} />
                 <Route path="seo" element={<AdminSEOSettings />} />
                 <Route path="media" element={<AdminMediaLibrary />} />
+                <Route path="ai-tools" element={<AdminAITools />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

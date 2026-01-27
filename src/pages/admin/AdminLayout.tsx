@@ -14,7 +14,8 @@ import {
   Settings,
   Search,
   Image,
-  Video
+  Video,
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,7 @@ const navItems = [
   { href: "/admin/blog", label: "Блог", icon: FileText },
   { href: "/admin/portfolio", label: "Портфолио", icon: Video },
   { href: "/admin/media", label: "Медиа", icon: Image },
+  { href: "/admin/ai-tools", label: "AI-инструменты", icon: Sparkles },
   { href: "/admin/settings", label: "Настройки", icon: Settings },
   { href: "/admin/seo", label: "SEO", icon: Search },
 ];
