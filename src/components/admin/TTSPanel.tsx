@@ -10,31 +10,39 @@ import { Volume2, Loader2, Play, Square, Headphones } from "lucide-react";
 export default function TTSPanel() {
   const [ttsText, setTtsText] = useState("");
   const [ttsLoading, setTtsLoading] = useState(false);
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [allVoices, setAllVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<string>("");
+  const [voiceFilter, setVoiceFilter] = useState<"all" | "en" | "ru">("all");
   const [rate, setRate] = useState(1);
   const [pitch, setPitch] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const visibleVoices = allVoices.filter((v) => {
+    if (voiceFilter === "all") return true;
+    return v.lang?.toLowerCase().startsWith(voiceFilter);
+  });
+
+  const selectedVoiceObj = visibleVoices.find((v) => v.name === selectedVoice);
+
+  const pickDefaultVoice = useCallback(
+    (voices: SpeechSynthesisVoice[]) => {
+      if (voices.length === 0) return;
+      if (selectedVoice && voices.some((v) => v.name === selectedVoice)) return;
+
+      // Prefer Google/Microsoft voices when available
+      const preferred =
+        voices.find((v) => v.name.includes("Google") || v.name.includes("Microsoft")) ||
+        voices[0];
+      setSelectedVoice(preferred.name);
+    },
+    [selectedVoice]
+  );
+
   // Load voices
   const loadVoices = useCallback(() => {
     const availableVoices = window.speechSynthesis.getVoices();
-    // Filter English voices
-    const englishVoices = availableVoices.filter(v => 
-      v.lang.startsWith("en")
-    );
-    
-    if (englishVoices.length > 0) {
-      setVoices(englishVoices);
-      if (!selectedVoice) {
-        // Prefer Google or Microsoft voices
-        const preferredVoice = englishVoices.find(v => 
-          v.name.includes("Google") || v.name.includes("Microsoft")
-        ) || englishVoices[0];
-        setSelectedVoice(preferredVoice.name);
-      }
-    }
-  }, [selectedVoice]);
+    setAllVoices(availableVoices);
+  }, []);
 
   useEffect(() => {
     // Initial load
@@ -47,7 +55,7 @@ export default function TTSPanel() {
 
     // Fallback for browsers that don't fire the event
     const interval = setInterval(() => {
-      if (voices.length === 0) {
+      if (allVoices.length === 0) {
         loadVoices();
       }
     }, 100);
@@ -58,16 +66,25 @@ export default function TTSPanel() {
       clearInterval(interval);
       window.speechSynthesis.cancel();
     };
-  }, [loadVoices, voices.length]);
+  }, [loadVoices, allVoices.length]);
+
+  // Ensure we always have a selected voice for the current filter
+  useEffect(() => {
+    pickDefaultVoice(visibleVoices);
+  }, [pickDefaultVoice, visibleVoices, voiceFilter]);
 
   // Preview voice with sample text
   const previewVoice = (voiceName: string) => {
     window.speechSynthesis.cancel();
     
-    const voice = voices.find(v => v.name === voiceName);
+    const voice = visibleVoices.find(v => v.name === voiceName);
     if (!voice) return;
 
-    const utterance = new SpeechSynthesisUtterance("Hello! This is a preview of this voice.");
+    const sample = voice.lang?.toLowerCase().startsWith("ru")
+      ? "Привет! Это пример звучания этого голоса."
+      : "Hello! This is a preview of this voice.";
+
+    const utterance = new SpeechSynthesisUtterance(sample);
     utterance.voice = voice;
     utterance.rate = rate;
     utterance.pitch = pitch;
@@ -87,7 +104,7 @@ export default function TTSPanel() {
     setTtsLoading(true);
     setIsPlaying(true);
 
-    const voice = voices.find(v => v.name === selectedVoice);
+    const voice = selectedVoiceObj;
     const utterance = new SpeechSynthesisUtterance(ttsText);
     
     if (voice) {
@@ -123,7 +140,7 @@ export default function TTSPanel() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Volume2 className="w-5 h-5" />
-          Озвучка текста (English)
+          Озвучка текста (RU/EN)
         </CardTitle>
         <CardDescription>
           Web Speech API — бесплатно, работает в браузере без API ключей
@@ -132,17 +149,33 @@ export default function TTSPanel() {
       <CardContent className="space-y-6">
         {/* Voice Selection */}
         <div className="space-y-2">
-          <Label>Голос ({voices.length} доступно)</Label>
+          <div className="flex items-center justify-between gap-3">
+            <Label>Голос ({visibleVoices.length} доступно)</Label>
+            <div className="flex items-center gap-2">
+              <Label className="text-xs text-muted-foreground">Язык</Label>
+              <select
+                className="p-1.5 border rounded-md bg-card text-foreground"
+                value={voiceFilter}
+                onChange={(e) => setVoiceFilter(e.target.value as typeof voiceFilter)}
+              >
+                <option value="all">Все</option>
+                <option value="ru">RU</option>
+                <option value="en">EN</option>
+              </select>
+            </div>
+          </div>
           <div className="flex gap-2">
             <select
               className="flex-1 p-2 border rounded-lg bg-card text-foreground"
               value={selectedVoice}
               onChange={(e) => setSelectedVoice(e.target.value)}
             >
-              {voices.length === 0 ? (
-                <option>Загрузка голосов...</option>
+              {visibleVoices.length === 0 ? (
+                <option>
+                  Нет голосов (установите голоса в системе/браузере)
+                </option>
               ) : (
-                voices.map((voice) => (
+                visibleVoices.map((voice) => (
                   <option key={voice.name} value={voice.name}>
                     {voice.name} ({voice.lang})
                   </option>
@@ -153,7 +186,7 @@ export default function TTSPanel() {
               variant="outline"
               size="icon"
               onClick={() => previewVoice(selectedVoice)}
-              disabled={!selectedVoice || voices.length === 0}
+              disabled={!selectedVoice || visibleVoices.length === 0}
               title="Прослушать голос"
             >
               <Headphones className="w-4 h-4" />
@@ -193,7 +226,7 @@ export default function TTSPanel() {
           <Textarea
             value={ttsText}
             onChange={(e) => setTtsText(e.target.value)}
-            placeholder="Enter text in English to speak..."
+            placeholder="Введите текст на русском или английском..."
             rows={5}
             className="resize-none"
           />
@@ -203,7 +236,7 @@ export default function TTSPanel() {
         <div className="flex gap-2">
           <Button
             onClick={handleSpeak}
-            disabled={ttsLoading || !ttsText.trim() || voices.length === 0}
+            disabled={ttsLoading || !ttsText.trim() || visibleVoices.length === 0}
             className="gap-2"
           >
             {ttsLoading ? (
@@ -224,7 +257,7 @@ export default function TTSPanel() {
 
         {/* Info */}
         <p className="text-xs text-muted-foreground">
-          Использует встроенный синтез речи браузера. Количество и качество голосов зависит от вашей операционной системы.
+          Использует встроенный синтез речи браузера. Если список пустой — это значит, что в вашей ОС/браузере не установлены голоса.
         </p>
       </CardContent>
     </Card>
