@@ -285,27 +285,16 @@ const translations: Record<Language, Record<string, string>> = {
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("language") as Language;
-      if (saved && (saved === "ru" || saved === "en")) {
-        return saved;
-      }
-      // Detect browser language
-      const browserLang = navigator.language.toLowerCase();
-      return browserLang.startsWith("ru") ? "ru" : "en";
-    }
-    return "ru";
-  });
+  // Always use Russian as the default language
+  const [language] = useState<Language>("ru");
+
+  const setLanguage = (_lang: Language) => {
+    // Language switching disabled - always Russian
+  };
 
   useEffect(() => {
-    localStorage.setItem("language", language);
     document.documentElement.lang = language;
   }, [language]);
-
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-  };
 
   const t = (key: string): string => {
     return translations[language][key] || key;
