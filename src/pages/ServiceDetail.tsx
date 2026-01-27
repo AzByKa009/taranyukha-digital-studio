@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowLeft, ArrowRight, CheckCircle, Clock, Loader2, Film, Users, Video, Cpu, Code, Bot, Globe } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FAQItem {
   question: string;
@@ -47,6 +48,7 @@ const ServiceDetail = () => {
   const [nextService, setNextService] = useState<{ slug: string; title: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchService = async () => {
@@ -147,7 +149,7 @@ const ServiceDetail = () => {
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Все услуги
+          {t("service_detail.all_services")}
         </Link>
       </div>
 
@@ -172,7 +174,7 @@ const ServiceDetail = () => {
               {service.price_from && (
                 <div className="flex items-center gap-2">
                   <span className="text-primary font-semibold text-lg">
-                    от {service.price_from.toLocaleString()} ₽
+                    {t("common.from")} {service.price_from.toLocaleString()} ₽
                   </span>
                 </div>
               )}
@@ -197,7 +199,7 @@ const ServiceDetail = () => {
               {service.process_steps && service.process_steps.length > 0 && (
                 <div className="animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
                   <h2 className="text-2xl font-display font-bold mb-6">
-                    Процесс работы
+                    {t("service_detail.process")}
                   </h2>
                   <div className="space-y-6">
                     {service.process_steps.map((step, index) => (
@@ -219,7 +221,7 @@ const ServiceDetail = () => {
               {service.faq && service.faq.length > 0 && (
                 <div className="animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
                   <h2 className="text-2xl font-display font-bold mb-6">
-                    Частые вопросы
+                    {t("service_detail.faq")}
                   </h2>
                   <Accordion type="single" collapsible className="space-y-3">
                     {service.faq.map((faq, index) => (
@@ -248,7 +250,7 @@ const ServiceDetail = () => {
                 {service.features && service.features.length > 0 && (
                   <div className="p-6 rounded-2xl bg-card/50 border border-border animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
                     <h3 className="font-display font-semibold text-lg mb-4">
-                      Что входит
+                      {t("service_detail.includes")}
                     </h3>
                     <ul className="space-y-3">
                       {service.features.map((item, index) => (
@@ -264,14 +266,14 @@ const ServiceDetail = () => {
                 {/* CTA */}
                 <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
                   <h3 className="font-display font-semibold text-lg mb-2">
-                    Хотите заказать?
+                    {t("service_detail.want_order")}
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Обсудим вашу задачу и подготовлю предложение
+                    {t("service_detail.want_order_desc")}
                   </p>
                   <Link to="/contacts">
                     <Button variant="hero" className="w-full">
-                      Обсудить проект
+                      {t("cta.primary")}
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -293,7 +295,7 @@ const ServiceDetail = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                   <span className="text-sm text-muted-foreground mb-2 block">
-                    Другая услуга
+                    {t("service_detail.next_service")}
                   </span>
                   <h3 className="text-2xl md:text-3xl font-display font-bold group-hover:text-gradient transition-colors">
                     {nextService.title}

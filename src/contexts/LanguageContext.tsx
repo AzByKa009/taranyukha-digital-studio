@@ -324,6 +324,31 @@ const translations: Record<Language, Record<string, string>> = {
     "calc.elements": "элементов",
     "calc.hours": "часов",
     
+    // Video Modal
+    "video_modal.want_same": "Хотите такой же результат?",
+    "video_modal.discuss": "Обсудить проект",
+    
+    // Case Detail
+    "case_detail.all_cases": "Все кейсы",
+    "case_detail.task": "Задача",
+    "case_detail.solution": "Решение",
+    "case_detail.result": "Результат",
+    "case_detail.gallery": "Галерея",
+    "case_detail.deliverables": "Что было сделано",
+    "case_detail.technologies": "Технологии",
+    "case_detail.want_same": "Хотите так же?",
+    "case_detail.want_same_desc": "Обсудим ваш проект и найдём лучшее решение",
+    "case_detail.next_case": "Следующий кейс",
+    
+    // Service Detail
+    "service_detail.all_services": "Все услуги",
+    "service_detail.process": "Процесс работы",
+    "service_detail.faq": "Частые вопросы",
+    "service_detail.includes": "Что входит",
+    "service_detail.want_order": "Хотите заказать?",
+    "service_detail.want_order_desc": "Обсудим вашу задачу и подготовлю предложение",
+    "service_detail.next_service": "Другая услуга",
+    
     // Admin
     "admin.dashboard": "Дашборд",
     "admin.content_management": "Управление контентом сайта",
@@ -657,6 +682,31 @@ const translations: Record<Language, Record<string, string>> = {
     "calc.months": "months",
     "calc.elements": "elements",
     "calc.hours": "hours",
+    
+    // Video Modal
+    "video_modal.want_same": "Want the same result?",
+    "video_modal.discuss": "Discuss project",
+    
+    // Case Detail
+    "case_detail.all_cases": "All cases",
+    "case_detail.task": "Task",
+    "case_detail.solution": "Solution",
+    "case_detail.result": "Result",
+    "case_detail.gallery": "Gallery",
+    "case_detail.deliverables": "What was done",
+    "case_detail.technologies": "Technologies",
+    "case_detail.want_same": "Want the same?",
+    "case_detail.want_same_desc": "Let's discuss your project and find the best solution",
+    "case_detail.next_case": "Next case",
+    
+    // Service Detail
+    "service_detail.all_services": "All services",
+    "service_detail.process": "Work process",
+    "service_detail.faq": "FAQ",
+    "service_detail.includes": "What's included",
+    "service_detail.want_order": "Want to order?",
+    "service_detail.want_order_desc": "Let's discuss your task and I'll prepare a proposal",
+    "service_detail.next_service": "Another service",
     
     // Admin
     "admin.dashboard": "Dashboard",

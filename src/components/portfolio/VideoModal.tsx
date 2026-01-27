@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import type { PortfolioVideo } from "@/data/portfolio-videos";
 import { useRef, useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface VideoModalProps {
   video: PortfolioVideo | null;
@@ -11,6 +12,7 @@ interface VideoModalProps {
 
 export function VideoModal({ video, isOpen, onClose }: VideoModalProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (isOpen && videoRef.current) {
@@ -88,7 +90,7 @@ export function VideoModal({ video, isOpen, onClose }: VideoModalProps) {
             {/* CTA */}
             <div className="pt-6 border-t border-border/50">
               <p className="text-sm text-muted-foreground mb-3">
-                Хотите такой же результат?
+                {t("video_modal.want_same")}
               </p>
               <a
                 href="https://t.me/altscalp"
@@ -96,7 +98,7 @@ export function VideoModal({ video, isOpen, onClose }: VideoModalProps) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
               >
-                Обсудить проект
+                {t("video_modal.discuss")}
               </a>
             </div>
           </div>
