@@ -8,6 +8,9 @@ interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   className?: string;
   wrapperClassName?: string;
   showSkeleton?: boolean;
+  width?: number;
+  height?: number;
+  fetchpriority?: "high" | "low" | "auto";
 }
 
 export function LazyImage({ 
@@ -16,6 +19,9 @@ export function LazyImage({
   className, 
   wrapperClassName,
   showSkeleton = true,
+  width,
+  height,
+  fetchpriority,
   ...props 
 }: LazyImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -49,8 +55,11 @@ export function LazyImage({
         ref={imgRef}
         src={isInView ? src : undefined}
         alt={alt}
+        width={width}
+        height={height}
         loading="lazy"
         decoding="async"
+        fetchPriority={fetchpriority}
         onLoad={() => setIsLoaded(true)}
         className={cn(
           "transition-opacity duration-300",

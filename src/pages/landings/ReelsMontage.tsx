@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Film, Clock, Sparkles, CheckCircle, Zap, Target, TrendingUp } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { ArrowRight, Film, Clock, Sparkles, CheckCircle, Target } from "lucide-react";
+import { toast } from "sonner";
+import { useSEO } from "@/hooks/useSEO";
+import { Link } from "react-router-dom";
 
 const ReelsMontage = () => {
-  const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -16,45 +17,31 @@ const ReelsMontage = () => {
     details: ""
   });
 
-  useEffect(() => {
-    document.title = "Монтаж Reels на заказ — монтаж вертикальных видео | Aleksey Taranukha";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", 
-      "Профессиональный монтаж вертикальных видео для Instagram Reels, TikTok, Shorts. Динамичные ролики, которые увеличивают охваты. Заказать монтаж Reels."
-    );
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Монтаж Reels на заказ",
+    "description": "Профессиональный монтаж Reels для бизнеса. Динамичные ролики, которые привлекают внимание и увеличивают охваты.",
+    "provider": {
+      "@type": "Person",
+      "name": "Aleksey Taranukha"
+    },
+    "areaServed": "Worldwide",
+    "serviceType": "Video Editing"
+  };
 
-    const serviceSchema = {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "name": "Монтаж Reels на заказ",
-      "description": "Профессиональный монтаж Reels для бизнеса. Динамичные ролики, которые привлекают внимание и увеличивают охваты.",
-      "provider": {
-        "@type": "Person",
-        "name": "Aleksey Taranukha"
-      },
-      "areaServed": "Worldwide",
-      "serviceType": "Video Editing"
-    };
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.setAttribute('data-schema', 'reels-montage');
-    script.textContent = JSON.stringify(serviceSchema);
-    document.head.appendChild(script);
-
-    return () => {
-      const schemaScript = document.querySelector('script[data-schema="reels-montage"]');
-      if (schemaScript) schemaScript.remove();
-    };
-  }, []);
+  useSEO({
+    title: "Монтаж Reels на заказ — монтаж вертикальных видео | Aleksey Taranukha",
+    description: "Профессиональный монтаж вертикальных видео для Instagram Reels, TikTok, Shorts. Динамичные ролики, которые увеличивают охваты. Заказать монтаж Reels.",
+    keywords: "монтаж reels, монтаж вертикальных видео, монтаж tiktok, монтаж shorts, видеомонтаж"
+  }, [serviceSchema]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.name.trim() || !formData.email.trim()) return;
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
-    toast({
-      title: "Заявка отправлена!",
-      description: "Свяжусь с вами в течение 24 часов для обсуждения проекта.",
-    });
+    toast.success("Заявка отправлена! Свяжусь с вами в течение 24 часов");
     setFormData({ name: "", email: "", instagram: "", details: "" });
     setIsSubmitting(false);
   };
@@ -83,30 +70,35 @@ const ReelsMontage = () => {
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="pt-12 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
-        <div className="container relative">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 animate-fade-in-up">
-              <Film className="h-4 w-4" />
-              <span className="text-sm font-medium">Монтаж Reels</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 animate-fade-in-up">
-              Монтаж Reels на заказ
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              Профессиональный монтаж коротких видео, которые привлекают внимание, увеличивают охваты и конвертируют зрителей в клиентов
-            </p>
-            <div className="flex flex-wrap gap-4 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-              <Button variant="hero" size="lg" onClick={() => document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' })}>
-                Заказать монтаж
-                <ArrowRight className="h-5 w-5" />
-              </Button>
+      <article>
+        <header className="pt-12 pb-16 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
+          <div className="container relative">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
+                <Film className="h-4 w-4" />
+                <span className="text-sm font-medium">Монтаж Reels</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6">
+                Монтаж Reels на заказ
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8">
+                Профессиональный монтаж коротких видео, которые привлекают внимание, увеличивают охваты и конвертируют зрителей в клиентов
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Button variant="hero" size="lg" onClick={() => document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' })}>
+                  Заказать монтаж
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+                <Link to="/produser-reels">
+                  <Button variant="hero-outline" size="lg">
+                    Полное продюсирование
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </header>
 
       {/* Benefits */}
       <section className="py-16">
@@ -237,6 +229,7 @@ const ReelsMontage = () => {
           </div>
         </div>
       </section>
+      </article>
     </Layout>
   );
 };

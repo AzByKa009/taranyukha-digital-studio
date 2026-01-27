@@ -15,6 +15,8 @@ const navigation = {
     { name: "Продюсер Reels", href: "/produser-reels" },
     { name: "AI-бот для бизнеса", href: "/ai-bot-dlya-biznesa" },
     { name: "Сайт под услуги", href: "/razrabotka-sayta-pod-uslugi" },
+    { name: "Вайб кодинг", href: "/vibe-coding" },
+    { name: "AI автоматизация", href: "/ai-automation" },
   ],
   company: [
     { name: "Обо мне", href: "/about" },
