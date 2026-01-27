@@ -217,6 +217,87 @@ export type Database = {
         }
         Relationships: []
       }
+      page_content: {
+        Row: {
+          content: Json
+          id: string
+          is_visible: boolean | null
+          page_key: string
+          section_key: string
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          id?: string
+          is_visible?: boolean | null
+          page_key: string
+          section_key: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          id?: string
+          is_visible?: boolean | null
+          page_key?: string
+          section_key?: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      portfolio_videos: {
+        Row: {
+          category: string
+          category_label: string
+          created_at: string
+          description: string | null
+          full_description: string | null
+          id: string
+          is_published: boolean | null
+          review: string | null
+          sort_order: number | null
+          stats: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          video_url: string
+        }
+        Insert: {
+          category: string
+          category_label: string
+          created_at?: string
+          description?: string | null
+          full_description?: string | null
+          id?: string
+          is_published?: boolean | null
+          review?: string | null
+          sort_order?: number | null
+          stats?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          video_url: string
+        }
+        Update: {
+          category?: string
+          category_label?: string
+          created_at?: string
+          description?: string | null
+          full_description?: string | null
+          id?: string
+          is_published?: boolean | null
+          review?: string | null
+          sort_order?: number | null
+          stats?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          video_url?: string
+        }
+        Relationships: []
+      }
       rate_limits: {
         Row: {
           created_at: string
@@ -241,6 +322,42 @@ export type Database = {
           ip_address?: string
           request_count?: number
           window_start?: string
+        }
+        Relationships: []
+      }
+      seo_settings: {
+        Row: {
+          description: string | null
+          id: string
+          keywords: string | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          page_key: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          keywords?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_key: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          keywords?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_key?: string
+          title?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -298,6 +415,27 @@ export type Database = {
           thumbnail?: string | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: Json
         }
         Relationships: []
       }

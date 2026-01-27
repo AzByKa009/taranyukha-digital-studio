@@ -44,6 +44,11 @@ const AdminProductForm = lazy(() => import("./pages/admin/products/AdminProductF
 const AdminCategoriesList = lazy(() => import("./pages/admin/products/AdminCategoriesList"));
 const AdminBlogList = lazy(() => import("./pages/admin/blog/AdminBlogList"));
 const AdminBlogForm = lazy(() => import("./pages/admin/blog/AdminBlogForm"));
+const AdminSiteSettings = lazy(() => import("./pages/admin/settings/AdminSiteSettings"));
+const AdminSEOSettings = lazy(() => import("./pages/admin/settings/AdminSEOSettings"));
+const AdminMediaLibrary = lazy(() => import("./pages/admin/media/AdminMediaLibrary"));
+const AdminPortfolioList = lazy(() => import("./pages/admin/portfolio/AdminPortfolioList"));
+const AdminPortfolioForm = lazy(() => import("./pages/admin/portfolio/AdminPortfolioForm"));
 
 const queryClient = new QueryClient();
 
@@ -100,6 +105,12 @@ const App = () => (
                 <Route path="blog" element={<AdminBlogList />} />
                 <Route path="blog/new" element={<AdminBlogForm />} />
                 <Route path="blog/:id" element={<AdminBlogForm />} />
+                <Route path="portfolio" element={<AdminPortfolioList />} />
+                <Route path="portfolio/new" element={<AdminPortfolioForm />} />
+                <Route path="portfolio/:id" element={<AdminPortfolioForm />} />
+                <Route path="settings" element={<AdminSiteSettings />} />
+                <Route path="seo" element={<AdminSEOSettings />} />
+                <Route path="media" element={<AdminMediaLibrary />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

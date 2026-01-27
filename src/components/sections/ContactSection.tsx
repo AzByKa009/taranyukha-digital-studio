@@ -7,21 +7,22 @@ import { Send, Mail, MessageCircle } from "lucide-react";
 import { FadeIn, PremiumCard } from "@/components/motion";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-
-const socialLinks = [
-  { name: "Telegram", href: "https://t.me/alekseytaranukha", icon: MessageCircle },
-  { name: "Email", href: "mailto:hello@taranukha.dev", icon: Mail },
-];
+import { useSiteSettings, ContactSettings } from "@/hooks/useSiteSettings";
 
 export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const { data: contact } = useSiteSettings<ContactSettings>("contact");
+
+  const socialLinks = [
+    { name: "Telegram", href: contact?.telegram || "#", icon: MessageCircle },
+    { name: "Email", href: contact?.email ? `mailto:${contact.email}` : "#", icon: Mail },
+  ].filter(link => link.href !== "#");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 1000));
     
     toast.success("Сообщение отправлено! Свяжусь с вами в ближайшее время.");
@@ -31,12 +32,10 @@ export function ContactSection() {
 
   return (
     <section className="py-24 relative overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-gradient-glow opacity-30" />
       
       <div className="container relative z-10">
         <div className="grid lg:grid-cols-2 gap-16">
-          {/* Left side - Info */}
           <FadeIn direction="right">
             <div>
               <span className="text-primary text-sm font-medium uppercase tracking-wider mb-4 block">
@@ -50,14 +49,13 @@ export function ContactSection() {
                 и предложу возможные решения. Консультация бесплатна.
               </p>
 
-              {/* Social Links */}
               <div className="flex flex-wrap gap-4">
                 {socialLinks.map((link) => (
                   <motion.a
                     key={link.name}
                     href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target={link.name === "Email" ? undefined : "_blank"}
+                    rel={link.name === "Email" ? undefined : "noopener noreferrer"}
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-border bg-card/50 hover:bg-card hover:border-primary/30 transition-colors"
                     whileHover={!prefersReducedMotion ? { scale: 1.03, y: -2 } : undefined}
                     whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
@@ -71,7 +69,6 @@ export function ContactSection() {
             </div>
           </FadeIn>
 
-          {/* Right side - Form */}
           <FadeIn delay={0.2}>
             <PremiumCard 
               className="glass-card rounded-2xl p-8"
