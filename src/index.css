@@ -215,6 +215,74 @@
   .duration-400 {
     transition-duration: 400ms;
   }
+
+  /* Enhanced micro-interactions */
+  .interactive-card {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.25, 0.4, 0.25, 1);
+  }
+
+  .interactive-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .interactive-card:active {
+    transform: translateY(-2px);
+    transition-duration: 100ms;
+  }
+
+  /* Button press effect */
+  .btn-press {
+    @apply transition-transform duration-150;
+  }
+
+  .btn-press:active {
+    transform: scale(0.97);
+  }
+
+  /* Smooth input focus */
+  .input-smooth {
+    @apply transition-all duration-200;
+  }
+
+  .input-smooth:focus {
+    @apply ring-2 ring-primary/20 border-primary/50;
+    transform: scale(1.01);
+  }
+
+  /* Subtle link underline animation */
+  .link-underline {
+    @apply relative;
+  }
+
+  .link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-px bg-primary origin-left;
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.25, 0.4, 0.25, 1);
+  }
+
+  .link-underline:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Shimmer loading effect */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+
+  .shimmer::before {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.1),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
 }
 
 @keyframes fadeIn {
