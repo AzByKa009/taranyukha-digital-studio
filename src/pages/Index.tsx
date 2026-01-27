@@ -5,6 +5,8 @@ import { FeaturedCases } from "@/components/sections/FeaturedCases";
 import { ServicesPreview } from "@/components/sections/ServicesPreview";
 import { WhyTrustMe } from "@/components/sections/WhyTrustMe";
 import { ContactSection } from "@/components/sections/ContactSection";
+import { CTASection } from "@/components/sections/CTASection";
+import { ExitIntentPopup } from "@/components/conversion/ExitIntentPopup";
 import { useSEO, personSchema, websiteSchema, professionalServiceSchema } from "@/hooks/useSEO";
 
 const Index = () => {
@@ -16,11 +18,13 @@ const Index = () => {
 
   return (
     <Layout>
+      <ExitIntentPopup />
       <HeroSection />
       <WhatIDo />
       <FeaturedCases />
       <ServicesPreview />
       <WhyTrustMe />
+      <CTASection />
       <ContactSection />
     </Layout>
   );
