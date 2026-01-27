@@ -139,19 +139,41 @@ export default function AdminAITools() {
     }
   };
 
-  // Video generation (placeholder - uses existing videogen)
+  // Video generation via edge function
   const handleVideoGenerate = async () => {
     if (!videoPrompt.trim()) return;
 
     setVideoLoading(true);
+    setGeneratedVideo(null);
     toast.info("Генерация видео запущена. Это может занять несколько минут...");
 
-    // Note: Video generation would use the videogen tool
-    // For now, show a placeholder message
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-video", {
+        body: { 
+          prompt: videoPrompt, 
+          duration: 5,
+          aspectRatio: "16:9"
+        }
+      });
+
+      if (error) throw error;
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      if (data.videoUrl) {
+        setGeneratedVideo(data.videoUrl);
+        toast.success("Видео сгенерировано!");
+      } else if (data.jobId) {
+        toast.info("Видео генерируется в фоновом режиме. Проверьте позже.");
+      }
+    } catch (error) {
+      console.error("Video error:", error);
+      toast.error(error instanceof Error ? error.message : "Ошибка генерации видео");
+    } finally {
       setVideoLoading(false);
-      toast.success("Для генерации видео используйте встроенный инструмент Lovable");
-    }, 2000);
+    }
   };
 
   const copyToClipboard = (text: string) => {
@@ -327,7 +349,7 @@ export default function AdminAITools() {
                 Генерация видео
               </CardTitle>
               <CardDescription>
-                Создавайте короткие видеоролики по описанию
+                Создавайте короткие видеоролики (5 сек) по описанию
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -336,7 +358,7 @@ export default function AdminAITools() {
                 <Textarea
                   value={videoPrompt}
                   onChange={(e) => setVideoPrompt(e.target.value)}
-                  placeholder="Опишите видео, которое хотите создать..."
+                  placeholder="Опишите видео, которое хотите создать. Например: 'Волны океана на закате, кинематографичный вид'"
                   rows={3}
                 />
               </div>
@@ -351,12 +373,30 @@ export default function AdminAITools() {
                 ) : (
                   <Sparkles className="w-4 h-4" />
                 )}
-                Сгенерировать
+                Сгенерировать видео
               </Button>
 
-              <p className="text-sm text-muted-foreground">
-                Примечание: Генерация видео доступна через встроенные инструменты Lovable
-              </p>
+              {videoLoading && (
+                <p className="text-sm text-muted-foreground animate-pulse">
+                  ⏳ Генерация видео может занять 1-3 минуты...
+                </p>
+              )}
+
+              {generatedVideo && (
+                <div className="space-y-3">
+                  <video
+                    src={generatedVideo}
+                    controls
+                    className="w-full max-w-md rounded-lg border"
+                  />
+                  <Button variant="outline" size="sm" asChild>
+                    <a href={generatedVideo} download target="_blank" rel="noreferrer">
+                      <Download className="w-4 h-4 mr-2" />
+                      Скачать видео
+                    </a>
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
