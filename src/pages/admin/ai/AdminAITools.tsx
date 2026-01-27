@@ -139,41 +139,13 @@ export default function AdminAITools() {
     }
   };
 
-  // Video generation via edge function
+  // Video generation - not available via API, show info message
   const handleVideoGenerate = async () => {
     if (!videoPrompt.trim()) return;
-
-    setVideoLoading(true);
-    setGeneratedVideo(null);
-    toast.info("Генерация видео запущена. Это может занять несколько минут...");
-
-    try {
-      const { data, error } = await supabase.functions.invoke("generate-video", {
-        body: { 
-          prompt: videoPrompt, 
-          duration: 5,
-          aspectRatio: "16:9"
-        }
-      });
-
-      if (error) throw error;
-      
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      if (data.videoUrl) {
-        setGeneratedVideo(data.videoUrl);
-        toast.success("Видео сгенерировано!");
-      } else if (data.jobId) {
-        toast.info("Видео генерируется в фоновом режиме. Проверьте позже.");
-      }
-    } catch (error) {
-      console.error("Video error:", error);
-      toast.error(error instanceof Error ? error.message : "Ошибка генерации видео");
-    } finally {
-      setVideoLoading(false);
-    }
+    
+    // Copy prompt to clipboard for use in Lovable chat
+    await navigator.clipboard.writeText(videoPrompt);
+    toast.info("Промпт скопирован! Вставьте его в чат Lovable для генерации видео.");
   };
 
   const copyToClipboard = (text: string) => {
@@ -349,54 +321,38 @@ export default function AdminAITools() {
                 Генерация видео
               </CardTitle>
               <CardDescription>
-                Создавайте короткие видеоролики (5 сек) по описанию
+                Создавайте короткие видеоролики по описанию
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="p-4 bg-muted/50 rounded-lg border border-dashed">
+                <p className="text-sm text-muted-foreground mb-3">
+                  ⚡ Генерация видео доступна через чат Lovable. Напишите промпт ниже и нажмите кнопку — он скопируется в буфер обмена.
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Затем вставьте промпт в чат Lovable и попросите сгенерировать видео.
+                </p>
+              </div>
+
               <div className="space-y-2">
                 <Label>Описание видео</Label>
                 <Textarea
                   value={videoPrompt}
                   onChange={(e) => setVideoPrompt(e.target.value)}
-                  placeholder="Опишите видео, которое хотите создать. Например: 'Волны океана на закате, кинематографичный вид'"
+                  placeholder="Опишите видео, которое хотите создать. Например: 'Волны океана на закате, кинематографичный вид, slow motion'"
                   rows={3}
                 />
               </div>
 
               <Button 
                 onClick={handleVideoGenerate} 
-                disabled={videoLoading || !videoPrompt.trim()}
+                disabled={!videoPrompt.trim()}
+                variant="outline"
                 className="gap-2"
               >
-                {videoLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Sparkles className="w-4 h-4" />
-                )}
-                Сгенерировать видео
+                <Copy className="w-4 h-4" />
+                Скопировать промпт
               </Button>
-
-              {videoLoading && (
-                <p className="text-sm text-muted-foreground animate-pulse">
-                  ⏳ Генерация видео может занять 1-3 минуты...
-                </p>
-              )}
-
-              {generatedVideo && (
-                <div className="space-y-3">
-                  <video
-                    src={generatedVideo}
-                    controls
-                    className="w-full max-w-md rounded-lg border"
-                  />
-                  <Button variant="outline" size="sm" asChild>
-                    <a href={generatedVideo} download target="_blank" rel="noreferrer">
-                      <Download className="w-4 h-4 mr-2" />
-                      Скачать видео
-                    </a>
-                  </Button>
-                </div>
-              )}
             </CardContent>
           </Card>
         </TabsContent>
