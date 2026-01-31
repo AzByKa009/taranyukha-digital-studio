@@ -22,7 +22,7 @@ export function HeroSection() {
     { value: "2+", label: t("hero.stat_years") },
     { value: "10+", label: t("hero.stat_projects") },
     { value: "AI", label: t("hero.stat_ai") },
-    { value: "1 день", label: t("hero.stat_response") },
+    { value: "24ч", label: t("hero.stat_response") },
   ];
 
   return (
