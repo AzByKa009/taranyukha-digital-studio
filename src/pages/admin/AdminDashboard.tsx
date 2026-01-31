@@ -46,35 +46,35 @@ export default function AdminDashboard() {
 
   const cards = [
     { 
-      title: t("admin.cases"), 
+      title: "Кейсы", 
       count: stats.cases, 
       icon: FolderOpen, 
       href: "/admin/cases",
       addHref: "/admin/cases/new"
     },
     { 
-      title: t("admin.services"), 
+      title: "Услуги", 
       count: stats.services, 
       icon: Wrench, 
       href: "/admin/services",
       addHref: "/admin/services/new"
     },
     { 
-      title: t("admin.ai_products"), 
+      title: "AI-продукты", 
       count: stats.products, 
       icon: Bot, 
       href: "/admin/ai-products",
       addHref: "/admin/ai-products/new"
     },
     { 
-      title: t("admin.blog"), 
+      title: "Блог", 
       count: stats.posts, 
       icon: FileText, 
       href: "/admin/blog",
       addHref: "/admin/blog/new"
     },
     { 
-      title: t("admin.portfolio"), 
+      title: "Портфолио", 
       count: stats.videos, 
       icon: Video, 
       href: "/admin/portfolio",
@@ -83,17 +83,17 @@ export default function AdminDashboard() {
   ];
 
   const quickLinks = [
-    { title: t("admin.media_library"), icon: Image, href: "/admin/media" },
-    { title: t("admin.site_settings"), icon: Settings, href: "/admin/settings" },
-    { title: t("admin.seo_settings"), icon: Search, href: "/admin/seo" },
+    { title: "Медиа", icon: Image, href: "/admin/media" },
+    { title: "Настройки", icon: Settings, href: "/admin/settings" },
+    { title: "SEO", icon: Search, href: "/admin/seo" },
   ];
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t("admin.dashboard")}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">Панель управления</h1>
         <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
-          {t("admin.content_management")}
+          Управление контентом сайта
         </p>
       </div>
 
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <div className="premium-card p-4 sm:p-6">
-          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">{t("admin.quick_actions")}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Быстрые действия</h2>
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             {cards.map((card) => (
               <Link key={card.addHref} to={card.addHref}>
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
         </div>
 
         <div className="premium-card p-4 sm:p-6">
-          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">{t("admin.management")}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Управление</h2>
           <div className="space-y-1.5 sm:space-y-2">
             {quickLinks.map((link) => (
               <Link 

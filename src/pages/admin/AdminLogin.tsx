@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2, Lock, UserPlus } from "lucide-react";
+import { Loader2, Lock } from "lucide-react";
 import { z } from "zod";
 
 const authSchema = z.object({
@@ -15,11 +15,10 @@ const authSchema = z.object({
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const { user, isAdmin, loading, signIn, signUp } = useAuth();
+  const { user, isAdmin, loading, signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
     if (!loading && user && isAdmin) {
@@ -38,37 +37,19 @@ export default function AdminLogin() {
 
     setIsSubmitting(true);
 
-    if (isSignUp) {
-      const { error } = await signUp(email, password);
-      
-      if (error) {
-        if (error.message.includes("already registered")) {
-          toast.error("Этот email уже зарегистрирован");
-        } else {
-          toast.error("Ошибка регистрации: " + error.message);
-        }
-        setIsSubmitting(false);
-        return;
+    const { error } = await signIn(email, password);
+    
+    if (error) {
+      if (error.message.includes("Invalid login credentials")) {
+        toast.error("Неверный email или пароль");
+      } else {
+        toast.error("Ошибка входа: " + error.message);
       }
-
-      toast.success("Аккаунт создан! Теперь войдите.");
-      setIsSignUp(false);
       setIsSubmitting(false);
-    } else {
-      const { error } = await signIn(email, password);
-      
-      if (error) {
-        if (error.message.includes("Invalid login credentials")) {
-          toast.error("Неверный email или пароль");
-        } else {
-          toast.error("Ошибка входа: " + error.message);
-        }
-        setIsSubmitting(false);
-        return;
-      }
-
-      toast.success("Успешный вход!");
+      return;
     }
+
+    toast.success("Добро пожаловать!");
   };
 
   if (loading) {
@@ -81,22 +62,14 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-sm">
         <div className="premium-card p-8">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-              {isSignUp ? (
-                <UserPlus className="w-8 h-8 text-primary" />
-              ) : (
-                <Lock className="w-8 h-8 text-primary" />
-              )}
+            <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+              <Lock className="w-7 h-7 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold">
-              {isSignUp ? "Регистрация" : "Вход в админ-панель"}
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              {isSignUp ? "Создайте аккаунт администратора" : "Введите данные для входа"}
-            </p>
+            <h1 className="text-xl font-bold">Управление сайтом</h1>
+            <p className="text-muted-foreground text-sm mt-1">Вход для администратора</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -107,7 +80,7 @@ export default function AdminLogin() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@example.com"
+                placeholder="email@example.com"
                 required
                 disabled={isSubmitting}
               />
@@ -132,26 +105,13 @@ export default function AdminLogin() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isSignUp ? "Регистрация..." : "Вход..."}
+                  Вход...
                 </>
               ) : (
-                isSignUp ? "Зарегистрироваться" : "Войти"
+                "Войти"
               )}
             </Button>
           </form>
-
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {isSignUp 
-                ? "Уже есть аккаунт? Войти" 
-                : "Нет аккаунта? Зарегистрироваться"
-              }
-            </button>
-          </div>
         </div>
       </div>
     </div>
