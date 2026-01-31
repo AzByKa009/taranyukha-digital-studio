@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Play } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Scene3D } from "@/components/3d/Scene3D";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { motion } from "framer-motion";
@@ -60,34 +60,20 @@ export function HeroSection() {
               </p>
             </FadeIn>
 
-            {/* CTAs */}
+            {/* CTA */}
             <FadeIn delay={0.3}>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4">
-                <Link to="/contacts" className="w-full sm:w-auto">
-                  <motion.div
-                    whileHover={!prefersReducedMotion ? { scale: 1.03 } : undefined}
-                    whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  >
-                    <Button variant="hero" size="lg" className="w-full sm:w-auto shadow-xl shadow-primary/25">
-                      {t("hero.cta_primary")}
-                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </Button>
-                  </motion.div>
-                </Link>
-                <Link to="/cases" className="w-full sm:w-auto">
-                  <motion.div
-                    whileHover={!prefersReducedMotion ? { scale: 1.03 } : undefined}
-                    whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  >
-                    <Button variant="hero-outline" size="lg" className="w-full sm:w-auto">
-                      <Play className="h-4 w-4" />
-                      {t("hero.cta_secondary")}
-                    </Button>
-                  </motion.div>
-                </Link>
-              </div>
+              <Link to="/contacts" className="inline-block">
+                <motion.div
+                  whileHover={!prefersReducedMotion ? { scale: 1.03 } : undefined}
+                  whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                >
+                  <Button variant="hero" size="lg" className="shadow-xl shadow-primary/25">
+                    {t("hero.cta_primary")}
+                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </Button>
+                </motion.div>
+              </Link>
             </FadeIn>
           </div>
 
