@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ApproachSection } from "@/components/sections/ApproachSection";
 import { WhatIDo } from "@/components/sections/WhatIDo";
+import { ThinkingSection } from "@/components/sections/ThinkingSection";
 import { FeaturedCases } from "@/components/sections/FeaturedCases";
 import { WhyTrustMe } from "@/components/sections/WhyTrustMe";
 import { ContactSection } from "@/components/sections/ContactSection";
@@ -22,6 +23,7 @@ const Index = () => {
       <HeroSection />
       <ApproachSection />
       <WhatIDo />
+      <ThinkingSection />
       <FeaturedCases />
       <WhyTrustMe />
       <CTASection />
