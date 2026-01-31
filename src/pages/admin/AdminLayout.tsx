@@ -23,16 +23,16 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const navItems = [
-  { href: "/admin", label: "admin.dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/cases", label: "admin.cases", icon: FolderOpen },
-  { href: "/admin/services", label: "admin.services", icon: Wrench },
-  { href: "/admin/ai-products", label: "admin.ai_products", icon: Bot },
-  { href: "/admin/blog", label: "admin.blog", icon: FileText },
-  { href: "/admin/portfolio", label: "admin.portfolio", icon: Video },
-  { href: "/admin/media", label: "admin.media_library", icon: Image },
-  { href: "/admin/ai-tools", label: "AI-инструменты", icon: Sparkles, isRaw: true },
-  { href: "/admin/settings", label: "admin.site_settings", icon: Settings },
-  { href: "/admin/seo", label: "admin.seo_settings", icon: Search },
+  { href: "/admin", label: "Главная", icon: LayoutDashboard, exact: true },
+  { href: "/admin/cases", label: "Кейсы", icon: FolderOpen },
+  { href: "/admin/services", label: "Услуги", icon: Wrench },
+  { href: "/admin/ai-products", label: "AI-продукты", icon: Bot },
+  { href: "/admin/blog", label: "Блог", icon: FileText },
+  { href: "/admin/portfolio", label: "Портфолио", icon: Video },
+  { href: "/admin/media", label: "Медиа", icon: Image },
+  { href: "/admin/ai-tools", label: "AI-инструменты", icon: Sparkles },
+  { href: "/admin/settings", label: "Настройки", icon: Settings },
+  { href: "/admin/seo", label: "SEO", icon: Search },
 ];
 
 export default function AdminLayout() {
@@ -73,8 +73,7 @@ export default function AdminLayout() {
   };
 
   const getLabel = (item: typeof navItems[0]) => {
-    if (item.isRaw) return item.label;
-    return t(item.label);
+    return item.label;
   };
 
   return (
@@ -107,7 +106,7 @@ export default function AdminLayout() {
       )}>
         <div className="p-4 lg:p-6 border-b border-border mt-14 lg:mt-0">
           <div>
-            <h1 className="text-lg lg:text-xl font-bold">{t("admin.dashboard")}</h1>
+            <h1 className="text-lg lg:text-xl font-bold">Управление сайтом</h1>
             <p className="text-xs lg:text-sm text-muted-foreground mt-1 truncate">{user.email}</p>
           </div>
         </div>
@@ -138,7 +137,7 @@ export default function AdminLayout() {
             className="flex items-center gap-3 px-3 lg:px-4 py-2.5 lg:py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-sm"
           >
             <Home className="w-4 h-4 lg:w-5 lg:h-5" />
-            {t("admin.to_site")}
+            На сайт
           </Link>
           <Button 
             variant="ghost" 
@@ -146,7 +145,7 @@ export default function AdminLayout() {
             onClick={handleSignOut}
           >
             <LogOut className="w-4 h-4 lg:w-5 lg:h-5" />
-            {t("admin.logout")}
+            Выйти
           </Button>
         </div>
       </aside>
