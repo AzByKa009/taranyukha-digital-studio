@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { Briefcase, Megaphone, Bot, BarChart3, ArrowRight } from "lucide-react";
+import { Briefcase, Megaphone, Bot, BarChart3 } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 
 // Areas of expertise - not services, but competencies
@@ -83,18 +82,7 @@ export function WhatIDo() {
           ))}
         </StaggerContainer>
 
-        {/* CTA to services */}
-        <FadeIn delay={0.4}>
-          <div className="text-center">
-            <Link 
-              to="/services"
-              className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
-            >
-              Подробнее об услугах и ценах
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </FadeIn>
+        {/* Removed redundant CTA - clean ending */}
       </div>
     </section>
   );
