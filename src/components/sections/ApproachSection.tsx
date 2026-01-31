@@ -76,6 +76,15 @@ export function ApproachSection() {
             </StaggerItem>
           ))}
         </StaggerContainer>
+
+        {/* Meta-note: site as proof */}
+        <FadeIn delay={0.5}>
+          <div className="mt-12 sm:mt-16 text-center">
+            <p className="text-sm text-muted-foreground/70 italic">
+              Кстати, этот сайт — тоже пример подхода. Структура, тексты, логика — всё работает на одну цель.
+            </p>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
