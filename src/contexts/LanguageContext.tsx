@@ -28,7 +28,7 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.title_1": "Превращаю маркетинг в систему, ",
     "hero.title_2": "которая растит бизнес",
     "hero.subtitle": "Упаковка, соцсети, продвижение, автоматизация — выстраиваю маркетинг как предсказуемый процесс, а не хаос из разовых задач.",
-    "hero.cta_primary": "Обсудить задачу",
+    "hero.cta_primary": "Разобрать мой проект",
     "hero.stat_years": "года в маркетинге",
     "hero.stat_projects": "бизнесов",
     "hero.stat_ai": "автоматизация",
@@ -107,11 +107,11 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.response_time": "Отвечу в течение дня",
     "contact.success": "Получил! Свяжусь с вами сегодня.",
     
-    // CTA - clear value proposition
-    "cta.title": "Нужен сайт, который приносит заявки?",
-    "cta.subtitle": "Расскажите о задаче — предложу решение в течение дня",
-    "cta.primary": "Написать",
-    "cta.secondary": "Посмотреть примеры",
+    // CTA - invitation to dialogue
+    "cta.title": "Понять, как расти дальше",
+    "cta.subtitle": "Расскажите о бизнесе — разберём вместе, что мешает и с чего начать",
+    "cta.primary": "Обсудить задачу",
+    "cta.secondary": "Посмотреть кейсы",
     
     // Footer
     "footer.rights": "Все права защищены",

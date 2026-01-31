@@ -253,15 +253,15 @@ const Services = () => {
           <FadeIn>
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-4 sm:mb-5">
-                Начнём с <span className="text-gradient">диагностики</span>
+                С чего <span className="text-gradient">начать</span>
               </h2>
               <p className="text-base sm:text-lg text-muted-foreground mb-8 sm:mb-10 leading-relaxed">
-                Расскажите о бизнесе и задачах — я определю, какие инструменты 
-                дадут максимальный результат именно вам.
+                Расскажите о бизнесе — разберём вместе, какие инструменты 
+                сработают именно в вашем случае.
               </p>
               <Link to="/contacts">
                 <Button variant="hero" size="lg" className="shadow-xl shadow-primary/20">
-                  Обсудить задачу
+                  Разобрать мой проект
                   <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
