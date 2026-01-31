@@ -25,7 +25,7 @@ const BlogPost = lazy(() => import("./pages/BlogPost"));
 const About = lazy(() => import("./pages/About"));
 const Contacts = lazy(() => import("./pages/Contacts"));
 const FAQ = lazy(() => import("./pages/FAQ"));
-const Calculator = lazy(() => import("./pages/Calculator"));
+
 
 // Lazy load SEO Landing Pages
 const ReelsMontage = lazy(() => import("./pages/landings/ReelsMontage"));
@@ -90,7 +90,7 @@ const App = () => (
                 <Route path="/about" element={<About />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/faq" element={<FAQ />} />
-                <Route path="/calculator" element={<Calculator />} />
+                
                 {/* SEO Landing Pages */}
                 <Route path="/montazh-reels" element={<ReelsMontage />} />
                 <Route path="/produser-reels" element={<ReelsProducer />} />
