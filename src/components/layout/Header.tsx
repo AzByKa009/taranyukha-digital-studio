@@ -15,7 +15,6 @@ export function Header() {
     { name: t("nav.cases"), href: "/cases" },
     { name: t("nav.services"), href: "/services" },
     { name: t("nav.ai_products"), href: "/ai-products" },
-    { name: t("nav.calculator"), href: "/calculator" },
     { name: t("nav.about"), href: "/about" },
     { name: t("nav.faq"), href: "/faq" },
   ];

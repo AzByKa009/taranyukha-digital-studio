@@ -14,7 +14,6 @@ export function Footer() {
       { name: t("nav.services"), href: "/services" },
       { name: t("nav.ai_products"), href: "/ai-products" },
       { name: language === "ru" ? "Блог" : "Blog", href: "/blog" },
-      { name: t("nav.calculator"), href: "/calculator" },
     ],
     services: [
       { name: language === "ru" ? "Монтаж Reels" : "Reels Editing", href: "/montazh-reels" },
