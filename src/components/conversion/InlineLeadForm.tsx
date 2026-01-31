@@ -38,8 +38,8 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
   };
 
   const ctaText = ctaVariant === "A" 
-    ? (language === "ru" ? "Получить предложение" : "Get proposal")
-    : (language === "ru" ? "Начать проект" : "Start project");
+    ? (language === "ru" ? "Обсудить" : "Discuss")
+    : (language === "ru" ? "Начать разговор" : "Start conversation");
 
   const namePlaceholder = language === "ru" ? "Ваше имя" : "Your name";
   const contactPlaceholder = language === "ru" ? "Telegram или Email" : "Telegram or Email";
@@ -99,12 +99,12 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
       transition={{ duration: 0.5 }}
     >
       <h3 className="text-lg sm:text-xl font-display font-bold mb-1.5 sm:mb-2">
-        {language === "ru" ? "Готовы обсудить проект?" : "Ready to discuss a project?"}
+        {language === "ru" ? "Расскажите о задаче" : "Tell me about your task"}
       </h3>
       <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
         {language === "ru" 
-          ? "Оставьте контакт — свяжусь в течение 24 часов" 
-          : "Leave your contact — I'll reach out within 24 hours"
+          ? "Оставьте контакт — разберём вместе, с чего начать" 
+          : "Leave your contact — let's figure out where to start"
         }
       </p>
       <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
