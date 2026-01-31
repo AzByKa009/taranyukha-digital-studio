@@ -1,5 +1,6 @@
 import { Layout } from "@/components/layout/Layout";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { ApproachSection } from "@/components/sections/ApproachSection";
 import { WhatIDo } from "@/components/sections/WhatIDo";
 import { FeaturedCases } from "@/components/sections/FeaturedCases";
 import { WhyTrustMe } from "@/components/sections/WhyTrustMe";
@@ -10,15 +11,16 @@ import { useSEO, personSchema, websiteSchema, professionalServiceSchema } from "
 
 const Index = () => {
   useSEO({
-    title: "Алексей Тарануха — Сайты под услуги и AI-решения для бизнеса",
-    description: "Делаю продающие сайты для бизнеса в сфере услуг и внедряю AI-автоматизацию. Один исполнитель, без агентств. Запуск за 2-3 недели.",
-    keywords: "сайт под услуги, сайт для бизнеса, AI автоматизация, чат-бот для бизнеса, разработка сайта, лендинг под ключ",
+    title: "Алексей Тарануха — Маркетолог для бизнеса | Стратегия, упаковка, продвижение",
+    description: "Системный маркетинг для роста бизнеса. Упаковка, продвижение, автоматизация. Работаю как стратег и партнёр, не как исполнитель.",
+    keywords: "маркетолог, маркетинг для бизнеса, упаковка бизнеса, продвижение, стратегия маркетинга, автоматизация маркетинга",
   }, [personSchema, websiteSchema, professionalServiceSchema]);
 
   return (
     <Layout>
       <ExitIntentPopup />
       <HeroSection />
+      <ApproachSection />
       <WhatIDo />
       <FeaturedCases />
       <WhyTrustMe />
