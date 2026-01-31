@@ -21,10 +21,10 @@ const Index = () => {
     <Layout>
       <ExitIntentPopup />
       <HeroSection />
-      <ApproachSection />
       <WhatIDo />
-      <ThinkingSection />
+      <ApproachSection />
       <FeaturedCases />
+      <ThinkingSection />
       <WhyTrustMe />
       <CTASection />
       <ContactSection />

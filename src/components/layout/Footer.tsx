@@ -52,8 +52,8 @@ export function Footer() {
             </Link>
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 max-w-xs">
               {footer?.tagline || (language === "ru" 
-                ? "AI & Digital Production. Создаю инновационные цифровые решения, которые трансформируют бизнес."
-                : "AI & Digital Production. Creating innovative digital solutions that transform business."
+                ? "Маркетолог. Помогаю бизнесу расти системно — через упаковку, продвижение и автоматизацию."
+                : "Marketer. Helping businesses grow systematically through packaging, promotion, and automation."
               )}
             </p>
             {contact?.email && (

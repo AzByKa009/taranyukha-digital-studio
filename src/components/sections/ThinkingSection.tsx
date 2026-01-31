@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { Quote } from "lucide-react";
 
@@ -122,16 +123,14 @@ export function ThinkingSection() {
           </div>
         </div>
 
-        {/* Bottom note - site as proof */}
+        {/* Bottom note */}
         <FadeIn delay={0.5}>
           <div className="mt-14 sm:mt-20 pt-8 sm:pt-10 border-t border-border/40">
-            <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto mb-4">
-              Если вам нужен «исполнитель по ТЗ» — я не подойду. 
-              Но если ищете человека, который будет думать о результате вместе с вами — напишите.
-            </p>
-            <p className="text-center text-xs text-muted-foreground/60 italic">
-              Посмотрите на этот сайт — он построен по тем же принципам. 
-              Каждый блок решает задачу, каждый текст ведёт к действию.
+            <p className="text-center text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
+              Если ищете человека, который будет думать о вашем результате — 
+              <Link to="/contacts" className="text-primary hover:text-primary/80 ml-1 transition-colors">
+                напишите
+              </Link>.
             </p>
           </div>
         </FadeIn>
