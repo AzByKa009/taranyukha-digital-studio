@@ -2,7 +2,6 @@ import { Layout } from "@/components/layout/Layout";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { WhatIDo } from "@/components/sections/WhatIDo";
 import { FeaturedCases } from "@/components/sections/FeaturedCases";
-import { ServicesPreview } from "@/components/sections/ServicesPreview";
 import { WhyTrustMe } from "@/components/sections/WhyTrustMe";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { CTASection } from "@/components/sections/CTASection";
@@ -11,9 +10,9 @@ import { useSEO, personSchema, websiteSchema, professionalServiceSchema } from "
 
 const Index = () => {
   useSEO({
-    title: "Aleksey Taranukha — AI продюсер, вайб кодинг, монтаж Reels",
-    description: "AI продюсер и специалист по вайб кодингу. Создание AI продуктов, монтаж вертикальных видео, продюсирование контента, премиальные лендинги и сайты под ключ.",
-    keywords: "AI продюсер, монтаж вертикальных видео, продюсирование контента, вайб кодинг, создание AI продукта, премиальный лендинг, сайт под ключ",
+    title: "Алексей Тарануха — Сайты под услуги и AI-решения для бизнеса",
+    description: "Делаю продающие сайты для бизнеса в сфере услуг и внедряю AI-автоматизацию. Один исполнитель, без агентств. Запуск за 2-3 недели.",
+    keywords: "сайт под услуги, сайт для бизнеса, AI автоматизация, чат-бот для бизнеса, разработка сайта, лендинг под ключ",
   }, [personSchema, websiteSchema, professionalServiceSchema]);
 
   return (
@@ -22,7 +21,6 @@ const Index = () => {
       <HeroSection />
       <WhatIDo />
       <FeaturedCases />
-      <ServicesPreview />
       <WhyTrustMe />
       <CTASection />
       <ContactSection />
