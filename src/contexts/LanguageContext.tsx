@@ -75,7 +75,6 @@ const translations: Record<Language, Record<string, string>> = {
     "services.quick_start": "С чего начать",
     "services.quick_start_subtitle": "Самые частые запросы",
     
-    // Why Trust Me - expert positioning
     // Why Trust Me - personal brand
     "trust.label": "Почему со мной",
     "trust.title": "Вы работаете ",
