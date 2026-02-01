@@ -27,14 +27,40 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
 
     setIsSubmitting(true);
     trackConversion();
-    await new Promise((r) => setTimeout(r, 800));
-    toast.success(language === "ru" 
-      ? "Заявка отправлена! Свяжусь в течение 24 часов" 
-      : "Request sent! I'll contact you within 24 hours"
-    );
-    setIsSubmitting(false);
-    setName("");
-    setContact("");
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-lead`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.trim(),
+            contact: contact.trim(),
+            source_page: window.location.pathname,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to submit");
+      }
+
+      toast.success(language === "ru" 
+        ? "Заявка отправлена! Свяжусь в течение 24 часов" 
+        : "Request sent! I'll contact you within 24 hours"
+      );
+      setName("");
+      setContact("");
+    } catch (error) {
+      console.error("Submit error:", error);
+      toast.error(language === "ru" 
+        ? "Ошибка отправки. Попробуйте ещё раз" 
+        : "Failed to submit. Please try again"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const ctaText = ctaVariant === "A" 

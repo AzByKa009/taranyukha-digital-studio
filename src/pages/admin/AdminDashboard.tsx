@@ -1,7 +1,7 @@
 import { useEffect, useState, lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { FolderOpen, Wrench, Bot, FileText, Plus, Video, Image, Settings, Search } from "lucide-react";
+import { FolderOpen, Wrench, Bot, FileText, Plus, Video, Image, Settings, Search, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -14,21 +14,25 @@ interface Stats {
   products: number;
   posts: number;
   videos: number;
+  leads: number;
+  newLeads: number;
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<Stats>({ cases: 0, services: 0, products: 0, posts: 0, videos: 0 });
+  const [stats, setStats] = useState<Stats>({ cases: 0, services: 0, products: 0, posts: 0, videos: 0, leads: 0, newLeads: 0 });
   const [loading, setLoading] = useState(true);
   const { t, language } = useLanguage();
 
   useEffect(() => {
     const fetchStats = async () => {
-      const [casesRes, servicesRes, productsRes, postsRes, videosRes] = await Promise.all([
+      const [casesRes, servicesRes, productsRes, postsRes, videosRes, leadsRes, newLeadsRes] = await Promise.all([
         supabase.from("cases").select("id", { count: "exact", head: true }),
         supabase.from("services").select("id", { count: "exact", head: true }),
         supabase.from("ai_products").select("id", { count: "exact", head: true }),
         supabase.from("blog_posts").select("id", { count: "exact", head: true }),
         supabase.from("portfolio_videos").select("id", { count: "exact", head: true }),
+        supabase.from("leads").select("id", { count: "exact", head: true }),
+        supabase.from("leads").select("id", { count: "exact", head: true }).eq("status", "new"),
       ]);
 
       setStats({
@@ -37,6 +41,8 @@ export default function AdminDashboard() {
         products: productsRes.count ?? 0,
         posts: postsRes.count ?? 0,
         videos: videosRes.count ?? 0,
+        leads: leadsRes.count ?? 0,
+        newLeads: newLeadsRes.count ?? 0,
       });
       setLoading(false);
     };
@@ -45,6 +51,13 @@ export default function AdminDashboard() {
   }, []);
 
   const cards = [
+    { 
+      title: "Заявки", 
+      count: stats.leads,
+      badge: stats.newLeads > 0 ? stats.newLeads : undefined,
+      icon: MessageSquare, 
+      href: "/admin/leads",
+    },
     { 
       title: "Кейсы", 
       count: stats.cases, 
@@ -101,13 +114,18 @@ export default function AdminDashboard() {
         <AnalyticsSection />
       </Suspense>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
         {cards.map((card) => (
           <Link 
             key={card.href} 
             to={card.href}
-            className="premium-card p-4 sm:p-6 group"
+            className="premium-card p-4 sm:p-6 group relative"
           >
+            {'badge' in card && card.badge && (
+              <span className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full">
+                {card.badge}
+              </span>
+            )}
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center">
                 <card.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
