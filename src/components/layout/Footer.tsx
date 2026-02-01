@@ -144,12 +144,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
+        <div className="mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-border/40">
           <p className="text-xs sm:text-sm text-muted-foreground text-center md:text-left">
             {footer?.copyright || `© ${new Date().getFullYear()} Aleksey Taranukha. ${t("footer.rights")}.`}
-          </p>
-          <p className="text-xs sm:text-sm text-muted-foreground/60">
-            {language === "ru" ? "Сделано с использованием AI" : "Made with AI"}
           </p>
         </div>
       </div>
