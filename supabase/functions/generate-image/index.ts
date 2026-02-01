@@ -7,6 +7,33 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+function extractImageDataUrl(gatewayPayload: any): string | null {
+  const msg = gatewayPayload?.choices?.[0]?.message;
+  if (!msg) return null;
+
+  // Primary: Lovable AI image schema
+  const img0 = msg?.images?.[0];
+  const direct = img0?.image_url?.url;
+  if (typeof direct === "string" && direct.startsWith("data:image/")) return direct;
+
+  // Variant: image_url might be directly a string
+  const direct2 = img0?.image_url;
+  if (typeof direct2 === "string" && direct2.startsWith("data:image/")) return direct2;
+
+  // Variant: some gateways return message.content as a string data URL
+  if (typeof msg?.content === "string" && msg.content.startsWith("data:image/")) return msg.content;
+
+  // Variant: OpenAI-style multimodal content array
+  if (Array.isArray(msg?.content)) {
+    for (const part of msg.content) {
+      const url = part?.image_url?.url ?? part?.image_url;
+      if (typeof url === "string" && url.startsWith("data:image/")) return url;
+    }
+  }
+
+  return null;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response('ok', { headers: corsHeaders });
@@ -106,10 +133,31 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const imageData = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const imageData = extractImageDataUrl(data);
 
     if (!imageData) {
-      throw new Error("No image generated");
+      // Provide useful diagnostics without leaking secrets.
+      const preview = {
+        model: data?.model,
+        hasChoices: Array.isArray(data?.choices),
+        messageKeys: Object.keys(data?.choices?.[0]?.message ?? {}),
+        contentType: typeof data?.choices?.[0]?.message?.content,
+        contentPreview:
+          typeof data?.choices?.[0]?.message?.content === "string"
+            ? data.choices[0].message.content.slice(0, 300)
+            : Array.isArray(data?.choices?.[0]?.message?.content)
+              ? data.choices[0].message.content.map((p: any) => Object.keys(p ?? {})).slice(0, 3)
+              : null,
+      };
+      console.error("AI Gateway returned no image. Payload preview:", preview);
+      return new Response(
+        JSON.stringify({
+          error:
+            "AI Gateway вернул ответ без изображения. Попробуйте уточнить промпт (например: 'сгенерируй именно картинку') или повторить запрос.",
+          debug: preview,
+        }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     // Extract base64 data (remove data:image/... prefix)
