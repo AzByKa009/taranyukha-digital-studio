@@ -109,6 +109,19 @@ serve(async (req) => {
       );
     }
 
+    // Verify user has admin role
+    const { data: isAdmin, error: roleError } = await supabaseAdmin.rpc('has_role', {
+      _user_id: user.id,
+      _role: 'admin'
+    });
+
+    if (roleError || !isAdmin) {
+      return new Response(
+        JSON.stringify({ error: "Доступ запрещён. Требуются права администратора." }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const clientIp = getClientIp(req);
     const { data: rateLimitAllowed, error: rateLimitError } = await supabaseAdmin.rpc(
       "check_rate_limit",
