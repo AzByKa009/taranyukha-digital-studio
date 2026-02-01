@@ -2,11 +2,39 @@ import { Link } from "react-router-dom";
 import { Mail, ArrowUpRight } from "lucide-react";
 import { useSiteSettings, ContactSettings, FooterSettings } from "@/hooks/useSiteSettings";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface ServiceLink {
+  name: string;
+  href: string;
+}
 
 export function Footer() {
   const { data: contact } = useSiteSettings<ContactSettings>("contact");
   const { data: footer } = useSiteSettings<FooterSettings>("footer");
   const { t, language } = useLanguage();
+  const [services, setServices] = useState<ServiceLink[]>([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      const { data, error } = await supabase
+        .from("services")
+        .select("slug, title")
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true })
+        .limit(6);
+
+      if (!error && data) {
+        setServices(data.map(s => ({
+          name: s.title,
+          href: `/services/${s.slug}`
+        })));
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   const navigation = {
     main: [
@@ -14,14 +42,6 @@ export function Footer() {
       { name: t("nav.services"), href: "/services" },
       { name: t("nav.ai_products"), href: "/ai-products" },
       { name: language === "ru" ? "Блог" : "Blog", href: "/blog" },
-    ],
-    services: [
-      { name: language === "ru" ? "Монтаж Reels" : "Reels Editing", href: "/montazh-reels" },
-      { name: language === "ru" ? "Продюсер Reels" : "Reels Production", href: "/produser-reels" },
-      { name: language === "ru" ? "AI-бот для бизнеса" : "AI Business Bot", href: "/ai-bot-dlya-biznesa" },
-      { name: language === "ru" ? "Сайт под услуги" : "Service Website", href: "/razrabotka-sayta-pod-uslugi" },
-      { name: language === "ru" ? "Вайб кодинг" : "Vibe Coding", href: "/vibe-coding" },
-      { name: language === "ru" ? "AI автоматизация" : "AI Automation", href: "/ai-automation" },
     ],
     company: [
       { name: t("nav.about"), href: "/about" },
@@ -89,16 +109,27 @@ export function Footer() {
               {t("footer.services")}
             </h3>
             <ul className="space-y-2.5 sm:space-y-3.5">
-              {navigation.services.map((item) => (
-                <li key={item.name}>
+              {services.length > 0 ? (
+                services.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      to={item.href}
+                      className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li>
                   <Link
-                    to={item.href}
+                    to="/services"
                     className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
                   >
-                    {item.name}
+                    {language === "ru" ? "Все услуги" : "All services"}
                   </Link>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
 
