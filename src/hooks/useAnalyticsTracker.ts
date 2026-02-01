@@ -36,7 +36,7 @@ function getSessionId(): string {
   return newId;
 }
 
-function detectDevice(): string {
+function detectDevice(): "desktop" | "mobile" | "tablet" {
   const ua = navigator.userAgent;
   if (/tablet|ipad|playbook|silk/i.test(ua)) return "tablet";
   if (/mobile|iphone|ipod|android|blackberry|opera mini|iemobile/i.test(ua)) return "mobile";
@@ -54,13 +54,24 @@ function detectBrowser(): string {
   return "Other";
 }
 
-function detectTrafficSource(referrer: string): string {
+function detectTrafficSource(referrer: string): "direct" | "search" | "social" | "referral" | "internal" {
   if (!referrer) return "direct";
   const ref = referrer.toLowerCase();
   if (ref.includes("google") || ref.includes("bing") || ref.includes("yahoo") || ref.includes("yandex")) return "search";
   if (ref.includes("facebook") || ref.includes("instagram") || ref.includes("twitter") || ref.includes("linkedin") || ref.includes("telegram") || ref.includes("vk.com") || ref.includes("t.me")) return "social";
   if (ref.includes(window.location.hostname)) return "internal";
   return "referral";
+}
+
+// Track analytics via edge function (server-side validation + rate limiting)
+async function trackAnalytics(action: string, data: Record<string, unknown>) {
+  try {
+    await supabase.functions.invoke("track-analytics", {
+      body: { action, data }
+    });
+  } catch (error) {
+    console.debug("Analytics tracking error:", error);
+  }
 }
 
 export function useAnalyticsTracker() {
@@ -81,42 +92,37 @@ export function useAnalyticsTracker() {
       const browser = detectBrowser();
       const trafficSource = detectTrafficSource(referrer);
 
-      try {
-        await supabase.from("page_views").insert({
-          page_path: location.pathname,
-          page_title: document.title,
-          referrer: referrer || null,
-          user_agent: navigator.userAgent,
-          device_type: device,
-          browser: browser,
+      // Track page view via edge function
+      await trackAnalytics("page_view", {
+        page_path: location.pathname,
+        page_title: document.title,
+        referrer: referrer || null,
+        device_type: device,
+        browser: browser,
+        session_id: sessionId,
+        visitor_id: visitorId,
+      });
+
+      if (isNewSession) {
+        sessionStorage.removeItem("analytics_is_new_session");
+        
+        // Create new session via edge function
+        await trackAnalytics("session_start", {
           session_id: sessionId,
           visitor_id: visitorId,
+          entry_page: location.pathname,
+          referrer: referrer || null,
+          traffic_source: trafficSource,
+          device_type: device,
+          browser: browser,
+          is_active: true,
         });
-
-        if (isNewSession) {
-          sessionStorage.removeItem("analytics_is_new_session");
-          
-          await supabase.from("sessions").insert({
-            session_id: sessionId,
-            visitor_id: visitorId,
-            entry_page: location.pathname,
-            referrer: referrer || null,
-            traffic_source: trafficSource,
-            device_type: device,
-            browser: browser,
-            is_active: true,
-          });
-        } else {
-          await supabase
-            .from("sessions")
-            .update({
-              exit_page: location.pathname,
-              last_activity_at: new Date().toISOString(),
-            })
-            .eq("session_id", sessionId);
-        }
-      } catch (error) {
-        console.debug("Analytics tracking error:", error);
+      } else {
+        // Update existing session via edge function
+        await trackAnalytics("session_update", {
+          session_id: sessionId,
+          exit_page: location.pathname,
+        });
       }
     };
 
@@ -128,11 +134,9 @@ export function useAnalyticsTracker() {
       const sessionId = sessionStorage.getItem(SESSION_ID_KEY);
       if (sessionId) {
         sessionStorage.setItem("analytics_last_activity", Date.now().toString());
-        supabase
-          .from("sessions")
-          .update({ last_activity_at: new Date().toISOString() })
-          .eq("session_id", sessionId)
-          .then(() => {});
+        trackAnalytics("session_update", {
+          session_id: sessionId,
+        });
       }
     };
 
@@ -142,15 +146,11 @@ export function useAnalyticsTracker() {
         const startTime = sessionStorage.getItem("analytics_session_start");
         if (sessionId && startTime) {
           const duration = Math.floor((Date.now() - parseInt(startTime)) / 1000);
-          supabase
-            .from("sessions")
-            .update({ 
-              is_active: false, 
-              duration_seconds: duration,
-              ended_at: new Date().toISOString()
-            })
-            .eq("session_id", sessionId)
-            .then(() => {});
+          trackAnalytics("session_update", {
+            session_id: sessionId,
+            is_active: false,
+            duration_seconds: duration,
+          });
         }
       } else {
         updateActivity();
@@ -159,10 +159,17 @@ export function useAnalyticsTracker() {
 
     const handleBeforeUnload = () => {
       const sessionId = sessionStorage.getItem(SESSION_ID_KEY);
+      const startTime = sessionStorage.getItem("analytics_session_start");
       if (sessionId) {
+        const duration = startTime ? Math.floor((Date.now() - parseInt(startTime)) / 1000) : 0;
+        // Use sendBeacon for reliable tracking on page unload
+        const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/track-analytics`;
         navigator.sendBeacon(
-          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/sessions?session_id=eq.${sessionId}`,
-          JSON.stringify({ is_active: false })
+          url,
+          JSON.stringify({
+            action: "session_update",
+            data: { session_id: sessionId, is_active: false, duration_seconds: duration }
+          })
         );
       }
     };
