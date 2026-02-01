@@ -55,6 +55,7 @@ const AdminMediaLibrary = lazy(() => import("./pages/admin/media/AdminMediaLibra
 const AdminPortfolioList = lazy(() => import("./pages/admin/portfolio/AdminPortfolioList"));
 const AdminPortfolioForm = lazy(() => import("./pages/admin/portfolio/AdminPortfolioForm"));
 const AdminAITools = lazy(() => import("./pages/admin/ai/AdminAITools"));
+const AdminLeadsList = lazy(() => import("./pages/admin/leads/AdminLeadsList"));
 
 const queryClient = new QueryClient();
 
@@ -103,6 +104,7 @@ const App = () => (
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route index element={<AdminDashboard />} />
+                  <Route path="leads" element={<AdminLeadsList />} />
                   <Route path="cases" element={<AdminCasesList />} />
                   <Route path="cases/new" element={<AdminCaseForm />} />
                   <Route path="cases/:id" element={<AdminCaseForm />} />

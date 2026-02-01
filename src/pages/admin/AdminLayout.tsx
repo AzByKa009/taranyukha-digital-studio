@@ -17,13 +17,15 @@ import {
   Video,
   Sparkles,
   Menu,
-  X
+  X,
+  MessageSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const navItems = [
   { href: "/admin", label: "Главная", icon: LayoutDashboard, exact: true },
+  { href: "/admin/leads", label: "Заявки", icon: MessageSquare },
   { href: "/admin/cases", label: "Кейсы", icon: FolderOpen },
   { href: "/admin/services", label: "Услуги", icon: Wrench },
   { href: "/admin/ai-products", label: "AI-продукты", icon: Bot },

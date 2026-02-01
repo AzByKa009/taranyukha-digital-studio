@@ -217,6 +217,39 @@ export type Database = {
         }
         Relationships: []
       }
+      leads: {
+        Row: {
+          contact: string
+          created_at: string
+          id: string
+          message: string | null
+          name: string
+          source_page: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          contact: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          name: string
+          source_page?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          contact?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          name?: string
+          source_page?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       page_content: {
         Row: {
           content: Json
