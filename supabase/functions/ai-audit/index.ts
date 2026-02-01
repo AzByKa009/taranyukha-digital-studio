@@ -8,10 +8,8 @@ const RATE_LIMIT_ENDPOINT = "ai-audit";
 
 // Extract client IP from request headers
 function getClientIp(req: Request): string {
-  // Check common proxy headers
   const xForwardedFor = req.headers.get("x-forwarded-for");
   if (xForwardedFor) {
-    // Take the first IP in the chain (original client)
     return xForwardedFor.split(",")[0].trim();
   }
   
@@ -25,20 +23,26 @@ function getClientIp(req: Request): string {
     return cfConnectingIp.trim();
   }
   
-  // Fallback - should rarely happen in production
   return "unknown";
 }
 
-// Restrict CORS to known frontend origins (prevents cross-site abuse)
-const allowedOrigins = new Set<string>([
-  // Lovable preview
-  "https://id-preview--cfb231d2-f3ba-4099-910d-c2951be206d2.lovable.app",
-  // Local development
-  "http://localhost:5173",
-  "http://localhost:8080",
-]);
+// Build allowed origins from environment variable
+function getAllowedOrigins(): Set<string> {
+  const envOrigins = Deno.env.get("ALLOWED_ORIGINS") || "";
+  const defaultOrigins = [
+    "http://localhost:5173",
+    "http://localhost:8080",
+  ];
+  
+  const origins = envOrigins
+    ? envOrigins.split(",").map(o => o.trim()).filter(Boolean)
+    : defaultOrigins;
+    
+  return new Set(origins);
+}
 
 function buildCorsHeaders(origin: string | null) {
+  const allowedOrigins = getAllowedOrigins();
   const allowed = !!origin && allowedOrigins.has(origin);
 
   return {
@@ -79,22 +83,15 @@ const AuditRequestSchema = z.object({
 function normalizeText(input: string): string {
   return input
     .normalize("NFKC")
-    // remove zero-width chars
     .replace(/[\u200B-\u200D\uFEFF]/g, "")
-    // strip control chars (incl. newlines/tabs) to reduce obfuscation tricks
     .replace(/[\u0000-\u001F\u007F-\u009F]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-// Sanitize input to reduce prompt-injection surface
 function sanitizeInput(input: string): string {
   const normalized = normalizeText(input);
-
-  // Remove common formatting that helps smuggle instructions
   let out = normalized.replace(/[<>`]/g, "");
-
-  // Remove common "role" / jailbreak patterns after normalization (case-insensitive)
   out = out
     .replace(/\b(system|assistant|developer|user)\s*:/gi, "")
     .replace(/\brole\s*:/gi, "")
@@ -110,12 +107,11 @@ serve(async (req) => {
   const origin = req.headers.get("Origin");
   const corsHeaders = buildCorsHeaders(origin);
 
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Reject unexpected browser origins early (prevents cross-site quota theft)
+  const allowedOrigins = getAllowedOrigins();
   if (origin && !allowedOrigins.has(origin)) {
     return new Response(
       JSON.stringify({ error: "Origin not allowed" }),
@@ -124,13 +120,10 @@ serve(async (req) => {
   }
 
   try {
-    // 0. Get client IP for rate limiting
     const clientIp = getClientIp(req);
     
-    // 1. Authentication check
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      console.error("Missing authorization header");
       return new Response(
         JSON.stringify({ error: "Требуется авторизация" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -145,27 +138,21 @@ serve(async (req) => {
       throw new Error("Supabase configuration is missing");
     }
 
-    // Client for user auth (with user's token)
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } }
     });
 
-    // Admin client for rate limiting (bypasses RLS)
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey);
 
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     
     if (authError || !user) {
-      console.error("Authentication failed:", authError?.message);
       return new Response(
         JSON.stringify({ error: "Недействительный токен авторизации" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    console.log("Authenticated user:", user.id);
-
-    // 2. Rate limiting check (using service role to bypass RLS)
     const { data: rateLimitAllowed, error: rateLimitError } = await supabaseAdmin.rpc(
       "check_rate_limit",
       {
@@ -178,14 +165,9 @@ serve(async (req) => {
 
     if (rateLimitError) {
       console.error("Rate limit check failed:", rateLimitError.message);
-      // Don't block request on rate limit errors, just log
     } else if (rateLimitAllowed === false) {
-      console.log("Rate limit exceeded for IP:", clientIp);
       return new Response(
-        JSON.stringify({ 
-          error: "Превышен лимит запросов. Попробуйте через час.",
-          retryAfter: 3600
-        }),
+        JSON.stringify({ error: "Превышен лимит запросов. Попробуйте через час." }),
         { 
           status: 429, 
           headers: { 
@@ -197,9 +179,6 @@ serve(async (req) => {
       );
     }
 
-    // 3. Parse and validate input
-
-    // 2. Parse and validate input
     let requestBody;
     try {
       requestBody = await req.json();
@@ -213,19 +192,14 @@ serve(async (req) => {
     const parseResult = AuditRequestSchema.safeParse(requestBody);
     
     if (!parseResult.success) {
-      console.error("Validation failed:", parseResult.error.issues);
       return new Response(
-        JSON.stringify({ 
-          error: "Некорректные данные формы",
-          details: parseResult.error.issues.map(issue => issue.message)
-        }),
+        JSON.stringify({ error: "Некорректные данные формы" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     const { businessType, currentProcesses, painPoints, budget, goals } = parseResult.data;
 
-    // 3. Sanitize inputs
     const sanitizedBusinessType = sanitizeInput(businessType);
     const sanitizedCurrentProcesses = sanitizeInput(currentProcesses);
     const sanitizedPainPoints = sanitizeInput(painPoints);
@@ -280,8 +254,6 @@ ${JSON.stringify(userData, null, 2)}
 
 Создай персонализированный план автоматизации.`;
 
-    console.log("Generating AI audit plan for user:", user.id);
-
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -300,8 +272,6 @@ ${JSON.stringify(userData, null, 2)}
 
     if (!response.ok) {
       const status = response.status;
-      console.error("AI Gateway returned non-OK status:", status);
-
       if (status === 429) {
         return new Response(
           JSON.stringify({ error: "Слишком много запросов. Попробуйте позже." }),
@@ -314,7 +284,6 @@ ${JSON.stringify(userData, null, 2)}
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-
       throw new Error(`AI Gateway error: ${status}`);
     }
 
@@ -325,18 +294,13 @@ ${JSON.stringify(userData, null, 2)}
       throw new Error("No content in AI response");
     }
 
-    console.log("Successfully generated audit plan for user:", user.id);
-
     return new Response(
       JSON.stringify({ plan }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
 
   } catch (error) {
-    // Log detailed error server-side only for debugging
     console.error("Error in ai-audit function:", error);
-    
-    // Return generic message to client - never expose internal error details
     return new Response(
       JSON.stringify({ error: "Произошла ошибка. Попробуйте позже." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

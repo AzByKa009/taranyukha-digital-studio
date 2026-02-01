@@ -26,15 +26,23 @@ function getClientIp(req: Request): string {
   return "unknown";
 }
 
-// Restrict CORS to known frontend origins
-const allowedOrigins = new Set<string>([
-  "https://id-preview--cfb231d2-f3ba-4099-910d-c2951be206d2.lovable.app",
-  "https://taranyukha-digital-studio.lovable.app",
-  "http://localhost:5173",
-  "http://localhost:8080",
-]);
+// Build allowed origins from environment variable
+function getAllowedOrigins(): Set<string> {
+  const envOrigins = Deno.env.get("ALLOWED_ORIGINS") || "";
+  const defaultOrigins = [
+    "http://localhost:5173",
+    "http://localhost:8080",
+  ];
+  
+  const origins = envOrigins
+    ? envOrigins.split(",").map(o => o.trim()).filter(Boolean)
+    : defaultOrigins;
+    
+  return new Set(origins);
+}
 
 function buildCorsHeaders(origin: string | null) {
+  const allowedOrigins = getAllowedOrigins();
   const allowed = !!origin && allowedOrigins.has(origin);
   return {
     "Access-Control-Allow-Origin": allowed && origin ? origin : "null",
@@ -61,7 +69,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Reject unexpected browser origins
+  const allowedOrigins = getAllowedOrigins();
   if (origin && !allowedOrigins.has(origin)) {
     return new Response(
       JSON.stringify({ error: "Origin not allowed" }),
@@ -70,7 +78,6 @@ serve(async (req) => {
   }
 
   try {
-    // 1. Authentication check
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(
@@ -87,12 +94,10 @@ serve(async (req) => {
       throw new Error("Supabase configuration is missing");
     }
 
-    // Client for user auth
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } }
     });
 
-    // Admin client for rate limiting (bypasses RLS)
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey);
 
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
@@ -104,7 +109,6 @@ serve(async (req) => {
       );
     }
 
-    // 2. Rate limiting check
     const clientIp = getClientIp(req);
     const { data: rateLimitAllowed, error: rateLimitError } = await supabaseAdmin.rpc(
       "check_rate_limit",
@@ -132,7 +136,6 @@ serve(async (req) => {
       );
     }
 
-    // 3. Parse and validate input
     let requestBody;
     try {
       requestBody = await req.json();
