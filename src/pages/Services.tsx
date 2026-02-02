@@ -60,21 +60,43 @@ const Services = () => {
   const [dbServices, setDbServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchServices = async () => {
+    const { data, error } = await supabase
+      .from("services")
+      .select("id, slug, title, short_description, price_from")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
+
+    if (!error && data) {
+      setDbServices(data);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchServices = async () => {
-      const { data, error } = await supabase
-        .from("services")
-        .select("id, slug, title, short_description, price_from")
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true });
-
-      if (!error && data) {
-        setDbServices(data);
-      }
-      setLoading(false);
-    };
-
     fetchServices();
+  }, []);
+
+  // Subscribe to real-time updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('services-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'services'
+        },
+        () => {
+          fetchServices();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   useSEO({

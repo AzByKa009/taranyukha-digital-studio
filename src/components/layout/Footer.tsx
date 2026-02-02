@@ -16,24 +16,46 @@ export function Footer() {
   const { t, language } = useLanguage();
   const [services, setServices] = useState<ServiceLink[]>([]);
 
+  const fetchServices = async () => {
+    const { data, error } = await supabase
+      .from("services")
+      .select("slug, title")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true })
+      .limit(6);
+
+    if (!error && data) {
+      setServices(data.map(s => ({
+        name: s.title,
+        href: `/services/${s.slug}`
+      })));
+    }
+  };
+
   useEffect(() => {
-    const fetchServices = async () => {
-      const { data, error } = await supabase
-        .from("services")
-        .select("slug, title")
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true })
-        .limit(6);
-
-      if (!error && data) {
-        setServices(data.map(s => ({
-          name: s.title,
-          href: `/services/${s.slug}`
-        })));
-      }
-    };
-
     fetchServices();
+  }, []);
+
+  // Subscribe to real-time updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('footer-services-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'services'
+        },
+        () => {
+          fetchServices();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const navigation = {
