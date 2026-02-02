@@ -48,49 +48,71 @@ const ServiceDetail = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
-  useEffect(() => {
-    const fetchService = async () => {
-      if (!slug) return;
+  const fetchService = async () => {
+    if (!slug) return;
 
-      const { data, error } = await supabase
-        .from("services")
-        .select("*")
-        .eq("slug", slug)
-        .eq("is_published", true)
-        .maybeSingle();
+    const { data, error } = await supabase
+      .from("services")
+      .select("*")
+      .eq("slug", slug)
+      .eq("is_published", true)
+      .maybeSingle();
 
-      if (error || !data) {
-        setNotFound(true);
-        setLoading(false);
-        return;
-      }
-
-      // Parse JSON fields
-      const parsedService = {
-        ...data,
-        faq: data.faq ? (data.faq as unknown as FAQItem[]) : null,
-        process_steps: data.process_steps ? (data.process_steps as unknown as ProcessStep[]) : null,
-      };
-
-      setService(parsedService);
-
-      // Fetch all services to find next one
-      const { data: allServices } = await supabase
-        .from("services")
-        .select("slug, title, sort_order")
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true });
-
-      if (allServices && allServices.length > 0) {
-        const currentIndex = allServices.findIndex((s) => s.slug === slug);
-        const next = currentIndex < allServices.length - 1 ? allServices[currentIndex + 1] : allServices[0];
-        setNextService(next);
-      }
-
+    if (error || !data) {
+      setNotFound(true);
       setLoading(false);
+      return;
+    }
+
+    // Parse JSON fields
+    const parsedService = {
+      ...data,
+      faq: data.faq ? (data.faq as unknown as FAQItem[]) : null,
+      process_steps: data.process_steps ? (data.process_steps as unknown as ProcessStep[]) : null,
     };
 
+    setService(parsedService);
+
+    // Fetch all services to find next one
+    const { data: allServices } = await supabase
+      .from("services")
+      .select("slug, title, sort_order")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
+
+    if (allServices && allServices.length > 0) {
+      const currentIndex = allServices.findIndex((s) => s.slug === slug);
+      const next = currentIndex < allServices.length - 1 ? allServices[currentIndex + 1] : allServices[0];
+      setNextService(next);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchService();
+  }, [slug]);
+
+  // Subscribe to real-time updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('service-detail-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'services'
+        },
+        () => {
+          fetchService();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [slug]);
 
   useEffect(() => {

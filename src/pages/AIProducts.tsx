@@ -41,37 +41,81 @@ const AIProducts = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchData = async () => {
+    // Fetch categories
+    const { data: categoriesData } = await supabase
+      .from("ai_product_categories")
+      .select("id, slug, title, description, icon")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
+
+    // Fetch products
+    const { data: productsData } = await supabase
+      .from("ai_products")
+      .select("id, slug, title, description, thumbnail, features, price_from, timeline, category_id")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
+
+    if (categoriesData) {
+      setCategories(categoriesData);
+      if (categoriesData.length > 0 && !activeCategory) {
+        setActiveCategory(categoriesData[0].id);
+      }
+    }
+
+    if (productsData) {
+      setProducts(productsData);
+    }
+
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      // Fetch categories
-      const { data: categoriesData } = await supabase
-        .from("ai_product_categories")
-        .select("id, slug, title, description, icon")
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true });
-
-      // Fetch products
-      const { data: productsData } = await supabase
-        .from("ai_products")
-        .select("id, slug, title, description, thumbnail, features, price_from, timeline, category_id")
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true });
-
-      if (categoriesData) {
-        setCategories(categoriesData);
-        if (categoriesData.length > 0) {
-          setActiveCategory(categoriesData[0].id);
-        }
-      }
-
-      if (productsData) {
-        setProducts(productsData);
-      }
-
-      setLoading(false);
-    };
-
     fetchData();
+  }, []);
+
+  // Subscribe to real-time updates for categories
+  useEffect(() => {
+    const channel = supabase
+      .channel('ai-categories-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'ai_product_categories'
+        },
+        () => {
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  // Subscribe to real-time updates for products
+  useEffect(() => {
+    const channel = supabase
+      .channel('ai-products-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'ai_products'
+        },
+        () => {
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   useSEO({
