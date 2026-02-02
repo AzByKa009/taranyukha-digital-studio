@@ -23,23 +23,44 @@ export function FeaturedCases() {
   const prefersReducedMotion = useReducedMotion();
   const { t } = useLanguage();
 
+  const fetchCases = async () => {
+    const { data, error } = await supabase
+      .from("cases")
+      .select("id, slug, title, category_label, short_description, thumbnail")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true })
+      .limit(3);
+
+    if (!error && data) {
+      setCases(data);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchCases = async () => {
-      const { data, error } = await supabase
-        .from("cases")
-        .select("id, slug, title, category_label, short_description, thumbnail")
-        .eq("is_published", true)
-        .is("video_preview", null)
-        .order("sort_order", { ascending: true })
-        .limit(3);
-
-      if (!error && data) {
-        setCases(data);
-      }
-      setLoading(false);
-    };
-
     fetchCases();
+  }, []);
+
+  // Subscribe to real-time updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('featured-cases-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'cases'
+        },
+        () => {
+          fetchCases();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   if (loading) {

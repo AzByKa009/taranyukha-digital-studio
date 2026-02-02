@@ -40,21 +40,43 @@ const Cases = () => {
     { value: "vibe-coding", label: t("cases.vibe_coding") },
   ];
 
+  const fetchCases = async () => {
+    const { data, error } = await supabase
+      .from("cases")
+      .select("id, slug, title, category, category_label, short_description, year, thumbnail, video_preview, tags")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
+
+    if (!error && data) {
+      setCases(data);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchCases = async () => {
-      const { data, error } = await supabase
-        .from("cases")
-        .select("id, slug, title, category, category_label, short_description, year, thumbnail, video_preview, tags")
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true });
-
-      if (!error && data) {
-        setCases(data);
-      }
-      setLoading(false);
-    };
-
     fetchCases();
+  }, []);
+
+  // Subscribe to real-time updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('cases-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'cases'
+        },
+        () => {
+          fetchCases();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   // Separate video cases (vertical montage) from regular cases
