@@ -38,18 +38,31 @@ interface Service {
 const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const fetchServices = async () => {
-    const { data, error } = await supabase
-      .from("services")
-      .select("id, slug, title, short_description, full_description, price_from, price_label, thumbnail, icon, features")
-      .eq("is_published", true)
-      .order("sort_order", { ascending: true });
+    try {
+      setLoadError(null);
+      const { data, error } = await supabase
+        .from("services")
+        .select(
+          "id, slug, title, short_description, full_description, price_from, price_label, thumbnail, icon, features"
+        )
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true });
 
-    if (!error && data) {
-      setServices(data);
+      if (error) {
+        throw error;
+      }
+
+      setServices(data ?? []);
+    } catch (e) {
+      console.error("Failed to fetch services:", e);
+      setServices([]);
+      setLoadError("Не удалось загрузить услуги. Обновите страницу и попробуйте ещё раз.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -105,6 +118,19 @@ const Services = () => {
       <Layout>
         <div className="flex justify-center items-center min-h-[60vh]">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <Layout>
+        <div className="container py-16">
+          <div className="max-w-2xl">
+            <h1 className="text-2xl sm:text-3xl font-display font-bold mb-3">Услуги</h1>
+            <p className="text-muted-foreground">{loadError}</p>
+          </div>
         </div>
       </Layout>
     );
