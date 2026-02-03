@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { Scene3D } from "@/components/3d/Scene3D";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { motion } from "framer-motion";
 import { EditableText } from "@/components/admin/EditableText";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface HeroContent {
   badge?: string;
@@ -19,60 +19,34 @@ interface HeroContent {
   stat_projects?: string;
   stat_ai?: string;
   stat_response?: string;
-  step_1_title?: string;
-  step_1_desc?: string;
-  step_2_title?: string;
-  step_2_desc?: string;
-  step_3_title?: string;
-  step_3_desc?: string;
-  step_4_title?: string;
-  step_4_desc?: string;
-  how_i_work?: string;
 }
 
-const defaultContent: HeroContent = {
-  badge: "Маркетолог · Системный подход",
-  title_1: "Выстраиваю маркетинг, ",
-  title_2: "который приносит клиентов",
-  subtitle: "Работаю с бизнесом напрямую. Упаковка, продвижение, автоматизация — как единая система, а не хаос задач.",
-  cta_text: "Обсудить задачу",
-  stat_years: "2+",
-  stat_projects: "10+",
-  stat_ai: "AI",
-  stat_response: "24ч",
-  step_1_title: "Разбираюсь",
-  step_1_desc: "Изучаю бизнес и задачу",
-  step_2_title: "Планирую",
-  step_2_desc: "Предлагаю решение",
-  step_3_title: "Делаю",
-  step_3_desc: "Беру реализацию на себя",
-  step_4_title: "Развиваю",
-  step_4_desc: "Помогаю масштабировать",
-  how_i_work: "Как я работаю",
-};
-
 export function EditableHeroSection() {
-  const queryClient = useQueryClient();
-  const [content, setContent] = useState<HeroContent>(defaultContent);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [content, setContent] = useState<HeroContent>({
+    badge: "Маркетолог + Технологии",
+    title_1: "Маркетинг ",
+    title_2: "как система роста",
+    subtitle: "Помогаю бизнесу расти системно — через упаковку, продвижение и автоматизацию. Работаю как стратег и партнёр, не как исполнитель.",
+    cta_text: "Разобрать мой проект",
+    stat_years: "2+",
+    stat_projects: "10+",
+    stat_ai: "AI",
+    stat_response: "24ч",
+  });
 
   useEffect(() => {
     loadContent();
   }, []);
 
   const loadContent = async () => {
-    try {
-      const { data } = await supabase
-        .from("site_settings")
-        .select("value")
-        .eq("key", "hero")
-        .maybeSingle();
+    const { data } = await supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "hero")
+      .maybeSingle();
 
-      if (data?.value && typeof data.value === "object") {
-        setContent((prev) => ({ ...prev, ...(data.value as HeroContent) }));
-      }
-    } finally {
-      setIsLoaded(true);
+    if (data?.value && typeof data.value === "object") {
+      setContent((prev) => ({ ...prev, ...(data.value as HeroContent) }));
     }
   };
 
@@ -92,32 +66,24 @@ export function EditableHeroSection() {
       } else {
         await supabase.from("site_settings").insert([{ key: "hero", value: newContent }]);
       }
-      
-      queryClient.invalidateQueries({ queryKey: ["site_settings", "hero"] });
       toast.success("Сохранено");
-    } catch {
+    } catch (error) {
       toast.error("Ошибка сохранения");
     }
   };
 
   const stats = [
-    { value: content.stat_years || "2+", label: "года опыта", key: "stat_years" as const },
-    { value: content.stat_projects || "10+", label: "проектов", key: "stat_projects" as const },
-    { value: content.stat_ai || "AI", label: "автоматизация", key: "stat_ai" as const },
-    { value: content.stat_response || "24ч", label: "ответ", key: "stat_response" as const },
-  ];
-
-  const processSteps = [
-    { number: "01", titleKey: "step_1_title" as const, descKey: "step_1_desc" as const },
-    { number: "02", titleKey: "step_2_title" as const, descKey: "step_2_desc" as const },
-    { number: "03", titleKey: "step_3_title" as const, descKey: "step_3_desc" as const },
-    { number: "04", titleKey: "step_4_title" as const, descKey: "step_4_desc" as const },
+    { value: content.stat_years || "2+", label: "лет опыта", key: "stat_years" },
+    { value: content.stat_projects || "10+", label: "проектов", key: "stat_projects" },
+    { value: content.stat_ai || "AI", label: "технологии", key: "stat_ai" },
+    { value: content.stat_response || "24ч", label: "ответ", key: "stat_response" },
   ];
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-glow opacity-30" />
       <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-primary/5 to-transparent" />
+      <Scene3D />
       
       <div className="container relative z-10 pt-20 sm:pt-24 pb-12 sm:pb-16">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -193,50 +159,13 @@ export function EditableHeroSection() {
                 <EditableText
                   id={`hero-${stat.key}`}
                   value={stat.value}
-                  onSave={(v) => saveField(stat.key, v)}
+                  onSave={(v) => saveField(stat.key as keyof HeroContent, v)}
                   className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gradient mb-1 sm:mb-2"
                   as="div"
                 />
                 <div className="text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
               </motion.div>
             ))}
-          </div>
-        </FadeIn>
-
-        <FadeIn delay={0.5}>
-          <div className="mt-16 sm:mt-24">
-            <EditableText
-              id="hero-how-i-work"
-              value={content.how_i_work || "Как я работаю"}
-              onSave={(v) => saveField("how_i_work", v)}
-              className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider mb-6 sm:mb-10"
-              as="h3"
-            />
-            <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5" staggerDelay={0.1}>
-              {processSteps.map((step) => (
-                <StaggerItem key={step.number}>
-                  <div className="group p-4 sm:p-7 rounded-xl sm:rounded-2xl border border-border/40 bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-primary/30 transition-all duration-400">
-                    <div className="text-xl sm:text-3xl font-display font-bold text-primary/50 mb-2 sm:mb-4 group-hover:text-primary/70 transition-colors duration-400">
-                      {step.number}
-                    </div>
-                    <EditableText
-                      id={`hero-${step.titleKey}`}
-                      value={content[step.titleKey] || ""}
-                      onSave={(v) => saveField(step.titleKey, v)}
-                      className="text-sm sm:text-lg font-display font-semibold mb-1 sm:mb-2"
-                      as="h4"
-                    />
-                    <EditableText
-                      id={`hero-${step.descKey}`}
-                      value={content[step.descKey] || ""}
-                      onSave={(v) => saveField(step.descKey, v)}
-                      className="text-xs sm:text-sm text-muted-foreground leading-relaxed"
-                      as="p"
-                    />
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
           </div>
         </FadeIn>
       </div>

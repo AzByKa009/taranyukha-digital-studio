@@ -86,17 +86,8 @@ export function EditableWhatIDo() {
   if (loading) {
     return (
       <section className="py-20 sm:py-28 relative bg-card/30">
-        <div className="container">
-          <div className="max-w-2xl mb-12 animate-pulse">
-            <div className="h-4 w-24 bg-muted rounded mb-4" />
-            <div className="h-10 w-3/4 bg-muted rounded mb-4" />
-            <div className="h-6 w-full bg-muted rounded" />
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => (
-              <div key={i} className="h-48 bg-muted/50 rounded-xl animate-pulse" />
-            ))}
-          </div>
+        <div className="container flex justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       </section>
     );

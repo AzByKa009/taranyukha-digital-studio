@@ -7,7 +7,6 @@ import { Send, Mail, MessageCircle } from "lucide-react";
 import { FadeIn, PremiumCard } from "@/components/motion";
 import { EditableText } from "@/components/admin/EditableText";
 import { supabase } from "@/integrations/supabase/client";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface ContactContent {
   title?: string;
@@ -16,7 +15,6 @@ interface ContactContent {
 }
 
 export function EditableContactSection() {
-  const queryClient = useQueryClient();
   const [title, setTitle] = useState("Обсудим ");
   const [titleAccent, setTitleAccent] = useState("ваш проект?");
   const [subtitle, setSubtitle] = useState("Расскажите о задаче — отвечу в течение дня и предложу решение.");
@@ -43,7 +41,6 @@ export function EditableContactSection() {
     } else {
       await supabase.from("site_settings").insert([{ key: "contact_section", value: content }]);
     }
-    queryClient.invalidateQueries({ queryKey: ["site_settings", "contact_section"] });
     toast.success("Сохранено");
   };
 
@@ -108,17 +105,17 @@ export function EditableContactSection() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-xs sm:text-sm font-medium text-foreground">Имя</label>
-                    <Input placeholder="Как вас зовут?" className="bg-background/50" />
+                    <Input placeholder="Ваше имя" className="bg-background/50" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs sm:text-sm font-medium text-foreground">Email или Telegram</label>
-                    <Input placeholder="@username или email" className="bg-background/50" />
+                    <label className="text-xs sm:text-sm font-medium text-foreground">Email</label>
+                    <Input type="email" placeholder="email@example.com" className="bg-background/50" />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-xs sm:text-sm font-medium text-foreground">Задача</label>
-                  <Textarea placeholder="Что нужно сделать?" rows={4} className="bg-background/50 resize-none" />
+                  <label className="text-xs sm:text-sm font-medium text-foreground">Сообщение</label>
+                  <Textarea placeholder="Расскажите о вашей задаче..." rows={4} className="bg-background/50 resize-none" />
                 </div>
 
                 <Button type="button" variant="hero" className="w-full">
@@ -127,7 +124,7 @@ export function EditableContactSection() {
                 </Button>
                 
                 <p className="text-xs text-muted-foreground text-center">
-                  Отвечу в течение дня
+                  Обычно отвечаю в течение 24 часов
                 </p>
               </form>
             </PremiumCard>

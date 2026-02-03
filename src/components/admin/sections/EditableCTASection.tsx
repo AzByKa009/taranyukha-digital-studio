@@ -5,7 +5,6 @@ import { InlineLeadForm } from "@/components/conversion/InlineLeadForm";
 import { EditableText } from "@/components/admin/EditableText";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface CTAContent {
   title?: string;
@@ -14,7 +13,6 @@ interface CTAContent {
 }
 
 export function EditableCTASection() {
-  const queryClient = useQueryClient();
   const [title, setTitle] = useState("С чего начать?");
   const [subtitle, setSubtitle] = useState("Расскажите о задаче — разберёмся вместе, что нужно и как это сделать.");
   const [responseNote, setResponseNote] = useState("Отвечу в течение дня");
@@ -41,7 +39,6 @@ export function EditableCTASection() {
     } else {
       await supabase.from("site_settings").insert([{ key: "cta", value: content }]);
     }
-    queryClient.invalidateQueries({ queryKey: ["site_settings", "cta"] });
     toast.success("Сохранено");
   };
 

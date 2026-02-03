@@ -20,19 +20,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!isMounted) return;
-      
       setSession(session);
       setUser(session?.user ?? null);
-      
       if (session?.user) {
-        checkAdminRole(session.user.id).finally(() => {
-          if (isMounted) setIsLoading(false);
-        });
+        checkAdminRole(session.user.id);
       } else {
         setIsLoading(false);
       }
@@ -41,23 +34,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        if (!isMounted) return;
-        
         setSession(session);
         setUser(session?.user ?? null);
-        
         if (session?.user) {
           await checkAdminRole(session.user.id);
         } else {
           setIsAdmin(false);
+          setIsLoading(false);
         }
       }
     );
 
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   const checkAdminRole = async (userId: string) => {
