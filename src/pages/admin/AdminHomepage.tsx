@@ -1,20 +1,21 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { supabase } from "@/integrations/supabase/client";
 import { EditableSection } from "@/components/admin/EditableSection";
 import { toast } from "sonner";
 
-// Import editable section components
-import { EditableHeroSection } from "@/components/admin/sections/EditableHeroSection";
-import { EditableWhatIDo } from "@/components/admin/sections/EditableWhatIDo";
-import { EditableApproachSection } from "@/components/admin/sections/EditableApproachSection";
-import { EditableFeaturedCases } from "@/components/admin/sections/EditableFeaturedCases";
-import { EditableThinkingSection } from "@/components/admin/sections/EditableThinkingSection";
-import { EditableWhyTrustMe } from "@/components/admin/sections/EditableWhyTrustMe";
-import { EditableCTASection } from "@/components/admin/sections/EditableCTASection";
-import { EditableContactSection } from "@/components/admin/sections/EditableContactSection";
 import { Footer } from "@/components/layout/Footer";
 import { StructurePanel } from "@/components/admin/StructurePanel";
+
+// Lazy load editable section components so the admin homepage doesn't load everything at once
+const EditableHeroSection = lazy(() => import("@/components/admin/sections/EditableHeroSection").then((m) => ({ default: m.EditableHeroSection })));
+const EditableWhatIDo = lazy(() => import("@/components/admin/sections/EditableWhatIDo").then((m) => ({ default: m.EditableWhatIDo })));
+const EditableApproachSection = lazy(() => import("@/components/admin/sections/EditableApproachSection").then((m) => ({ default: m.EditableApproachSection })));
+const EditableFeaturedCases = lazy(() => import("@/components/admin/sections/EditableFeaturedCases").then((m) => ({ default: m.EditableFeaturedCases })));
+const EditableThinkingSection = lazy(() => import("@/components/admin/sections/EditableThinkingSection").then((m) => ({ default: m.EditableThinkingSection })));
+const EditableWhyTrustMe = lazy(() => import("@/components/admin/sections/EditableWhyTrustMe").then((m) => ({ default: m.EditableWhyTrustMe })));
+const EditableCTASection = lazy(() => import("@/components/admin/sections/EditableCTASection").then((m) => ({ default: m.EditableCTASection })));
+const EditableContactSection = lazy(() => import("@/components/admin/sections/EditableContactSection").then((m) => ({ default: m.EditableContactSection })));
 
 interface SectionVisibility {
   [key: string]: boolean;
@@ -33,6 +34,7 @@ const defaultSections = [
 
 export default function AdminHomepage() {
   const { mode } = useAdmin();
+  const [activeTab, setActiveTab] = useState<string>("hero");
   const [sectionVisibility, setSectionVisibility] = useState<SectionVisibility>({
     hero: true,
     whatido: true,
@@ -47,6 +49,18 @@ export default function AdminHomepage() {
   useEffect(() => {
     loadSectionVisibility();
   }, []);
+
+  const visibleSections = useMemo(() => {
+    return defaultSections.filter((s) => sectionVisibility[s.id] !== false);
+  }, [sectionVisibility]);
+
+  useEffect(() => {
+    // Ensure active tab always points to an existing visible section
+    if (sectionVisibility[activeTab] === false) {
+      const firstVisible = visibleSections[0]?.id;
+      if (firstVisible) setActiveTab(firstVisible);
+    }
+  }, [activeTab, sectionVisibility, visibleSections]);
 
   const loadSectionVisibility = async () => {
     try {
@@ -103,93 +117,94 @@ export default function AdminHomepage() {
     );
   }
 
+  const renderActiveSection = () => {
+    switch (activeTab) {
+      case "hero":
+        return <EditableHeroSection />;
+      case "whatido":
+        return <EditableWhatIDo />;
+      case "approach":
+        return <EditableApproachSection />;
+      case "cases":
+        return <EditableFeaturedCases />;
+      case "thinking":
+        return <EditableThinkingSection />;
+      case "trust":
+        return <EditableWhyTrustMe />;
+      case "cta":
+        return <EditableCTASection />;
+      case "contact":
+        return <EditableContactSection />;
+      default:
+        return null;
+    }
+  };
+
+  const activeMeta = defaultSections.find((s) => s.id === activeTab);
+
   return (
     <div className="min-h-screen">
-      {sectionVisibility.hero && (
-        <EditableSection
-          id="hero"
-          name="Hero"
-          isVisible={sectionVisibility.hero}
-          onVisibilityChange={(v) => handleVisibilityChange("hero", v)}
-        >
-          <EditableHeroSection />
-        </EditableSection>
-      )}
 
-      {sectionVisibility.whatido && (
-        <EditableSection
-          id="whatido"
-          name="Что я делаю"
-          isVisible={sectionVisibility.whatido}
-          onVisibilityChange={(v) => handleVisibilityChange("whatido", v)}
-        >
-          <EditableWhatIDo />
-        </EditableSection>
-      )}
+      {/* Tab bar: loads only the selected section (big perf win) */}
+      <div className="sticky top-14 z-40 border-b border-border bg-background/95 backdrop-blur">
+        <div className="container">
+          <div className="flex items-center gap-2 overflow-x-auto py-3">
+            {defaultSections.map((s) => {
+              const isHidden = sectionVisibility[s.id] === false;
+              const isActive = activeTab === s.id;
 
-      {sectionVisibility.approach && (
-        <EditableSection
-          id="approach"
-          name="Подход"
-          isVisible={sectionVisibility.approach}
-          onVisibilityChange={(v) => handleVisibilityChange("approach", v)}
-        >
-          <EditableApproachSection />
-        </EditableSection>
-      )}
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => {
+                    if (isHidden) {
+                      toast.info("Секция скрыта в режиме структуры");
+                      return;
+                    }
+                    setActiveTab(s.id);
+                  }}
+                  className={
+                    "shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors " +
+                    (isHidden
+                      ? "text-muted-foreground/60 cursor-not-allowed"
+                      : isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted/50 text-muted-foreground hover:text-foreground")
+                  }
+                  aria-current={isActive ? "page" : undefined}
+                  disabled={isHidden}
+                >
+                  {s.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
-      {sectionVisibility.cases && (
+      {/* Only one section is mounted at a time */}
+      {activeMeta && sectionVisibility[activeMeta.id] !== false && (
         <EditableSection
-          id="cases"
-          name="Кейсы"
-          isVisible={sectionVisibility.cases}
-          onVisibilityChange={(v) => handleVisibilityChange("cases", v)}
+          id={activeMeta.id}
+          name={activeMeta.name}
+          isVisible={sectionVisibility[activeMeta.id]}
+          onVisibilityChange={(v) => handleVisibilityChange(activeMeta.id, v)}
         >
-          <EditableFeaturedCases />
-        </EditableSection>
-      )}
-
-      {sectionVisibility.thinking && (
-        <EditableSection
-          id="thinking"
-          name="Мышление"
-          isVisible={sectionVisibility.thinking}
-          onVisibilityChange={(v) => handleVisibilityChange("thinking", v)}
-        >
-          <EditableThinkingSection />
-        </EditableSection>
-      )}
-
-      {sectionVisibility.trust && (
-        <EditableSection
-          id="trust"
-          name="Доверие"
-          isVisible={sectionVisibility.trust}
-          onVisibilityChange={(v) => handleVisibilityChange("trust", v)}
-        >
-          <EditableWhyTrustMe />
-        </EditableSection>
-      )}
-
-      {sectionVisibility.cta && (
-        <EditableSection
-          id="cta"
-          name="Призыв к действию"
-          isVisible={sectionVisibility.cta}
-          onVisibilityChange={(v) => handleVisibilityChange("cta", v)}
-        >
-          <EditableCTASection />
-        </EditableSection>
-      )}
-
-      {sectionVisibility.contact && (
-        <EditableSection
-          id="contact"
-          name="Контакты"
-          isVisible={sectionVisibility.contact}
-          onVisibilityChange={(v) => handleVisibilityChange("contact", v)}
-        >
-          <EditableContactSection />
+          <Suspense
+            fallback={
+              <div className="container py-16">
+                <div className="h-6 w-48 rounded bg-muted animate-pulse" />
+                <div className="mt-6 space-y-3">
+                  <div className="h-4 w-full rounded bg-muted animate-pulse" />
+                  <div className="h-4 w-11/12 rounded bg-muted animate-pulse" />
+                  <div className="h-4 w-9/12 rounded bg-muted animate-pulse" />
+                </div>
+              </div>
+            }
+          >
+            {renderActiveSection()}
+          </Suspense>
         </EditableSection>
       )}
 
