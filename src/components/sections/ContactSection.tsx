@@ -8,13 +8,22 @@ import { FadeIn, PremiumCard } from "@/components/motion";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useSiteSettings, ContactSettings } from "@/hooks/useSiteSettings";
-import { useLanguage } from "@/contexts/LanguageContext";
+
+interface ContactSectionContent {
+  title?: string;
+  titleAccent?: string;
+  subtitle?: string;
+}
 
 export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const { data: contact } = useSiteSettings<ContactSettings>("contact");
-  const { t } = useLanguage();
+  const { data: sectionContent } = useSiteSettings<ContactSectionContent>("contact_section");
+
+  const title = sectionContent?.title || "Обсудим ";
+  const titleAccent = sectionContent?.titleAccent || "ваш проект?";
+  const subtitle = sectionContent?.subtitle || "Расскажите о задаче — отвечу в течение дня и предложу решение.";
 
   const socialLinks = [
     { name: "Telegram", href: contact?.telegram || "#", icon: MessageCircle },
@@ -27,7 +36,7 @@ export function ContactSection() {
     
     await new Promise((resolve) => setTimeout(resolve, 1000));
     
-    toast.success(t("contact.success"));
+    toast.success("Получил! Свяжусь сегодня.");
     setIsSubmitting(false);
     (e.target as HTMLFormElement).reset();
   };
@@ -41,13 +50,13 @@ export function ContactSection() {
           <FadeIn direction="right">
             <div>
               <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
-                {t("contact.label")}
+                Контакты
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
-                {t("contact.title")}<span className="text-gradient">{t("contact.title_accent")}</span>
+                {title}<span className="text-gradient">{titleAccent}</span>
               </h2>
               <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-                {t("contact.subtitle")}
+                {subtitle}
               </p>
 
               <div className="flex flex-wrap gap-3 sm:gap-4">
@@ -81,11 +90,11 @@ export function ContactSection() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-xs sm:text-sm font-medium text-foreground">
-                      {t("contact.name")}
+                      Имя
                     </label>
                     <Input
                       name="name"
-                      placeholder={t("contact.name_placeholder")}
+                      placeholder="Как вас зовут?"
                       required
                       maxLength={100}
                       className="bg-background/50 transition-all duration-200 focus:ring-2 focus:ring-primary/20 text-sm sm:text-base"
@@ -93,12 +102,11 @@ export function ContactSection() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs sm:text-sm font-medium text-foreground">
-                      {t("contact.email")}
+                      Email или Telegram
                     </label>
                     <Input
                       name="email"
-                      type="email"
-                      placeholder={t("contact.email_placeholder")}
+                      placeholder="@username или email"
                       required
                       maxLength={100}
                       className="bg-background/50 transition-all duration-200 focus:ring-2 focus:ring-primary/20 text-sm sm:text-base"
@@ -108,11 +116,11 @@ export function ContactSection() {
                 
                 <div className="space-y-2">
                   <label className="text-xs sm:text-sm font-medium text-foreground">
-                    {t("contact.message")}
+                    Задача
                   </label>
                   <Textarea
                     name="message"
-                    placeholder={t("contact.message_placeholder")}
+                    placeholder="Что нужно сделать?"
                     rows={4}
                     required
                     maxLength={2000}
@@ -132,10 +140,10 @@ export function ContactSection() {
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
-                      t("contact.submitting")
+                      "Отправка..."
                     ) : (
                       <>
-                        {t("contact.submit")}
+                        Отправить
                         <Send className="h-4 w-4" />
                       </>
                     )}
@@ -143,7 +151,7 @@ export function ContactSection() {
                 </motion.div>
                 
                 <p className="text-xs text-muted-foreground text-center">
-                  {t("contact.response_time")}
+                  Отвечу в течение дня
                 </p>
               </form>
             </PremiumCard>

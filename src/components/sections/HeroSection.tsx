@@ -5,24 +5,55 @@ import { Scene3D } from "@/components/3d/Scene3D";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+
+interface HeroContent {
+  badge?: string;
+  title_1?: string;
+  title_2?: string;
+  subtitle?: string;
+  cta_text?: string;
+  stat_years?: string;
+  stat_projects?: string;
+  stat_ai?: string;
+  stat_response?: string;
+  step_1_title?: string;
+  step_1_desc?: string;
+  step_2_title?: string;
+  step_2_desc?: string;
+  step_3_title?: string;
+  step_3_desc?: string;
+  step_4_title?: string;
+  step_4_desc?: string;
+  how_i_work?: string;
+}
 
 export function HeroSection() {
   const prefersReducedMotion = useReducedMotion();
-  const { t } = useLanguage();
+  const { data: heroSettings, isLoading } = useSiteSettings<HeroContent>("hero");
+
+  // Default values that will be used until data loads
+  const content = {
+    badge: heroSettings?.badge || "Маркетолог · Системный подход",
+    title_1: heroSettings?.title_1 || "Выстраиваю маркетинг, ",
+    title_2: heroSettings?.title_2 || "который приносит клиентов",
+    subtitle: heroSettings?.subtitle || "Работаю с бизнесом напрямую. Упаковка, продвижение, автоматизация — как единая система, а не хаос задач.",
+    cta_text: heroSettings?.cta_text || "Обсудить задачу",
+    how_i_work: heroSettings?.how_i_work || "Как я работаю",
+  };
 
   const processSteps = [
-    { number: "01", title: t("hero.step_1_title"), description: t("hero.step_1_desc") },
-    { number: "02", title: t("hero.step_2_title"), description: t("hero.step_2_desc") },
-    { number: "03", title: t("hero.step_3_title"), description: t("hero.step_3_desc") },
-    { number: "04", title: t("hero.step_4_title"), description: t("hero.step_4_desc") },
+    { number: "01", title: heroSettings?.step_1_title || "Разбираюсь", description: heroSettings?.step_1_desc || "Изучаю бизнес и задачу" },
+    { number: "02", title: heroSettings?.step_2_title || "Планирую", description: heroSettings?.step_2_desc || "Предлагаю решение" },
+    { number: "03", title: heroSettings?.step_3_title || "Делаю", description: heroSettings?.step_3_desc || "Беру реализацию на себя" },
+    { number: "04", title: heroSettings?.step_4_title || "Развиваю", description: heroSettings?.step_4_desc || "Помогаю масштабировать" },
   ];
 
   const stats = [
-    { value: "2+", label: t("hero.stat_years") },
-    { value: "10+", label: t("hero.stat_projects") },
-    { value: "AI", label: t("hero.stat_ai") },
-    { value: "24ч", label: t("hero.stat_response") },
+    { value: heroSettings?.stat_years || "2+", label: "года опыта" },
+    { value: heroSettings?.stat_projects || "10+", label: "проектов" },
+    { value: heroSettings?.stat_ai || "AI", label: "автоматизация" },
+    { value: heroSettings?.stat_response || "24ч", label: "ответ" },
   ];
 
   return (
@@ -42,21 +73,21 @@ export function HeroSection() {
             <FadeIn delay={0}>
               <div className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border border-border/40 bg-card/40 backdrop-blur-sm mb-6 sm:mb-10">
                 <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                <span className="text-xs sm:text-sm text-muted-foreground font-medium">{t("hero.badge")}</span>
+                <span className="text-xs sm:text-sm text-muted-foreground font-medium">{content.badge}</span>
               </div>
             </FadeIn>
 
             {/* Heading */}
             <FadeIn delay={0.1}>
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.1] sm:leading-[1.08] mb-5 sm:mb-7">
-                <span className="text-gradient">{t("hero.title_1")}</span>{t("hero.title_2")}
+                <span className="text-gradient">{content.title_1}</span>{content.title_2}
               </h1>
             </FadeIn>
 
             {/* Subheading */}
             <FadeIn delay={0.2}>
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mb-8 sm:mb-12 leading-relaxed">
-                {t("hero.subtitle")}
+                {content.subtitle}
               </p>
             </FadeIn>
 
@@ -69,7 +100,7 @@ export function HeroSection() {
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
                   <Button variant="hero" size="lg" className="shadow-xl shadow-primary/25">
-                    {t("hero.cta_primary")}
+                    {content.cta_text}
                     <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </motion.div>
@@ -109,7 +140,7 @@ export function HeroSection() {
         <FadeIn delay={0.5}>
           <div className="mt-16 sm:mt-24">
             <h3 className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider mb-6 sm:mb-10">
-              {t("hero.how_i_work")}
+              {content.how_i_work}
             </h3>
             <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5" staggerDelay={0.1}>
               {processSteps.map((step) => (
