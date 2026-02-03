@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ArrowRight, Brain, Layers, Zap, Code, Briefcase, Megaphone, Bot, BarChart3 } from "lucide-react";
+import { ArrowRight, Brain, Layers, Zap, Code, Briefcase, Megaphone, Bot, BarChart3, Globe, Share2, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { supabase } from "@/integrations/supabase/client";
+import { useRealtimeServices } from "@/hooks/useRealtimeServices";
 
 // Fallback images
 import serviceWeb from "@/assets/service-web.jpg";
@@ -22,59 +22,21 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Megaphone,
   Bot,
   BarChart3,
+  Globe,
+  Share2,
+  Target,
 };
 
 const fallbackImages = [serviceWeb, serviceBot, serviceReels, serviceAiVideo];
 
-interface Service {
-  id: string;
-  slug: string;
-  title: string;
-  short_description: string;
-  thumbnail: string | null;
-  icon: string | null;
-}
-
 export function ServicesPreview() {
   const prefersReducedMotion = useReducedMotion();
-  const [services, setServices] = useState<Service[]>([]);
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      const { data } = await supabase
-        .from("services")
-        .select("id, slug, title, short_description, thumbnail, icon")
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true })
-        .limit(4);
-
-      if (data) {
-        setServices(data);
-      }
-    };
-
-    fetchServices();
-
-    // Realtime subscription
-    const channel = supabase
-      .channel("services-preview-realtime")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "services" },
-        () => fetchServices()
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
+  const { services, loading } = useRealtimeServices({ limit: 4 });
 
   const getIcon = (iconName: string | null, index: number) => {
     if (iconName && iconMap[iconName]) {
       return iconMap[iconName];
     }
-    // Fallback icons
     const defaultIcons = [Code, Brain, Layers, Zap];
     return defaultIcons[index % defaultIcons.length];
   };
@@ -82,6 +44,10 @@ export function ServicesPreview() {
   const getImage = (thumbnail: string | null, index: number) => {
     return thumbnail || fallbackImages[index % fallbackImages.length];
   };
+
+  if (loading || services.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-24">
