@@ -73,8 +73,18 @@ export function EditableFeaturedCases() {
   if (loading) {
     return (
       <section className="py-20 sm:py-28 bg-card/20 border-y border-border/30">
-        <div className="container flex justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <div className="container">
+          <div className="flex flex-col md:flex-row justify-between gap-4 mb-10 animate-pulse">
+            <div>
+              <div className="h-8 w-48 bg-muted rounded mb-3" />
+              <div className="h-5 w-64 bg-muted rounded" />
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1,2,3].map(i => (
+              <div key={i} className="h-64 bg-muted/50 rounded-xl animate-pulse" />
+            ))}
+          </div>
         </div>
       </section>
     );
