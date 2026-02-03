@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { Scene3D } from "@/components/3d/Scene3D";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { motion } from "framer-motion";
 import { EditableText } from "@/components/admin/EditableText";
@@ -31,42 +30,49 @@ interface HeroContent {
   how_i_work?: string;
 }
 
+const defaultContent: HeroContent = {
+  badge: "Маркетолог · Системный подход",
+  title_1: "Выстраиваю маркетинг, ",
+  title_2: "который приносит клиентов",
+  subtitle: "Работаю с бизнесом напрямую. Упаковка, продвижение, автоматизация — как единая система, а не хаос задач.",
+  cta_text: "Обсудить задачу",
+  stat_years: "2+",
+  stat_projects: "10+",
+  stat_ai: "AI",
+  stat_response: "24ч",
+  step_1_title: "Разбираюсь",
+  step_1_desc: "Изучаю бизнес и задачу",
+  step_2_title: "Планирую",
+  step_2_desc: "Предлагаю решение",
+  step_3_title: "Делаю",
+  step_3_desc: "Беру реализацию на себя",
+  step_4_title: "Развиваю",
+  step_4_desc: "Помогаю масштабировать",
+  how_i_work: "Как я работаю",
+};
+
 export function EditableHeroSection() {
   const queryClient = useQueryClient();
-  const [content, setContent] = useState<HeroContent>({
-    badge: "Маркетолог · Системный подход",
-    title_1: "Выстраиваю маркетинг, ",
-    title_2: "который приносит клиентов",
-    subtitle: "Работаю с бизнесом напрямую. Упаковка, продвижение, автоматизация — как единая система, а не хаос задач.",
-    cta_text: "Обсудить задачу",
-    stat_years: "2+",
-    stat_projects: "10+",
-    stat_ai: "AI",
-    stat_response: "24ч",
-    step_1_title: "Разбираюсь",
-    step_1_desc: "Изучаю бизнес и задачу",
-    step_2_title: "Планирую",
-    step_2_desc: "Предлагаю решение",
-    step_3_title: "Делаю",
-    step_3_desc: "Беру реализацию на себя",
-    step_4_title: "Развиваю",
-    step_4_desc: "Помогаю масштабировать",
-    how_i_work: "Как я работаю",
-  });
+  const [content, setContent] = useState<HeroContent>(defaultContent);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     loadContent();
   }, []);
 
   const loadContent = async () => {
-    const { data } = await supabase
-      .from("site_settings")
-      .select("value")
-      .eq("key", "hero")
-      .maybeSingle();
+    try {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "hero")
+        .maybeSingle();
 
-    if (data?.value && typeof data.value === "object") {
-      setContent((prev) => ({ ...prev, ...(data.value as HeroContent) }));
+      if (data?.value && typeof data.value === "object") {
+        setContent((prev) => ({ ...prev, ...(data.value as HeroContent) }));
+      }
+    } finally {
+      setIsLoaded(true);
     }
   };
 
@@ -87,10 +93,9 @@ export function EditableHeroSection() {
         await supabase.from("site_settings").insert([{ key: "hero", value: newContent }]);
       }
       
-      // Invalidate query so public site updates
       queryClient.invalidateQueries({ queryKey: ["site_settings", "hero"] });
       toast.success("Сохранено");
-    } catch (error) {
+    } catch {
       toast.error("Ошибка сохранения");
     }
   };
@@ -113,7 +118,6 @@ export function EditableHeroSection() {
     <section className="relative min-h-screen flex items-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-glow opacity-30" />
       <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-primary/5 to-transparent" />
-      <Scene3D />
       
       <div className="container relative z-10 pt-20 sm:pt-24 pb-12 sm:pb-16">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -199,7 +203,6 @@ export function EditableHeroSection() {
           </div>
         </FadeIn>
 
-        {/* How I Work */}
         <FadeIn delay={0.5}>
           <div className="mt-16 sm:mt-24">
             <EditableText
