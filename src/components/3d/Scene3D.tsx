@@ -1,4 +1,4 @@
-import { Suspense, lazy, useRef, useState, useEffect } from "react";
+import { Suspense, lazy, useRef, useState, useEffect, forwardRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
@@ -8,19 +8,20 @@ const Canvas = lazy(() =>
   import("@react-three/fiber").then(module => ({ default: module.Canvas }))
 );
 
-function AnimatedSphere() {
+const AnimatedSphere = forwardRef<THREE.Mesh>(function AnimatedSphere(_, ref) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const actualRef = (ref as React.RefObject<THREE.Mesh>) || meshRef;
 
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.1;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.15;
+    if (actualRef.current) {
+      actualRef.current.rotation.x = state.clock.elapsedTime * 0.1;
+      actualRef.current.rotation.y = state.clock.elapsedTime * 0.15;
     }
   });
 
   return (
     <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1}>
-      <mesh ref={meshRef} scale={2.2}>
+      <mesh ref={actualRef} scale={2.2}>
         <icosahedronGeometry args={[1, 4]} />
         <MeshDistortMaterial
           color="#7C3AED"
@@ -33,26 +34,27 @@ function AnimatedSphere() {
       </mesh>
     </Float>
   );
-}
+});
 
-function InnerGlow() {
+const InnerGlow = forwardRef<THREE.Mesh>(function InnerGlow(_, ref) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const actualRef = (ref as React.RefObject<THREE.Mesh>) || meshRef;
 
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.z = state.clock.elapsedTime * 0.05;
+    if (actualRef.current) {
+      actualRef.current.rotation.z = state.clock.elapsedTime * 0.05;
     }
   });
 
   return (
-    <mesh ref={meshRef} scale={1.5}>
+    <mesh ref={actualRef} scale={1.5}>
       <torusGeometry args={[1, 0.02, 16, 100]} />
       <meshBasicMaterial color="#8B5CF6" transparent opacity={0.6} />
     </mesh>
   );
-}
+});
 
-function Scene() {
+const Scene = forwardRef(function Scene(_, ref) {
   return (
     <>
       <ambientLight intensity={0.3} />
@@ -62,16 +64,16 @@ function Scene() {
       <InnerGlow />
     </>
   );
-}
+});
 
 // Fallback for loading/mobile
-function Fallback() {
+const Fallback = forwardRef(function Fallback(_, ref) {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
       <div className="w-64 h-64 rounded-full bg-gradient-to-br from-primary/30 to-primary/5 blur-3xl animate-pulse" />
     </div>
   );
-}
+});
 
 // Check if device is likely mobile/tablet for performance
 function useIsDesktop() {
@@ -79,7 +81,6 @@ function useIsDesktop() {
 
   useEffect(() => {
     const checkDesktop = () => {
-      // Check for touch device and screen size
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       const isLargeScreen = window.innerWidth >= 768;
       const hasGoodGPU = !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
@@ -102,7 +103,7 @@ export function Scene3D() {
   // Delay 3D rendering to prioritize LCP
   useEffect(() => {
     if (isDesktop) {
-      const timer = setTimeout(() => setShouldRender(true), 100);
+      const timer = setTimeout(() => setShouldRender(true), 300);
       return () => clearTimeout(timer);
     }
   }, [isDesktop]);

@@ -4,6 +4,8 @@ import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components
 import { EditableText } from "@/components/admin/EditableText";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import type { Json } from "@/integrations/supabase/types";
 
 interface TrustFactor {
   icon: string;
@@ -11,22 +13,31 @@ interface TrustFactor {
   description: string;
 }
 
+interface TrustContent {
+  title?: string;
+  titleAccent?: string;
+  subtitle?: string;
+  quote?: string;
+  factors?: TrustFactor[];
+}
+
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Clock, Users, Shield, CheckCircle,
 };
 
 const defaultFactors: TrustFactor[] = [
-  { icon: "Clock", title: "Быстрый старт", description: "Начинаем работу в течение 48 часов после согласования" },
-  { icon: "Users", title: "Индивидуальный подход", description: "Каждый проект уникален — решения под ваш бизнес" },
-  { icon: "Shield", title: "Гарантия качества", description: "Бесплатные правки до полного соответствия ожиданиям" },
-  { icon: "CheckCircle", title: "Прозрачность", description: "Еженедельные отчёты и доступ ко всем материалам" },
+  { icon: "Clock", title: "Думаю стратегически", description: "Сначала — зачем, потом — как" },
+  { icon: "Users", title: "Понимаю контекст", description: "Ниша, клиенты, конкуренты" },
+  { icon: "Shield", title: "Считаю результат", description: "Цифры важнее красивых отчётов" },
+  { icon: "CheckCircle", title: "Строю надолго", description: "Системы, а не разовые акции" },
 ];
 
 export function EditableWhyTrustMe() {
-  const [title, setTitle] = useState("Почему мне ");
-  const [titleAccent, setTitleAccent] = useState("доверяют");
-  const [subtitle, setSubtitle] = useState("Работаю прозрачно и на результат. Вот что получите, работая со мной.");
-  const [quote, setQuote] = useState("Моя задача — чтобы вы получили результат, а не просто «выполненную работу».");
+  const queryClient = useQueryClient();
+  const [title, setTitle] = useState("Работаете ");
+  const [titleAccent, setTitleAccent] = useState("со мной напрямую");
+  const [subtitle, setSubtitle] = useState("Без менеджеров и посредников. Я лично разбираюсь в задаче и отвечаю за результат.");
+  const [quote, setQuote] = useState("Мне важно понять бизнес — иначе маркетинг не сработает");
   const [factors, setFactors] = useState<TrustFactor[]>(defaultFactors);
 
   useEffect(() => {
@@ -36,7 +47,7 @@ export function EditableWhyTrustMe() {
   const loadContent = async () => {
     const { data } = await supabase.from("site_settings").select("value").eq("key", "trust").maybeSingle();
     if (data?.value && typeof data.value === "object") {
-      const v = data.value as any;
+      const v = data.value as TrustContent;
       if (v.title) setTitle(v.title);
       if (v.titleAccent) setTitleAccent(v.titleAccent);
       if (v.subtitle) setSubtitle(v.subtitle);
@@ -45,14 +56,16 @@ export function EditableWhyTrustMe() {
     }
   };
 
-  const saveContent = async (updates: any) => {
+  const saveContent = async (updates: Partial<TrustContent>) => {
     const content = { title, titleAccent, subtitle, quote, factors, ...updates };
+    const jsonValue = JSON.parse(JSON.stringify(content)) as Json;
     const { data: existing } = await supabase.from("site_settings").select("id").eq("key", "trust").maybeSingle();
     if (existing) {
-      await supabase.from("site_settings").update({ value: content }).eq("key", "trust");
+      await supabase.from("site_settings").update({ value: jsonValue }).eq("key", "trust");
     } else {
-      await supabase.from("site_settings").insert([{ key: "trust", value: content }]);
+      await supabase.from("site_settings").insert([{ key: "trust", value: jsonValue }]);
     }
+    queryClient.invalidateQueries({ queryKey: ["site_settings", "trust"] });
     toast.success("Сохранено");
   };
 
@@ -70,7 +83,7 @@ export function EditableWhyTrustMe() {
           <FadeIn direction="right">
             <div>
               <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
-                Почему я
+                Подход
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
                 <EditableText

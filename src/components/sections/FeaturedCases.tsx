@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 interface CaseItem {
   id: string;
@@ -17,11 +17,21 @@ interface CaseItem {
   thumbnail: string | null;
 }
 
+interface CasesContent {
+  title?: string;
+  subtitle?: string;
+  allText?: string;
+}
+
 export function FeaturedCases() {
   const [cases, setCases] = useState<CaseItem[]>([]);
   const [loading, setLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
-  const { t } = useLanguage();
+  const { data: casesSettings } = useSiteSettings<CasesContent>("featured_cases");
+
+  const title = casesSettings?.title || "Проекты";
+  const subtitle = casesSettings?.subtitle || "Примеры того, как это работает";
+  const allText = casesSettings?.allText || "Все проекты";
 
   const fetchCases = async () => {
     const { data, error } = await supabase
@@ -87,10 +97,10 @@ export function FeaturedCases() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-10 sm:mb-14">
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-3 sm:mb-4">
-                {t("cases.featured_title")}
+                {title}
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">
-                {t("cases.featured_subtitle")}
+                {subtitle}
               </p>
             </div>
             <Link to="/cases">
@@ -100,7 +110,7 @@ export function FeaturedCases() {
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
                 <Button variant="outline" className="group text-sm">
-                  {t("cases.all")}
+                  {allText}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </motion.div>
