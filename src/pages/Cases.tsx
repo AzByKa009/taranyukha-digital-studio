@@ -29,6 +29,7 @@ const Cases = () => {
   const [selectedVideo, setSelectedVideo] = useState<PortfolioVideo | null>(null);
   const [cases, setCases] = useState<CaseItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const { t, language } = useLanguage();
 
   const categoryFilters = [
@@ -41,16 +42,32 @@ const Cases = () => {
   ];
 
   const fetchCases = async () => {
-    const { data, error } = await supabase
-      .from("cases")
-      .select("id, slug, title, category, category_label, short_description, year, thumbnail, video_preview, tags")
-      .eq("is_published", true)
-      .order("sort_order", { ascending: true });
+    try {
+      setLoadError(null);
+      const { data, error } = await supabase
+        .from("cases")
+        .select(
+          "id, slug, title, category, category_label, short_description, year, thumbnail, video_preview, tags"
+        )
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true });
 
-    if (!error && data) {
-      setCases(data);
+      if (error) {
+        throw error;
+      }
+
+      setCases(data ?? []);
+    } catch (e) {
+      console.error("Failed to fetch cases:", e);
+      setCases([]);
+      setLoadError(
+        language === "ru"
+          ? "Не удалось загрузить кейсы. Обновите страницу и попробуйте ещё раз."
+          : "Failed to load cases. Please refresh and try again."
+      );
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -116,6 +133,21 @@ const Cases = () => {
       <Layout>
         <div className="flex justify-center items-center min-h-[60vh]">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <Layout>
+        <div className="container py-16">
+          <div className="max-w-2xl">
+            <h1 className="text-2xl sm:text-3xl font-display font-bold mb-3">
+              {language === "ru" ? "Кейсы" : "Cases"}
+            </h1>
+            <p className="text-muted-foreground">{loadError}</p>
+          </div>
         </div>
       </Layout>
     );
