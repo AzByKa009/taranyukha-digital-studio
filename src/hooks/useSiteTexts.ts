@@ -1,19 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export type Language = "ru" | "en";
-
-interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
-}
-
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-// Default Russian translations
-const defaultTranslations: Record<string, string> = {
+// Default texts for the site
+const defaultTexts: Record<string, string> = {
   // Navigation
   "nav.home": "Главная",
   "nav.cases": "Кейсы",
@@ -23,7 +12,7 @@ const defaultTranslations: Record<string, string> = {
   "nav.faq": "FAQ",
   "nav.contact": "Связаться",
   
-  // Hero - confident, personal, minimal
+  // Hero
   "hero.badge": "Маркетолог · Системный подход",
   "hero.title_1": "Выстраиваю маркетинг, ",
   "hero.title_2": "который приносит клиентов",
@@ -48,7 +37,7 @@ const defaultTranslations: Record<string, string> = {
   "whatido.title": "Что я делаю",
   "whatido.subtitle": "Помогаю бизнесу расти системно — через понятный маркетинг",
   
-  // Featured Cases
+  // Cases
   "cases.featured_title": "Проекты",
   "cases.featured_subtitle": "Примеры того, как это работает",
   "cases.all": "Все проекты",
@@ -75,7 +64,7 @@ const defaultTranslations: Record<string, string> = {
   "services.quick_start": "С чего начать",
   "services.quick_start_subtitle": "Частые запросы",
   
-  // Why Trust Me - personal, direct
+  // Trust
   "trust.label": "Подход",
   "trust.title": "Работаете ",
   "trust.title_accent": "со мной напрямую",
@@ -90,7 +79,7 @@ const defaultTranslations: Record<string, string> = {
   "trust.item_4_title": "Строю надолго",
   "trust.item_4_desc": "Системы, а не разовые акции",
   
-  // Contact - simple, inviting
+  // Contact
   "contact.label": "Контакт",
   "contact.title": "Расскажите ",
   "contact.title_accent": "о задаче",
@@ -106,7 +95,7 @@ const defaultTranslations: Record<string, string> = {
   "contact.response_time": "Отвечу в течение дня",
   "contact.success": "Получил! Свяжусь сегодня.",
   
-  // CTA - invitation, not pressure
+  // CTA
   "cta.title": "С чего начать?",
   "cta.subtitle": "Расскажите о задаче — разберёмся вместе",
   "cta.primary": "Обсудить",
@@ -118,27 +107,11 @@ const defaultTranslations: Record<string, string> = {
   "footer.services": "Услуги",
   "footer.contacts": "Контакты",
   
-  // Exit Popup
+  // Popup
   "popup.title": "Уходите?",
   "popup.subtitle": "Оставьте контакт — расскажу, как могу помочь",
   "popup.cta": "Получить консультацию",
   "popup.close": "Нет, спасибо",
-  
-  // Admin
-  "admin.dashboard": "Дашборд",
-  "admin.content_management": "Управление контентом",
-  "admin.cases": "Кейсы",
-  "admin.services": "Услуги",
-  "admin.ai_products": "AI-решения",
-  "admin.blog": "Блог",
-  "admin.portfolio": "Портфолио",
-  "admin.quick_actions": "Быстрые действия",
-  "admin.management": "Управление",
-  "admin.media_library": "Медиа",
-  "admin.site_settings": "Настройки",
-  "admin.seo_settings": "SEO",
-  "admin.logout": "Выйти",
-  "admin.to_site": "На сайт",
   
   // Common
   "common.from": "от",
@@ -147,13 +120,8 @@ const defaultTranslations: Record<string, string> = {
   "common.loading": "Загрузка...",
 };
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language] = useState<Language>("ru");
-  const [customTexts, setCustomTexts] = useState<Record<string, string>>({});
-  const queryClient = useQueryClient();
-
-  // Fetch custom texts from database
-  const { data: dbTexts } = useQuery({
+export function useSiteTexts() {
+  return useQuery({
     queryKey: ["site_texts"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -164,67 +132,23 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         console.error("Error fetching site texts:", error);
-        return {};
+        return defaultTexts;
       }
 
-      return (data?.value as Record<string, string>) || {};
+      if (data?.value) {
+        const customTexts = data.value as Record<string, string>;
+        return { ...defaultTexts, ...customTexts };
+      }
+
+      return defaultTexts;
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
-
-  // Subscribe to realtime updates
-  useEffect(() => {
-    const channel = supabase
-      .channel("site_texts_changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "site_settings",
-          filter: "key=eq.site_texts",
-        },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ["site_texts"] });
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [queryClient]);
-
-  useEffect(() => {
-    if (dbTexts) {
-      setCustomTexts(dbTexts);
-    }
-  }, [dbTexts]);
-
-  const setLanguage = (_lang: Language) => {
-    // Language switching disabled - always Russian
-  };
-
-  useEffect(() => {
-    document.documentElement.lang = language;
-  }, [language]);
-
-  const t = (key: string): string => {
-    // First check custom texts from DB, then fallback to defaults
-    return customTexts[key] || defaultTranslations[key] || key;
-  };
-
-  return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      {children}
-    </LanguageContext.Provider>
-  );
 }
 
-export function useLanguage() {
-  const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
-  }
-  return context;
+export function useText(key: string): string {
+  const { data: texts } = useSiteTexts();
+  return texts?.[key] || defaultTexts[key] || key;
 }
+
+export { defaultTexts };
