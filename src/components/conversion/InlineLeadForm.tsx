@@ -16,6 +16,7 @@ interface InlineLeadFormProps {
 export function InlineLeadForm({ variant = "default", className = "" }: InlineLeadFormProps) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
+  const [honeypot, setHoneypot] = useState(""); // Honeypot field for bot detection
   const [isSubmitting, setIsSubmitting] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const { variant: ctaVariant, trackConversion } = useABTest("cta_lead_form");
@@ -38,6 +39,7 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
             name: name.trim(),
             contact: contact.trim(),
             source_page: window.location.pathname,
+            website: honeypot, // Honeypot field - should be empty
           }),
         }
       );
@@ -80,6 +82,17 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
+        {/* Honeypot field - hidden from users, visible to bots */}
+        <input
+          type="text"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          className="absolute opacity-0 pointer-events-none h-0 w-0"
+          aria-hidden="true"
+        />
         <Input
           type="text"
           placeholder={namePlaceholder}
@@ -134,6 +147,17 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
         }
       </p>
       <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+        {/* Honeypot field - hidden from users, visible to bots */}
+        <input
+          type="text"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          className="absolute opacity-0 pointer-events-none h-0 w-0"
+          aria-hidden="true"
+        />
         <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
           <Input
             type="text"
