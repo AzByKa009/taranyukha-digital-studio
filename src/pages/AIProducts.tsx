@@ -40,51 +40,34 @@ const AIProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
 
   const fetchData = async () => {
-    try {
-      setLoadError(null);
+    // Fetch categories
+    const { data: categoriesData } = await supabase
+      .from("ai_product_categories")
+      .select("id, slug, title, description, icon")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
 
-      // Fetch categories
-      const { data: categoriesData, error: categoriesError } = await supabase
-        .from("ai_product_categories")
-        .select("id, slug, title, description, icon")
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true });
+    // Fetch products
+    const { data: productsData } = await supabase
+      .from("ai_products")
+      .select("id, slug, title, description, thumbnail, features, price_from, timeline, category_id")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
 
-      if (categoriesError) {
-        throw categoriesError;
+    if (categoriesData) {
+      setCategories(categoriesData);
+      if (categoriesData.length > 0 && !activeCategory) {
+        setActiveCategory(categoriesData[0].id);
       }
-
-      // Fetch products
-      const { data: productsData, error: productsError } = await supabase
-        .from("ai_products")
-        .select(
-          "id, slug, title, description, thumbnail, features, price_from, timeline, category_id"
-        )
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true });
-
-      if (productsError) {
-        throw productsError;
-      }
-
-      const safeCategories = categoriesData ?? [];
-      setCategories(safeCategories);
-      if (safeCategories.length > 0 && !activeCategory) {
-        setActiveCategory(safeCategories[0].id);
-      }
-
-      setProducts(productsData ?? []);
-    } catch (e) {
-      console.error("Failed to fetch AI products:", e);
-      setCategories([]);
-      setProducts([]);
-      setLoadError("Не удалось загрузить AI-решения. Обновите страницу и попробуйте ещё раз.");
-    } finally {
-      setLoading(false);
     }
+
+    if (productsData) {
+      setProducts(productsData);
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -154,19 +137,6 @@ const AIProducts = () => {
       <Layout>
         <div className="flex justify-center items-center min-h-[60vh]">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
-      </Layout>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <Layout>
-        <div className="container py-16">
-          <div className="max-w-2xl">
-            <h1 className="text-2xl sm:text-3xl font-display font-bold mb-3">AI-продукты</h1>
-            <p className="text-muted-foreground">{loadError}</p>
-          </div>
         </div>
       </Layout>
     );

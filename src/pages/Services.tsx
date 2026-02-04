@@ -2,67 +2,75 @@ import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Target, Briefcase, Megaphone, Share2, Bot, Globe, Loader2, TrendingUp, Code, Brain, Layers, Zap, BarChart3 } from "lucide-react";
+import { ArrowRight, Target, Briefcase, Megaphone, Share2, Bot, Globe, Loader2, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 
-// Icon mapping for dynamic services
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Briefcase,
-  Globe,
-  Share2,
-  Megaphone,
-  Bot,
-  Code,
-  Brain,
-  Layers,
-  Zap,
-  BarChart3,
-  Target,
-};
-
-interface Service {
-  id: string;
-  slug: string;
-  title: string;
-  short_description: string;
-  full_description: string | null;
-  price_from: number | null;
-  price_label: string | null;
-  thumbnail: string | null;
-  icon: string | null;
-  features: string[] | null;
-}
+// Strategic services - tools for implementing growth strategy
+const strategicServices = [
+  {
+    icon: Briefcase,
+    title: "Упаковка бизнеса",
+    problemSolved: "Клиенты не понимают, чем вы лучше конкурентов",
+    whyNeeded: "Позиционирование → понятное предложение → больше конверсий. Упаковка — фундамент всего маркетинга.",
+    includes: ["Позиционирование", "Ценностное предложение", "Коммерческие материалы"],
+    result: "Клиент понимает ценность за 5 секунд",
+    href: "/contacts",
+  },
+  {
+    icon: Globe,
+    title: "Сайты",
+    problemSolved: "Сайт есть, но заявок с него нет",
+    whyNeeded: "Сайт — не визитка, а инструмент продаж. Правильная структура и тексты конвертируют посетителей в заявки.",
+    includes: ["Продающая структура", "Конверсионные формы", "SEO-оптимизация"],
+    result: "Сайт приносит заявки, а не просто «есть»",
+    href: "/razrabotka-sayta-pod-uslugi",
+  },
+  {
+    icon: Share2,
+    title: "Соцсети",
+    problemSolved: "Ведёте соцсети, но они не приносят клиентов",
+    whyNeeded: "Контент без стратегии — просто посты. Системный подход превращает соцсети в канал продаж.",
+    includes: ["Контент-стратегия", "Визуальный стиль", "Регулярный постинг"],
+    result: "Соцсети работают на узнаваемость и продажи",
+    href: "/contacts",
+  },
+  {
+    icon: Megaphone,
+    title: "Продвижение",
+    problemSolved: "Нет стабильного потока новых клиентов",
+    whyNeeded: "Органика — долго, реклама — можно слить бюджет. Нужна система, которая окупается.",
+    includes: ["Таргетированная реклама", "SEO-продвижение", "Контент-маркетинг"],
+    result: "Предсказуемый поток заявок каждый месяц",
+    href: "/contacts",
+  },
+  {
+    icon: Bot,
+    title: "Автоматизация",
+    problemSolved: "Команда тонет в рутине, время уходит на повторяющиеся задачи",
+    whyNeeded: "Автоматизация освобождает время для важного. AI и интеграции работают 24/7 без усталости.",
+    includes: ["Чат-боты", "CRM-интеграции", "Автоворонки"],
+    result: "Рутина на автопилоте, команда занята важным",
+    href: "/ai-bot-dlya-biznesa",
+  },
+];
 
 const Services = () => {
-  const [services, setServices] = useState<Service[]>([]);
+  const [dbServices, setDbServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
 
   const fetchServices = async () => {
-    try {
-      setLoadError(null);
-      const { data, error } = await supabase
-        .from("services")
-        .select(
-          "id, slug, title, short_description, full_description, price_from, price_label, thumbnail, icon, features"
-        )
-        .eq("is_published", true)
-        .order("sort_order", { ascending: true });
+    const { data, error } = await supabase
+      .from("services")
+      .select("id, slug, title, short_description, price_from")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
 
-      if (error) {
-        throw error;
-      }
-
-      setServices(data ?? []);
-    } catch (e) {
-      console.error("Failed to fetch services:", e);
-      setServices([]);
-      setLoadError("Не удалось загрузить услуги. Обновите страницу и попробуйте ещё раз.");
-    } finally {
-      setLoading(false);
+    if (!error && data) {
+      setDbServices(data);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -72,7 +80,7 @@ const Services = () => {
   // Subscribe to real-time updates
   useEffect(() => {
     const channel = supabase
-      .channel('services-page-realtime')
+      .channel('services-changes')
       .on(
         'postgres_changes',
         {
@@ -97,40 +105,11 @@ const Services = () => {
     keywords: "маркетолог услуги, упаковка бизнеса, продвижение бизнеса, автоматизация маркетинга, сайт для бизнеса, соцсети для бизнеса",
   });
 
-  const getIcon = (iconName: string | null) => {
-    if (iconName && iconMap[iconName]) {
-      return iconMap[iconName];
-    }
-    return Briefcase;
-  };
-
-  const getServiceLink = (service: Service) => {
-    // Map slugs to landing pages if they exist
-    const landingPages: Record<string, string> = {
-      'sajty': '/razrabotka-sayta-pod-uslugi',
-      'avtomatizaciya': '/ai-bot-dlya-biznesa',
-    };
-    return landingPages[service.slug] || `/services/${service.slug}`;
-  };
-
   if (loading) {
     return (
       <Layout>
         <div className="flex justify-center items-center min-h-[60vh]">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
-      </Layout>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <Layout>
-        <div className="container py-16">
-          <div className="max-w-2xl">
-            <h1 className="text-2xl sm:text-3xl font-display font-bold mb-3">Услуги</h1>
-            <p className="text-muted-foreground">{loadError}</p>
-          </div>
         </div>
       </Layout>
     );
@@ -164,99 +143,80 @@ const Services = () => {
         </div>
       </section>
 
-      {/* Dynamic Services from Database */}
+      {/* Strategic Services */}
       <section className="pb-20 sm:pb-28">
         <div className="container">
           <StaggerContainer className="space-y-4 sm:space-y-6" staggerDelay={0.1}>
-            {services.map((service) => {
-              const IconComponent = getIcon(service.icon);
-              return (
-                <StaggerItem key={service.id}>
-                  <Link to={getServiceLink(service)}>
-                    <PremiumCard
-                      className="group p-6 sm:p-8 md:p-10 rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-all duration-300"
-                      hoverScale={1.01}
-                      hoverY={-4}
-                    >
-                      <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10">
-                        {/* Left - Icon & Title */}
-                        <div className="lg:w-1/3">
-                          <div className="flex items-start gap-4 mb-4 lg:mb-0">
-                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-300">
-                              <IconComponent className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
-                            </div>
-                            <div>
-                              <h2 className="text-xl sm:text-2xl font-display font-bold mb-2 group-hover:text-gradient transition-colors duration-300">
-                                {service.title}
-                              </h2>
-                              {service.features && service.features.length > 0 && (
-                                <div className="flex flex-wrap gap-1.5">
-                                  {service.features.slice(0, 3).map((item) => (
-                                    <span
-                                      key={item}
-                                      className="px-2 py-0.5 text-xs rounded-md bg-muted/50 text-muted-foreground"
-                                    >
-                                      {item}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
+            {strategicServices.map((service, index) => (
+              <StaggerItem key={service.title}>
+                <Link to={service.href}>
+                  <PremiumCard
+                    className="group p-6 sm:p-8 md:p-10 rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-all duration-300"
+                    hoverScale={1.01}
+                    hoverY={-4}
+                  >
+                    <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10">
+                      {/* Left - Icon & Title */}
+                      <div className="lg:w-1/3">
+                        <div className="flex items-start gap-4 mb-4 lg:mb-0">
+                          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-300">
+                            <service.icon className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
                           </div>
-                        </div>
-
-                        {/* Right - Description & Price */}
-                        <div className="lg:w-2/3 space-y-4">
                           <div>
-                            <span className="text-xs text-primary font-medium uppercase tracking-wider mb-1 block">
-                              Проблема
-                            </span>
-                            <p className="text-base sm:text-lg text-foreground font-medium">
-                              {service.short_description}
-                            </p>
-                          </div>
-                          
-                          {service.full_description && (
-                            <div>
-                              <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1 block">
-                                Решение
-                              </span>
-                              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                                {service.full_description}
-                              </p>
-                            </div>
-                          )}
-
-                          <div className="flex items-center justify-between pt-2">
-                            <div className="flex items-center gap-4">
-                              {(service.price_from || service.price_label) && (
-                                <div className="flex items-center gap-2 text-primary">
-                                  <Target className="h-4 w-4" />
-                                  <span className="text-sm font-medium">
-                                    {service.price_label || `от ${service.price_from?.toLocaleString()} ₽`}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 text-primary font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              Подробнее
-                              <ArrowRight className="h-4 w-4" />
+                            <h2 className="text-xl sm:text-2xl font-display font-bold mb-2 group-hover:text-gradient transition-colors duration-300">
+                              {service.title}
+                            </h2>
+                            <div className="flex flex-wrap gap-1.5">
+                              {service.includes.map((item) => (
+                                <span
+                                  key={item}
+                                  className="px-2 py-0.5 text-xs rounded-md bg-muted/50 text-muted-foreground"
+                                >
+                                  {item}
+                                </span>
+                              ))}
                             </div>
                           </div>
                         </div>
                       </div>
-                    </PremiumCard>
-                  </Link>
-                </StaggerItem>
-              );
-            })}
-          </StaggerContainer>
 
-          {services.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Услуги пока не добавлены</p>
-            </div>
-          )}
+                      {/* Right - Problem & Solution */}
+                      <div className="lg:w-2/3 space-y-4">
+                        <div>
+                          <span className="text-xs text-primary font-medium uppercase tracking-wider mb-1 block">
+                            Проблема
+                          </span>
+                          <p className="text-base sm:text-lg text-foreground font-medium">
+                            {service.problemSolved}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1 block">
+                            Зачем в системе роста
+                          </span>
+                          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                            {service.whyNeeded}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2">
+                          <div className="flex items-center gap-2 text-primary">
+                            <Target className="h-4 w-4" />
+                            <span className="text-sm font-medium">{service.result}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-primary font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Подробнее
+                            <ArrowRight className="h-4 w-4" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </PremiumCard>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
@@ -285,20 +245,23 @@ const Services = () => {
                 <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 via-primary/30 to-primary/10 hidden sm:block" />
                 
                 <div className="space-y-6 sm:space-y-8">
-                  {services.map((service, index) => {
-                    const stepNumber = String(index + 1).padStart(2, '0');
-                    return (
-                      <div key={service.id} className="flex gap-4 sm:gap-8">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 relative z-10 border-2 border-background">
-                          <span className="text-primary font-display font-bold text-sm">{stepNumber}</span>
-                        </div>
-                        <div className="pt-2">
-                          <h3 className="text-lg sm:text-xl font-display font-semibold mb-1">{service.title}</h3>
-                          <p className="text-sm sm:text-base text-muted-foreground">{service.short_description}</p>
-                        </div>
+                  {[
+                    { step: "01", title: "Упаковка", desc: "Формируем понятное предложение, которое отличает вас от конкурентов" },
+                    { step: "02", title: "Сайт", desc: "Превращаем упаковку в конверсионный инструмент, который продаёт 24/7" },
+                    { step: "03", title: "Соцсети", desc: "Выстраиваем доверие и узнаваемость через регулярный контент" },
+                    { step: "04", title: "Продвижение", desc: "Запускаем трафик, который конвертируется в заявки" },
+                    { step: "05", title: "Автоматизация", desc: "Масштабируем результат без увеличения нагрузки на команду" },
+                  ].map((item, index) => (
+                    <div key={item.step} className="flex gap-4 sm:gap-8">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 relative z-10 border-2 border-background">
+                        <span className="text-primary font-display font-bold text-sm">{item.step}</span>
                       </div>
-                    );
-                  })}
+                      <div className="pt-2">
+                        <h3 className="text-lg sm:text-xl font-display font-semibold mb-1">{item.title}</h3>
+                        <p className="text-sm sm:text-base text-muted-foreground">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

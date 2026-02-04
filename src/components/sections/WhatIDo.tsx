@@ -1,50 +1,35 @@
-import { Link } from "react-router-dom";
-import { Briefcase, Megaphone, Bot, BarChart3, Code, Brain, Layers, Zap, Globe, Share2, Target } from "lucide-react";
+import { Briefcase, Megaphone, Bot, BarChart3 } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
-import { useRealtimeServices } from "@/hooks/useRealtimeServices";
-import { Loader2 } from "lucide-react";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Briefcase,
-  Megaphone,
-  Bot,
-  BarChart3,
-  Code,
-  Brain,
-  Layers,
-  Zap,
-  Globe,
-  Share2,
-  Target,
-};
+// Areas of expertise - not services, but competencies
+const expertiseAreas = [
+  {
+    icon: Briefcase,
+    title: "Упаковка бизнеса",
+    description: "Позиционирование, смыслы, визуал. Чтобы клиент понял ценность за 3 секунды.",
+    examples: ["Сайты", "Презентации", "Коммерческие предложения"],
+  },
+  {
+    icon: Megaphone,
+    title: "Продвижение",
+    description: "Трафик, который конвертируется в заявки и продажи. Без слива бюджета.",
+    examples: ["Таргет", "Контент-маркетинг", "SEO"],
+  },
+  {
+    icon: Bot,
+    title: "Автоматизация",
+    description: "Освобождаю время команды от рутины. AI и интеграции работают за вас.",
+    examples: ["Чат-боты", "CRM-интеграции", "Авторассылки"],
+  },
+  {
+    icon: BarChart3,
+    title: "Аналитика и стратегия",
+    description: "Понимаю, что работает, а что — нет. Решения на основе данных, не интуиции.",
+    examples: ["Аудит", "Unit-экономика", "Воронки"],
+  },
+];
 
 export function WhatIDo() {
-  const { services, loading } = useRealtimeServices({ limit: 4 });
-
-  const getIcon = (iconName: string | null, index: number) => {
-    if (iconName && iconMap[iconName]) {
-      return iconMap[iconName];
-    }
-    const defaultIcons = [Briefcase, Megaphone, Bot, BarChart3];
-    return defaultIcons[index % defaultIcons.length];
-  };
-
-  if (loading) {
-    return (
-      <section className="py-20 sm:py-28 relative bg-card/30">
-        <div className="container relative z-10">
-          <div className="flex justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (services.length === 0) {
-    return null;
-  }
-
   return (
     <section className="py-20 sm:py-28 relative bg-card/30">
       <div className="container relative z-10">
@@ -64,44 +49,37 @@ export function WhatIDo() {
           </div>
         </FadeIn>
 
-        {/* Expertise Grid - Dynamic from Services */}
+        {/* Expertise Grid */}
         <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-12" staggerDelay={0.1}>
-          {services.map((service, index) => {
-            const IconComponent = getIcon(service.icon, index);
-            return (
-              <StaggerItem key={service.id}>
-                <Link to={`/services/${service.slug}`}>
-                  <PremiumCard
-                    className="group p-5 sm:p-7 rounded-xl sm:rounded-2xl border border-border bg-background/50 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full"
-                    hoverScale={1.02}
-                    hoverY={-4}
-                  >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-5 group-hover:bg-primary/20 transition-colors duration-300">
-                      <IconComponent className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
-                    </div>
-                    <h3 className="text-base sm:text-lg font-display font-semibold mb-2 sm:mb-3">
-                      {service.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                      {service.short_description}
-                    </p>
-                    {service.features && service.features.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5">
-                        {service.features.slice(0, 3).map((feature) => (
-                          <span
-                            key={feature}
-                            className="px-2 py-0.5 text-xs rounded-md bg-muted/50 text-muted-foreground"
-                          >
-                            {feature}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </PremiumCard>
-                </Link>
-              </StaggerItem>
-            );
-          })}
+          {expertiseAreas.map((area) => (
+            <StaggerItem key={area.title}>
+              <PremiumCard
+                className="group p-5 sm:p-7 rounded-xl sm:rounded-2xl border border-border bg-background/50 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full"
+                hoverScale={1.02}
+                hoverY={-4}
+              >
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-5 group-hover:bg-primary/20 transition-colors duration-300">
+                  <area.icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+                </div>
+                <h3 className="text-base sm:text-lg font-display font-semibold mb-2 sm:mb-3">
+                  {area.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                  {area.description}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {area.examples.map((example) => (
+                    <span
+                      key={example}
+                      className="px-2 py-0.5 text-xs rounded-md bg-muted/50 text-muted-foreground"
+                    >
+                      {example}
+                    </span>
+                  ))}
+                </div>
+              </PremiumCard>
+            </StaggerItem>
+          ))}
         </StaggerContainer>
 
         {/* Removed redundant CTA - clean ending */}

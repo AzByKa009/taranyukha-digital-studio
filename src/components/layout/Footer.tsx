@@ -2,13 +2,61 @@ import { Link } from "react-router-dom";
 import { Mail, ArrowUpRight } from "lucide-react";
 import { useSiteSettings, ContactSettings, FooterSettings } from "@/hooks/useSiteSettings";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useRealtimeServices } from "@/hooks/useRealtimeServices";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface ServiceLink {
+  name: string;
+  href: string;
+}
 
 export function Footer() {
   const { data: contact } = useSiteSettings<ContactSettings>("contact");
   const { data: footer } = useSiteSettings<FooterSettings>("footer");
   const { t, language } = useLanguage();
-  const { services } = useRealtimeServices({ limit: 6 });
+  const [services, setServices] = useState<ServiceLink[]>([]);
+
+  const fetchServices = async () => {
+    const { data, error } = await supabase
+      .from("services")
+      .select("slug, title")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true })
+      .limit(6);
+
+    if (!error && data) {
+      setServices(data.map(s => ({
+        name: s.title,
+        href: `/services/${s.slug}`
+      })));
+    }
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  // Subscribe to real-time updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('footer-services-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'services'
+        },
+        () => {
+          fetchServices();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const navigation = {
     main: [
@@ -84,13 +132,13 @@ export function Footer() {
             </h3>
             <ul className="space-y-2.5 sm:space-y-3.5">
               {services.length > 0 ? (
-                services.map((service) => (
-                  <li key={service.id}>
+                services.map((item) => (
+                  <li key={item.href}>
                     <Link
-                      to={`/services/${service.slug}`}
+                      to={item.href}
                       className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
                     >
-                      {service.title}
+                      {item.name}
                     </Link>
                   </li>
                 ))
