@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 // Get allowed origins from environment, with fallback for development
 const getAllowedOrigins = (): string[] => {
