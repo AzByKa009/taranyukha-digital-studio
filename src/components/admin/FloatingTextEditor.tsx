@@ -135,50 +135,63 @@ export function FloatingTextEditor() {
         </Select>
       </div>
 
-      {/* Visual Preview with drag support */}
-      <div className="relative bg-black/50 rounded-xl border border-white/10 overflow-hidden" style={{ aspectRatio: "16/9" }}>
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent" />
-        
-        {/* Grid overlay */}
-        <div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-            backgroundSize: "10% 10%"
+      {/* Visual Preview with live site iframe */}
+      <div className="relative rounded-xl border border-white/10 overflow-hidden" style={{ height: "70vh" }}>
+        {/* Live site iframe */}
+        <iframe
+          src={previewPage}
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          title="Site Preview"
+          style={{ 
+            transform: "scale(1)",
+            transformOrigin: "top left",
           }}
         />
+        
+        {/* Overlay for interactions */}
+        <div className="absolute inset-0 bg-transparent">
+          {/* Text elements */}
+          {filteredTexts.map(text => (
+            <DraggableText
+              key={text.id}
+              text={text}
+              isActive={dragMode === text.id}
+              onDragStart={() => setDragMode(text.id)}
+              onDragEnd={(x, y) => {
+                setDragMode(null);
+                handleUpdate(text.id, { position_x: x, position_y: y });
+              }}
+              onEdit={() => {
+                setSelectedText(text);
+                setEditDialogOpen(true);
+              }}
+            />
+          ))}
 
-        {/* Text elements */}
-        {filteredTexts.map(text => (
-          <DraggableText
-            key={text.id}
-            text={text}
-            isActive={dragMode === text.id}
-            onDragStart={() => setDragMode(text.id)}
-            onDragEnd={(x, y) => {
-              setDragMode(null);
-              handleUpdate(text.id, { position_x: x, position_y: y });
-            }}
-            onEdit={() => {
-              setSelectedText(text);
-              setEditDialogOpen(true);
-            }}
-          />
-        ))}
-
-        {/* Empty state */}
-        {filteredTexts.length === 0 && !isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center text-white/40">
-            <div className="text-center">
-              <Type className="w-12 h-12 mx-auto mb-2 opacity-50" />
-              <p>Нет текстов на этой странице</p>
-              <Button variant="outline" size="sm" className="mt-4" onClick={handleCreate}>
-                <Plus className="w-4 h-4 mr-2" />
-                Добавить первый
-              </Button>
+          {/* Empty state */}
+          {filteredTexts.length === 0 && !isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+              <div className="text-center">
+                <Type className="w-12 h-12 mx-auto mb-2 text-white/50" />
+                <p className="text-white/60">Нет текстов на этой странице</p>
+                <Button variant="outline" size="sm" className="mt-4" onClick={handleCreate}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Добавить первый
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+        
+        {/* Page indicator badge */}
+        <div className="absolute top-3 left-3 px-3 py-1.5 bg-black/80 backdrop-blur-sm rounded-lg border border-white/20 text-white text-sm font-medium z-10">
+          Превью: {PAGES.find(p => p.value === previewPage)?.label}
+        </div>
+        
+        {/* Instruction badge */}
+        <div className="absolute bottom-3 left-3 right-3 px-3 py-2 bg-black/80 backdrop-blur-sm rounded-lg border border-white/20 text-white/70 text-xs z-10">
+          💡 Перетаскивайте тексты мышкой • Двойной клик для редактирования • Изменения сохраняются автоматически
+        </div>
       </div>
 
       {/* Text list */}
