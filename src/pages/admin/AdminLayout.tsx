@@ -18,7 +18,8 @@ import {
   Sparkles,
   Menu,
   X,
-  MessageSquare
+  MessageSquare,
+  Type
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -27,6 +28,7 @@ const navItems = [
   { href: "/admin", label: "Главная", icon: LayoutDashboard, exact: true },
   { href: "/admin/leads", label: "Заявки", icon: MessageSquare },
   { href: "/admin/texts", label: "Тексты", icon: FileText },
+  { href: "/admin/floating-texts", label: "Плавающие тексты", icon: Type },
   { href: "/admin/cases", label: "Кейсы", icon: FolderOpen },
   { href: "/admin/services", label: "Услуги", icon: Wrench },
   { href: "/admin/ai-products", label: "AI-продукты", icon: Bot },

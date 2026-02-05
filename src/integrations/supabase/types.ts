@@ -217,6 +217,54 @@ export type Database = {
         }
         Relationships: []
       }
+      floating_texts: {
+        Row: {
+          background_color: string | null
+          color: string
+          content: string
+          created_at: string
+          font_size: number
+          font_weight: string
+          id: string
+          is_visible: boolean
+          page_path: string
+          position_x: number
+          position_y: number
+          updated_at: string
+          z_index: number
+        }
+        Insert: {
+          background_color?: string | null
+          color?: string
+          content?: string
+          created_at?: string
+          font_size?: number
+          font_weight?: string
+          id?: string
+          is_visible?: boolean
+          page_path?: string
+          position_x?: number
+          position_y?: number
+          updated_at?: string
+          z_index?: number
+        }
+        Update: {
+          background_color?: string | null
+          color?: string
+          content?: string
+          created_at?: string
+          font_size?: number
+          font_weight?: string
+          id?: string
+          is_visible?: boolean
+          page_path?: string
+          position_x?: number
+          position_y?: number
+          updated_at?: string
+          z_index?: number
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           contact: string

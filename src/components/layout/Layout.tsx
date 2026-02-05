@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { FloatingTextRenderer } from "@/components/floating/FloatingTextRenderer";
 
 interface LayoutProps {
   children: ReactNode;
@@ -34,6 +35,7 @@ export function Layout({ children }: LayoutProps) {
         {children}
       </main>
       <Footer />
+      <FloatingTextRenderer />
     </div>
   );
 }

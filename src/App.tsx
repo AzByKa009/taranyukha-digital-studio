@@ -57,6 +57,7 @@ const AdminPortfolioForm = lazy(() => import("./pages/admin/portfolio/AdminPortf
 const AdminAITools = lazy(() => import("./pages/admin/ai/AdminAITools"));
 const AdminLeadsList = lazy(() => import("./pages/admin/leads/AdminLeadsList"));
 const AdminTextsList = lazy(() => import("./pages/admin/texts/AdminTextsList"));
+const AdminFloatingTexts = lazy(() => import("./pages/admin/texts/AdminFloatingTexts"));
 
 const queryClient = new QueryClient();
 
@@ -107,6 +108,7 @@ const App = () => (
                   <Route index element={<AdminDashboard />} />
                   <Route path="leads" element={<AdminLeadsList />} />
                   <Route path="texts" element={<AdminTextsList />} />
+                  <Route path="floating-texts" element={<AdminFloatingTexts />} />
                   <Route path="cases" element={<AdminCasesList />} />
                   <Route path="cases/new" element={<AdminCaseForm />} />
                   <Route path="cases/:id" element={<AdminCaseForm />} />
