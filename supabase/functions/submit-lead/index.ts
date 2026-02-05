@@ -17,10 +17,10 @@ const getAllowedOrigins = (): string[] => {
 
 const getCorsHeaders = (origin: string | null) => {
   const allowedOrigins = getAllowedOrigins();
-  const isAllowed = origin && allowedOrigins.some((allowed) => 
-    origin === allowed || origin.endsWith(".lovable.app")
-  );
-  
+  const isAllowed = origin &&
+    allowedOrigins.some((allowed) => origin === allowed) ||
+    (origin && (origin.endsWith(".lovable.app") || origin.endsWith(".lovableproject.com")));
+
   return {
     "Access-Control-Allow-Origin": isAllowed ? origin : allowedOrigins[0],
     "Access-Control-Allow-Headers":
@@ -94,10 +94,10 @@ Deno.serve(async (req) => {
   // Validate origin
   const allowedOrigins = getAllowedOrigins();
   const isOriginAllowed = origin && (
-    allowedOrigins.includes(origin) || 
-    origin.endsWith(".lovable.app")
+    allowedOrigins.includes(origin) ||
+    origin.endsWith(".lovable.app") ||
+    origin.endsWith(".lovableproject.com")
   );
-  
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
