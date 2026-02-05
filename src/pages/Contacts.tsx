@@ -73,17 +73,43 @@ const Contacts = () => {
     keywords: "контакты, заказать монтаж Reels, заказать AI продукт, заказать сайт под ключ, вайб кодинг заказать",
   });
 
+  const [honeypot, setHoneypot] = useState(""); // Honeypot for bot detection
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.name.trim() || !formData.contact.trim() || !formData.task.trim()) return;
+    
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    console.log("Contact form submitted:", formData);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    toast.success("Заявка отправлена! Свяжусь с вами в ближайшее время.");
-    setFormData({ name: "", contact: "", task: "" });
-    setIsSubmitting(false);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-lead`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            contact: formData.contact.trim(),
+            message: formData.task.trim(),
+            source_page: "/contacts",
+            website: honeypot, // Honeypot field - should be empty
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to submit");
+      }
+
+      toast.success("Заявка отправлена! Свяжусь с вами в ближайшее время.");
+      setFormData({ name: "", contact: "", task: "" });
+    } catch (error) {
+      console.error("Submit error:", error);
+      toast.error("Ошибка отправки. Попробуйте ещё раз или напишите в Telegram.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -169,6 +195,17 @@ const Contacts = () => {
                   Расскажите о задаче — я свяжусь для обсуждения деталей
                 </p>
                 
+                {/* Honeypot field - hidden from users, visible to bots */}
+                <input
+                  type="text"
+                  name="website"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="absolute opacity-0 pointer-events-none h-0 w-0"
+                  aria-hidden="true"
+                />
                 <div className="grid sm:grid-cols-2 gap-5 mb-5">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium mb-2.5">
