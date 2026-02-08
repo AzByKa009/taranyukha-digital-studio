@@ -56,13 +56,10 @@ const defaultTranslations: Record<string, string> = {
   "cases.title": "Кейсы",
   "cases.subtitle": "Реальные проекты с результатами",
   "cases.all_projects": "Все",
-  "cases.montage": "Видео",
-  "cases.producing": "Продюсирование",
-  "cases.ai_video": "AI-видео",
-  "cases.ai_products": "AI-решения",
-  "cases.vibe_coding": "Сайты",
-  "cases.montage_reels": "Видеопродакшн",
-  "cases.complex_projects": "Сайты и AI",
+  "cases.packaging": "Упаковка",
+  "cases.promotion": "Продвижение",
+  "cases.automation": "Автоматизация",
+  "cases.analytics": "Аналитика",
   "cases.empty": "Проекты скоро появятся",
   
   // Services
