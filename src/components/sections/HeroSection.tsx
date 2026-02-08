@@ -19,7 +19,7 @@ export function HeroSection() {
   ];
 
   const stats = [
-    { value: "2+", label: t("hero.stat_years") },
+    { value: "1+", label: t("hero.stat_years") },
     { value: "10+", label: t("hero.stat_projects") },
     { value: "AI", label: t("hero.stat_ai") },
     { value: "24ч", label: t("hero.stat_response") },
