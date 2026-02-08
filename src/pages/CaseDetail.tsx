@@ -169,8 +169,27 @@ const CaseDetail = () => {
         </div>
       </section>
 
-      {/* Main image */}
-      {caseItem.thumbnail && (
+      {/* Video Preview */}
+      {caseItem.video_preview && (
+        <section className="pb-8">
+          <div className="container">
+            <div className="max-w-2xl mx-auto">
+              <div className="aspect-[9/16] max-h-[70vh] rounded-2xl overflow-hidden bg-muted animate-fade-in-up shadow-2xl" style={{ animationDelay: "0.3s" }}>
+                <video
+                  src={caseItem.video_preview}
+                  controls
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster={caseItem.thumbnail || undefined}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Main image (only if no video) */}
+      {!caseItem.video_preview && caseItem.thumbnail && (
         <section className="pb-16">
           <div className="container">
             <div className="aspect-video rounded-2xl overflow-hidden bg-muted animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
