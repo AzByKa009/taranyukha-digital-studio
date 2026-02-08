@@ -1,15 +1,15 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
 import { FadeIn } from "@/components/motion";
 import { InlineLeadForm } from "@/components/conversion/InlineLeadForm";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function CTASection() {
   const prefersReducedMotion = useReducedMotion();
+  const { t } = useLanguage();
 
   return (
     <section className="py-20 sm:py-28 relative overflow-hidden">
-      {/* Background with parallax-like effect */}
       <motion.div
         className="absolute inset-0 bg-gradient-glow opacity-40"
         animate={!prefersReducedMotion ? {
@@ -25,10 +25,10 @@ export function CTASection() {
           <FadeIn>
             <div className="text-center mb-8 sm:mb-10">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
-                С чего <span className="text-gradient">начать?</span>
+                {t("cta.title")}<span className="text-gradient">{t("cta.title_accent")}</span>
               </h2>
               <p className="text-base sm:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
-                Расскажите о задаче — разберёмся вместе, что нужно и как это сделать.
+                {t("cta.subtitle")}
               </p>
             </div>
           </FadeIn>
@@ -39,7 +39,7 @@ export function CTASection() {
 
           <FadeIn delay={0.3}>
             <p className="text-center text-xs sm:text-sm text-muted-foreground mt-6">
-              Отвечу в течение дня
+              {t("cta.response_time")}
             </p>
           </FadeIn>
         </div>

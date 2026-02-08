@@ -13,7 +13,7 @@ interface ServiceLink {
 export function Footer() {
   const { data: contact } = useSiteSettings<ContactSettings>("contact");
   const { data: footer } = useSiteSettings<FooterSettings>("footer");
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [services, setServices] = useState<ServiceLink[]>([]);
 
   const fetchServices = async () => {
@@ -25,37 +25,18 @@ export function Footer() {
       .limit(6);
 
     if (!error && data) {
-      setServices(data.map(s => ({
-        name: s.title,
-        href: `/services/${s.slug}`
-      })));
+      setServices(data.map(s => ({ name: s.title, href: `/services/${s.slug}` })));
     }
   };
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
+  useEffect(() => { fetchServices(); }, []);
 
-  // Subscribe to real-time updates
   useEffect(() => {
     const channel = supabase
       .channel('footer-services-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'services'
-        },
-        () => {
-          fetchServices();
-        }
-      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'services' }, () => fetchServices())
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   const navigation = {
@@ -63,7 +44,7 @@ export function Footer() {
       { name: t("nav.cases"), href: "/cases" },
       { name: t("nav.services"), href: "/services" },
       { name: t("nav.ai_products"), href: "/ai-products" },
-      { name: language === "ru" ? "Блог" : "Blog", href: "/blog" },
+      { name: t("footer.blog"), href: "/blog" },
     ],
     company: [
       { name: t("nav.about"), href: "/about" },
@@ -92,10 +73,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 max-w-xs">
-              {footer?.tagline || (language === "ru" 
-                ? "Маркетолог. Помогаю бизнесу расти системно — через упаковку, продвижение и автоматизацию."
-                : "Marketer. Helping businesses grow systematically through packaging, promotion, and automation."
-              )}
+              {footer?.tagline || t("hero.subtitle")}
             </p>
             {contact?.email && (
               <a
@@ -115,10 +93,7 @@ export function Footer() {
             <ul className="space-y-2.5 sm:space-y-3.5">
               {navigation.main.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    to={item.href}
-                    className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
-                  >
+                  <Link to={item.href} className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
                     {item.name}
                   </Link>
                 </li>
@@ -134,21 +109,15 @@ export function Footer() {
               {services.length > 0 ? (
                 services.map((item) => (
                   <li key={item.href}>
-                    <Link
-                      to={item.href}
-                      className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
-                    >
+                    <Link to={item.href} className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
                       {item.name}
                     </Link>
                   </li>
                 ))
               ) : (
                 <li>
-                  <Link
-                    to="/services"
-                    className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
-                  >
-                    {language === "ru" ? "Все услуги" : "All services"}
+                  <Link to="/services" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
+                    {t("footer.all_services")}
                   </Link>
                 </li>
               )}
@@ -162,10 +131,7 @@ export function Footer() {
             <ul className="space-y-2.5 sm:space-y-3.5 mb-6 sm:mb-8">
               {navigation.company.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    to={item.href}
-                    className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
-                  >
+                  <Link to={item.href} className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
                     {item.name}
                   </Link>
                 </li>
@@ -175,7 +141,7 @@ export function Footer() {
             {socialLinks.length > 0 && (
               <>
                 <h3 className="font-display font-semibold text-xs sm:text-sm mb-3 sm:mb-5 text-foreground/90">
-                  {language === "ru" ? "Соцсети" : "Social"}
+                  {t("footer.social")}
                 </h3>
                 <ul className="space-y-2.5 sm:space-y-3.5">
                   {socialLinks.map((item) => (

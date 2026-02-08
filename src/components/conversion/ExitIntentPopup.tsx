@@ -11,7 +11,7 @@ export function ExitIntentPopup() {
   const { showPopup, closePopup } = useExitIntent({ delayMs: 8000 });
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ export function ExitIntentPopup() {
 
     setIsSubmitting(true);
     await new Promise((r) => setTimeout(r, 800));
-    toast.success(language === "ru" ? "Отлично! Свяжусь с вами в ближайшее время" : "Great! I'll contact you soon");
+    toast.success(t("popup.success"));
     setIsSubmitting(false);
     closePopup();
   };
@@ -47,7 +47,7 @@ export function ExitIntentPopup() {
               <button
                 onClick={closePopup}
                 className="absolute right-3 top-3 sm:right-4 sm:top-4 p-1.5 sm:p-2 rounded-lg hover:bg-muted transition-colors"
-                aria-label={language === "ru" ? "Закрыть" : "Close"}
+                aria-label={t("popup.close")}
               >
                 <X className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               </button>
@@ -61,7 +61,7 @@ export function ExitIntentPopup() {
                     {t("popup.title")}
                   </h3>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    {language === "ru" ? "Бесплатная консультация" : "Free consultation"}
+                    {t("popup.consultation")}
                   </p>
                 </div>
               </div>
@@ -73,7 +73,7 @@ export function ExitIntentPopup() {
               <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <Input
                   type="email"
-                  placeholder={language === "ru" ? "Ваш email" : "Your email"}
+                  placeholder={t("popup.email_placeholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -87,7 +87,7 @@ export function ExitIntentPopup() {
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
-                    language === "ru" ? "Отправка..." : "Sending..."
+                    t("popup.sending")
                   ) : (
                     <>
                       {t("popup.cta")}
@@ -98,7 +98,7 @@ export function ExitIntentPopup() {
               </form>
 
               <p className="text-xs text-muted-foreground text-center mt-3 sm:mt-4">
-                {language === "ru" ? "Никакого спама — только полезные материалы" : "No spam — only useful content"}
+                {t("popup.no_spam")}
               </p>
             </div>
           </motion.div>

@@ -1,34 +1,37 @@
 import { Target, Lightbulb, TrendingUp, Zap } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
-
-const approachPillars = [
-  {
-    icon: Target,
-    title: "Стратегическое мышление",
-    description: "Не делаю ради галочки. Каждое действие — часть плана, работающего на вашу цель: рост, продажи, узнаваемость.",
-    accent: "Сначала — зачем, потом — как",
-  },
-  {
-    icon: Lightbulb,
-    title: "Понимание бизнеса",
-    description: "Разбираюсь в вашей нише, конкурентах, клиентах. Маркетинг без контекста — просто трата бюджета.",
-    accent: "Вникаю в суть, а не поверхностно",
-  },
-  {
-    icon: TrendingUp,
-    title: "Фокус на результат",
-    description: "Метрики, которые можно измерить: заявки, продажи, рост аудитории. Красивые отчёты без результата — не мой подход.",
-    accent: "Цифры важнее красивых слов",
-  },
-  {
-    icon: Zap,
-    title: "Системность",
-    description: "Маркетинг как процесс, а не хаос. Выстраиваю систему, которая работает предсказуемо и масштабируется.",
-    accent: "Один раз настроить — долго пожинать",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ApproachSection() {
+  const { t } = useLanguage();
+
+  const approachPillars = [
+    {
+      icon: Target,
+      title: t("approach.card_1_title"),
+      description: t("approach.card_1_desc"),
+      accent: t("approach.card_1_accent"),
+    },
+    {
+      icon: Lightbulb,
+      title: t("approach.card_2_title"),
+      description: t("approach.card_2_desc"),
+      accent: t("approach.card_2_accent"),
+    },
+    {
+      icon: TrendingUp,
+      title: t("approach.card_3_title"),
+      description: t("approach.card_3_desc"),
+      accent: t("approach.card_3_accent"),
+    },
+    {
+      icon: Zap,
+      title: t("approach.card_4_title"),
+      description: t("approach.card_4_desc"),
+      accent: t("approach.card_4_accent"),
+    },
+  ];
+
   return (
     <section className="py-20 sm:py-28 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
@@ -38,15 +41,14 @@ export function ApproachSection() {
         <FadeIn>
           <div className="max-w-2xl mb-12 sm:mb-16">
             <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
-              Мой подход
+              {t("approach.label")}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
-              Не просто исполнитель, <br />
-              <span className="text-gradient">а партнёр в росте</span>
+              {t("approach.title")}<br />
+              <span className="text-gradient">{t("approach.title_accent")}</span>
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-              Я не беру задачи «сделать пост» или «запустить рекламу». 
-              Работаю с теми, кому нужен маркетинг как система — с пониманием целей и ответственностью за результат.
+              {t("approach.subtitle")}
             </p>
           </div>
         </FadeIn>
@@ -76,8 +78,6 @@ export function ApproachSection() {
             </StaggerItem>
           ))}
         </StaggerContainer>
-
-        {/* Meta-note removed - less is more */}
       </div>
     </section>
   );
