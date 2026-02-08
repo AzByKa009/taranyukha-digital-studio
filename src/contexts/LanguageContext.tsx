@@ -90,6 +90,14 @@ const defaultTranslations: Record<string, string> = {
   "trust.item_4_title": "Строю надолго",
   "trust.item_4_desc": "Системы, а не разовые акции",
   
+  // UTP / Offer
+  "utp.badge": "Под ключ",
+  "utp.title": "Полный пакет: сайт + 5 вертикальных видео + автоматизация",
+  "utp.feature_1": "Продающий сайт",
+  "utp.feature_2": "5 вертикальных видео",
+  "utp.feature_3": "AI-автоматизация",
+  "utp.timeline": "Старт под ключ от 14 дней",
+
   // Contact - simple, inviting
   "contact.label": "Контакт",
   "contact.title": "Расскажите ",

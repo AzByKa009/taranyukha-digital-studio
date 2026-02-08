@@ -158,6 +158,14 @@ const defaultTexts: Record<string, string> = {
   "contact.response_time": "Отвечу в течение дня",
   "contact.success": "Получил! Свяжусь сегодня.",
   
+  // UTP / Offer
+  "utp.badge": "Под ключ",
+  "utp.title": "Полный пакет: сайт + 5 вертикальных видео + автоматизация",
+  "utp.feature_1": "Продающий сайт",
+  "utp.feature_2": "5 вертикальных видео",
+  "utp.feature_3": "AI-автоматизация",
+  "utp.timeline": "Старт под ключ от 14 дней",
+
   // CTA
   "cta.title": "С чего ",
   "cta.title_accent": "начать?",
