@@ -55,25 +55,33 @@ export function ApproachSection() {
 
         {/* Approach Cards */}
         <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6" staggerDelay={0.1}>
-          {approachPillars.map((pillar) => (
+          {approachPillars.map((pillar, index) => (
             <StaggerItem key={pillar.title}>
               <PremiumCard
-                className="group p-5 sm:p-7 rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full"
+                className="group p-5 sm:p-7 rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full relative overflow-hidden"
                 hoverScale={1.02}
                 hoverY={-4}
               >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                  <pillar.icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+                {/* Decorative line */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <div className="relative z-10">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-primary/20 transition-colors duration-300 ring-1 ring-primary/5 group-hover:ring-primary/20">
+                    <pillar.icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="text-base sm:text-lg font-display font-semibold mb-2 sm:mb-3">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-3 sm:mb-4">
+                    {pillar.description}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-px bg-primary/50" />
+                    <span className="text-xs text-primary/80 font-medium">
+                      {pillar.accent}
+                    </span>
+                  </div>
                 </div>
-                <h3 className="text-base sm:text-lg font-display font-semibold mb-2 sm:mb-3">
-                  {pillar.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-3 sm:mb-4">
-                  {pillar.description}
-                </p>
-                <span className="text-xs text-primary/80 font-medium">
-                  {pillar.accent}
-                </span>
               </PremiumCard>
             </StaggerItem>
           ))}

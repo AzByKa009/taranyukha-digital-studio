@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, Users, Shield } from "lucide-react";
+import { Brain, Users, BarChart, Layers } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -7,7 +7,7 @@ export function WhyTrustMe() {
 
   const trustFactors = [
     {
-      icon: Clock,
+      icon: Brain,
       title: t("trust.item_1_title"),
       description: t("trust.item_1_desc"),
     },
@@ -17,12 +17,12 @@ export function WhyTrustMe() {
       description: t("trust.item_2_desc"),
     },
     {
-      icon: Shield,
+      icon: BarChart,
       title: t("trust.item_3_title"),
       description: t("trust.item_3_desc"),
     },
     {
-      icon: CheckCircle,
+      icon: Layers,
       title: t("trust.item_4_title"),
       description: t("trust.item_4_desc"),
     },
@@ -59,13 +59,18 @@ export function WhyTrustMe() {
             {trustFactors.map((factor) => (
               <StaggerItem key={factor.title}>
                 <PremiumCard
-                  className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-background/50 border border-border hover:border-primary/30 transition-colors h-full"
+                  className="group p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-background/50 border border-border hover:border-primary/30 transition-colors h-full relative overflow-hidden"
                   hoverScale={1.03}
                   hoverY={-4}
                 >
-                  <factor.icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary mb-3 sm:mb-4" />
-                  <h3 className="font-display font-semibold mb-1.5 sm:mb-2 text-sm sm:text-base">{factor.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">{factor.description}</p>
+                  <div className="absolute -top-8 -right-8 w-16 h-16 bg-primary/0 group-hover:bg-primary/8 rounded-full blur-xl transition-all duration-500" />
+                  <div className="relative z-10">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-primary/20 transition-colors duration-300 ring-1 ring-primary/5 group-hover:ring-primary/20">
+                      <factor.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" strokeWidth={1.5} />
+                    </div>
+                    <h3 className="font-display font-semibold mb-1.5 sm:mb-2 text-sm sm:text-base">{factor.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{factor.description}</p>
+                  </div>
                 </PremiumCard>
               </StaggerItem>
             ))}

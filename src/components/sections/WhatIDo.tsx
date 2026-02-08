@@ -55,28 +55,33 @@ export function WhatIDo() {
           {expertiseAreas.map((area) => (
             <StaggerItem key={area.title}>
               <PremiumCard
-                className="group p-5 sm:p-7 rounded-xl sm:rounded-2xl border border-border bg-background/50 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full"
+                className="group p-5 sm:p-7 rounded-xl sm:rounded-2xl border border-border bg-background/50 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full relative overflow-hidden"
                 hoverScale={1.02}
                 hoverY={-4}
               >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-5 group-hover:bg-primary/20 transition-colors duration-300">
-                  <area.icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
-                </div>
-                <h3 className="text-base sm:text-lg font-display font-semibold mb-2 sm:mb-3">
-                  {area.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                  {area.description}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {area.examples.map((example) => (
-                    <span
-                      key={example}
-                      className="px-2 py-0.5 text-xs rounded-md bg-muted/50 text-muted-foreground"
-                    >
-                      {example}
-                    </span>
-                  ))}
+                {/* Subtle corner glow on hover */}
+                <div className="absolute -top-12 -right-12 w-24 h-24 bg-primary/0 group-hover:bg-primary/10 rounded-full blur-2xl transition-all duration-500" />
+                
+                <div className="relative z-10">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-5 group-hover:bg-primary/20 transition-colors duration-300 ring-1 ring-primary/5 group-hover:ring-primary/20">
+                    <area.icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="text-base sm:text-lg font-display font-semibold mb-2 sm:mb-3">
+                    {area.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                    {area.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {area.examples.map((example) => (
+                      <span
+                        key={example}
+                        className="px-2.5 py-1 text-xs rounded-lg bg-primary/5 text-muted-foreground border border-border/40"
+                      >
+                        {example}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </PremiumCard>
             </StaggerItem>
