@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Search, Map, Wrench, Rocket } from "lucide-react";
 import { Scene3D } from "@/components/3d/Scene3D";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { motion } from "framer-motion";
@@ -12,10 +12,10 @@ export function HeroSection() {
   const { t } = useLanguage();
 
   const processSteps = [
-    { number: "01", title: t("hero.step_1_title"), description: t("hero.step_1_desc") },
-    { number: "02", title: t("hero.step_2_title"), description: t("hero.step_2_desc") },
-    { number: "03", title: t("hero.step_3_title"), description: t("hero.step_3_desc") },
-    { number: "04", title: t("hero.step_4_title"), description: t("hero.step_4_desc") },
+    { number: "01", icon: Search, title: t("hero.step_1_title"), description: t("hero.step_1_desc") },
+    { number: "02", icon: Map, title: t("hero.step_2_title"), description: t("hero.step_2_desc") },
+    { number: "03", icon: Wrench, title: t("hero.step_3_title"), description: t("hero.step_3_desc") },
+    { number: "04", icon: Rocket, title: t("hero.step_4_title"), description: t("hero.step_4_desc") },
   ];
 
   const stats = [
@@ -27,6 +27,16 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Abstract grid pattern */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{
+        backgroundImage: `linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)`,
+        backgroundSize: '60px 60px'
+      }} />
+      
+      {/* Gradient orbs */}
+      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/8 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-accent/6 rounded-full blur-[100px]" />
+      
       {/* Background layers */}
       <div className="absolute inset-0 bg-gradient-glow opacity-30" />
       <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-primary/5 to-transparent" />
@@ -121,8 +131,13 @@ export function HeroSection() {
                     } : undefined}
                     className="group p-4 sm:p-7 rounded-xl sm:rounded-2xl border border-border/40 bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-primary/30 transition-all duration-400"
                   >
-                    <div className="text-xl sm:text-3xl font-display font-bold text-primary/50 mb-2 sm:mb-4 group-hover:text-primary/70 transition-colors duration-400">
-                      {step.number}
+                    <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
+                        <step.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                      </div>
+                      <span className="text-lg sm:text-2xl font-display font-bold text-primary/40 group-hover:text-primary/60 transition-colors duration-400">
+                        {step.number}
+                      </span>
                     </div>
                     <h4 className="text-sm sm:text-lg font-display font-semibold mb-1 sm:mb-2">
                       {step.title}

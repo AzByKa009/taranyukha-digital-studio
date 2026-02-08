@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
-import { Quote } from "lucide-react";
+import { Quote, HelpCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ThinkingSection() {
@@ -55,19 +55,19 @@ export function ThinkingSection() {
             <StaggerContainer className="space-y-5 sm:space-y-6" staggerDelay={0.08}>
               {thinkingPrinciples.map((item, index) => (
                 <StaggerItem key={index}>
-                  <div className="group">
-                    <div className="flex items-start gap-4">
-                      <span className="text-2xl sm:text-3xl font-display font-bold text-primary/30 group-hover:text-primary/50 transition-colors duration-300 leading-none">
+                  <div className="group flex items-start gap-4 p-4 rounded-xl hover:bg-card/40 transition-colors duration-300">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors ring-1 ring-primary/5 group-hover:ring-primary/20">
+                      <span className="text-sm font-display font-bold text-primary">
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                      <div>
-                        <h4 className="text-base sm:text-lg font-display font-semibold mb-1.5">
-                          {item.principle}
-                        </h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {item.explanation}
-                        </p>
-                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-base sm:text-lg font-display font-semibold mb-1.5">
+                        {item.principle}
+                      </h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {item.explanation}
+                      </p>
                     </div>
                   </div>
                 </StaggerItem>
@@ -85,8 +85,9 @@ export function ThinkingSection() {
             </FadeIn>
             
             <FadeIn delay={0.3}>
-              <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl bg-card/50 border border-border/60 mb-6 sm:mb-8">
-                <Quote className="h-8 w-8 text-primary/30 mb-4" />
+              <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl bg-card/50 border border-border/60 mb-6 sm:mb-8 relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+                <Quote className="h-8 w-8 text-primary/20 mb-4" strokeWidth={1.5} />
                 <p className="text-base sm:text-lg text-foreground/90 italic leading-relaxed mb-4">
                   «{t("thinking.quote")}»
                 </p>
@@ -96,8 +97,10 @@ export function ThinkingSection() {
             <StaggerContainer className="space-y-3 sm:space-y-4" staggerDelay={0.06}>
               {realQuestions.map((question, index) => (
                 <StaggerItem key={index}>
-                  <div className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-background/50 border border-border/40 hover:border-primary/30 transition-colors duration-300">
-                    <span className="text-primary text-lg leading-none">?</span>
+                  <div className="group flex items-start gap-3 p-3 sm:p-4 rounded-xl bg-background/50 border border-border/40 hover:border-primary/30 transition-colors duration-300">
+                    <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                      <HelpCircle className="w-3.5 h-3.5 text-primary" strokeWidth={1.5} />
+                    </div>
                     <p className="text-sm sm:text-base text-foreground/80">
                       {question}
                     </p>

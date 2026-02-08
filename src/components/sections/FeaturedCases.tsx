@@ -7,6 +7,11 @@ import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import mockupDashboard from "@/assets/mockup-dashboard.jpg";
+import mockupWebsite from "@/assets/mockup-website.jpg";
+import mockupAiBot from "@/assets/mockup-ai-bot.jpg";
+
+const fallbackImages = [mockupDashboard, mockupWebsite, mockupAiBot];
 
 interface CaseItem {
   id: string;
@@ -41,26 +46,15 @@ export function FeaturedCases() {
     fetchCases();
   }, []);
 
-  // Subscribe to real-time updates
   useEffect(() => {
     const channel = supabase
       .channel('featured-cases-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'cases'
-        },
-        () => {
-          fetchCases();
-        }
-      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cases' }, () => {
+        fetchCases();
+      })
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   if (loading) {
@@ -75,9 +69,7 @@ export function FeaturedCases() {
     );
   }
 
-  if (cases.length === 0) {
-    return null;
-  }
+  if (cases.length === 0) return null;
 
   return (
     <section className="py-20 sm:py-28 bg-card/20 border-y border-border/30">
@@ -110,7 +102,7 @@ export function FeaturedCases() {
 
         {/* Cases Grid */}
         <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" staggerDelay={0.15}>
-          {cases.map((caseItem) => (
+          {cases.map((caseItem, index) => (
             <StaggerItem key={caseItem.id}>
               <Link to={`/cases/${caseItem.slug}`}>
                 <PremiumCard 
@@ -121,26 +113,19 @@ export function FeaturedCases() {
                 >
                   {/* Image */}
                   <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                    {caseItem.thumbnail ? (
-                      <motion.img
-                        src={caseItem.thumbnail}
-                        alt={caseItem.title}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        whileHover={!prefersReducedMotion ? { scale: 1.05 } : undefined}
-                        transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
-                    )}
+                    <motion.img
+                      src={caseItem.thumbnail || fallbackImages[index % fallbackImages.length]}
+                      alt={caseItem.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      whileHover={!prefersReducedMotion ? { scale: 1.05 } : undefined}
+                      transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent opacity-80" />
                     
                     {/* Arrow */}
                     <motion.div 
-                      className="absolute top-4 sm:top-5 right-4 sm:right-5 w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-foreground/10 backdrop-blur-sm flex items-center justify-center"
-                      initial={{ opacity: 0, y: 8 }}
-                      whileHover={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
+                      className="absolute top-4 sm:top-5 right-4 sm:right-5 w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-foreground/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     >
                       <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5" />
                     </motion.div>
