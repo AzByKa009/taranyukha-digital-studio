@@ -7,6 +7,7 @@ import { FeaturedCases } from "@/components/sections/FeaturedCases";
 import { WhyTrustMe } from "@/components/sections/WhyTrustMe";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { CTASection } from "@/components/sections/CTASection";
+import { UTPSection } from "@/components/sections/UTPSection";
 import { ExitIntentPopup } from "@/components/conversion/ExitIntentPopup";
 import { useSEO, personSchema, websiteSchema, professionalServiceSchema } from "@/hooks/useSEO";
 
@@ -24,6 +25,7 @@ const Index = () => {
       <WhatIDo />
       <ApproachSection />
       <FeaturedCases />
+      <UTPSection />
       <ThinkingSection />
       <WhyTrustMe />
       <CTASection />
