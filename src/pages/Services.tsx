@@ -7,10 +7,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 
+import servicePackaging from "@/assets/service-packaging-light.jpg";
+import serviceWebsites from "@/assets/service-websites-light.jpg";
+import serviceSocial from "@/assets/service-social-light.jpg";
+import servicePromotion from "@/assets/service-promotion-light.jpg";
+import serviceAutomation from "@/assets/service-automation-light.jpg";
+
 // Strategic services - tools for implementing growth strategy
 const strategicServices = [
   {
     icon: Briefcase,
+    image: servicePackaging,
     title: "Упаковка бизнеса",
     problemSolved: "Клиенты не понимают, чем вы лучше конкурентов",
     whyNeeded: "Позиционирование → понятное предложение → больше конверсий. Упаковка — фундамент всего маркетинга.",
@@ -20,6 +27,7 @@ const strategicServices = [
   },
   {
     icon: Globe,
+    image: serviceWebsites,
     title: "Сайты",
     problemSolved: "Сайт есть, но заявок с него нет",
     whyNeeded: "Сайт — не визитка, а инструмент продаж. Правильная структура и тексты конвертируют посетителей в заявки.",
@@ -29,6 +37,7 @@ const strategicServices = [
   },
   {
     icon: Share2,
+    image: serviceSocial,
     title: "Соцсети",
     problemSolved: "Ведёте соцсети, но они не приносят клиентов",
     whyNeeded: "Контент без стратегии — просто посты. Системный подход превращает соцсети в канал продаж.",
@@ -38,6 +47,7 @@ const strategicServices = [
   },
   {
     icon: Megaphone,
+    image: servicePromotion,
     title: "Продвижение",
     problemSolved: "Нет стабильного потока новых клиентов",
     whyNeeded: "Органика — долго, реклама — можно слить бюджет. Нужна система, которая окупается.",
@@ -47,6 +57,7 @@ const strategicServices = [
   },
   {
     icon: Bot,
+    image: serviceAutomation,
     title: "Автоматизация",
     problemSolved: "Команда тонет в рутине, время уходит на повторяющиеся задачи",
     whyNeeded: "Автоматизация освобождает время для важного. AI и интеграции работают 24/7 без усталости.",
@@ -151,56 +162,60 @@ const Services = () => {
               <StaggerItem key={service.title}>
                 <Link to={service.href}>
                   <PremiumCard
-                    className="group p-6 sm:p-8 md:p-10 rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-all duration-300"
+                    className="group rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-all duration-300 overflow-hidden"
                     hoverScale={1.01}
                     hoverY={-4}
                   >
-                    <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10">
-                      {/* Left - Icon & Title */}
-                      <div className="lg:w-1/3">
-                        <div className="flex items-start gap-4 mb-4 lg:mb-0">
-                          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-300">
-                            <service.icon className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
-                          </div>
-                          <div>
-                            <h2 className="text-xl sm:text-2xl font-display font-bold mb-2 group-hover:text-gradient transition-colors duration-300">
-                              {service.title}
-                            </h2>
-                            <div className="flex flex-wrap gap-1.5">
-                              {service.includes.map((item) => (
-                                <span
-                                  key={item}
-                                  className="px-2 py-0.5 text-xs rounded-md bg-muted/50 text-muted-foreground"
-                                >
-                                  {item}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
+                    <div className="flex flex-col lg:flex-row">
+                      {/* Image */}
+                      <div className="lg:w-1/3 aspect-[4/3] lg:aspect-auto overflow-hidden relative">
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/80 hidden lg:block" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent lg:hidden" />
                       </div>
 
-                      {/* Right - Problem & Solution */}
-                      <div className="lg:w-2/3 space-y-4">
-                        <div>
-                          <span className="text-xs text-primary font-medium uppercase tracking-wider mb-1 block">
-                            Проблема
-                          </span>
-                          <p className="text-base sm:text-lg text-foreground font-medium">
-                            {service.problemSolved}
-                          </p>
+                      {/* Content */}
+                      <div className="p-6 sm:p-8 md:p-10 lg:w-2/3 flex flex-col justify-center">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-300">
+                            <service.icon className="h-5 w-5 text-primary" />
+                          </div>
+                          <h2 className="text-xl sm:text-2xl font-display font-bold group-hover:text-gradient transition-colors duration-300">
+                            {service.title}
+                          </h2>
                         </div>
-                        
-                        <div>
-                          <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1 block">
-                            Зачем в системе роста
-                          </span>
-                          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+
+                        <div className="flex flex-wrap gap-1.5 mb-5">
+                          {service.includes.map((item) => (
+                            <span
+                              key={item}
+                              className="px-2.5 py-1 text-xs rounded-lg bg-primary/5 text-muted-foreground border border-border/40"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="space-y-3 mb-5">
+                          <div>
+                            <span className="text-xs text-primary font-medium uppercase tracking-wider mb-1 block">
+                              Проблема
+                            </span>
+                            <p className="text-base sm:text-lg text-foreground font-medium">
+                              {service.problemSolved}
+                            </p>
+                          </div>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
                             {service.whyNeeded}
                           </p>
                         </div>
 
-                        <div className="flex items-center justify-between pt-2">
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 text-primary">
                             <Target className="h-4 w-4" />
                             <span className="text-sm font-medium">{service.result}</span>
