@@ -1,35 +1,37 @@
 import { Briefcase, Megaphone, Bot, BarChart3 } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
-
-// Areas of expertise - not services, but competencies
-const expertiseAreas = [
-  {
-    icon: Briefcase,
-    title: "Упаковка бизнеса",
-    description: "Позиционирование, смыслы, визуал. Чтобы клиент понял ценность за 3 секунды.",
-    examples: ["Сайты", "Презентации", "Коммерческие предложения"],
-  },
-  {
-    icon: Megaphone,
-    title: "Продвижение",
-    description: "Трафик, который конвертируется в заявки и продажи. Без слива бюджета.",
-    examples: ["Таргет", "Контент-маркетинг", "SEO"],
-  },
-  {
-    icon: Bot,
-    title: "Автоматизация",
-    description: "Освобождаю время команды от рутины. AI и интеграции работают за вас.",
-    examples: ["Чат-боты", "CRM-интеграции", "Авторассылки"],
-  },
-  {
-    icon: BarChart3,
-    title: "Аналитика и стратегия",
-    description: "Понимаю, что работает, а что — нет. Решения на основе данных, не интуиции.",
-    examples: ["Аудит", "Unit-экономика", "Воронки"],
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function WhatIDo() {
+  const { t } = useLanguage();
+
+  const expertiseAreas = [
+    {
+      icon: Briefcase,
+      title: t("whatido.card_1_title"),
+      description: t("whatido.card_1_desc"),
+      examples: t("whatido.card_1_tags").split(","),
+    },
+    {
+      icon: Megaphone,
+      title: t("whatido.card_2_title"),
+      description: t("whatido.card_2_desc"),
+      examples: t("whatido.card_2_tags").split(","),
+    },
+    {
+      icon: Bot,
+      title: t("whatido.card_3_title"),
+      description: t("whatido.card_3_desc"),
+      examples: t("whatido.card_3_tags").split(","),
+    },
+    {
+      icon: BarChart3,
+      title: t("whatido.card_4_title"),
+      description: t("whatido.card_4_desc"),
+      examples: t("whatido.card_4_tags").split(","),
+    },
+  ];
+
   return (
     <section className="py-20 sm:py-28 relative bg-card/30">
       <div className="container relative z-10">
@@ -37,14 +39,13 @@ export function WhatIDo() {
         <FadeIn>
           <div className="max-w-2xl mb-12 sm:mb-16">
             <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
-              Экспертиза
+              {t("whatido.label")}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
-              С чем помогаю <span className="text-gradient">бизнесу расти</span>
+              {t("whatido.title")}<span className="text-gradient">{t("whatido.title_accent")}</span>
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-              Это не список услуг, а области, в которых я разбираюсь. 
-              Конкретное решение подбираю под вашу задачу — после диагностики.
+              {t("whatido.subtitle")}
             </p>
           </div>
         </FadeIn>
@@ -81,8 +82,6 @@ export function WhatIDo() {
             </StaggerItem>
           ))}
         </StaggerContainer>
-
-        {/* Removed redundant CTA - clean ending */}
       </div>
     </section>
   );

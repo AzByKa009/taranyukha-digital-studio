@@ -16,11 +16,11 @@ interface InlineLeadFormProps {
 export function InlineLeadForm({ variant = "default", className = "" }: InlineLeadFormProps) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
-  const [honeypot, setHoneypot] = useState(""); // Honeypot field for bot detection
+  const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const { variant: ctaVariant, trackConversion } = useABTest("cta_lead_form");
-  const { language } = useLanguage();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,38 +39,25 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
             name: name.trim(),
             contact: contact.trim(),
             source_page: window.location.pathname,
-            website: honeypot, // Honeypot field - should be empty
+            website: honeypot,
           }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to submit");
-      }
+      if (!response.ok) throw new Error("Failed to submit");
 
-      toast.success(language === "ru" 
-        ? "Заявка отправлена! Свяжусь в течение 24 часов" 
-        : "Request sent! I'll contact you within 24 hours"
-      );
+      toast.success(t("lead.success"));
       setName("");
       setContact("");
     } catch (error) {
       console.error("Submit error:", error);
-      toast.error(language === "ru" 
-        ? "Ошибка отправки. Попробуйте ещё раз" 
-        : "Failed to submit. Please try again"
-      );
+      toast.error(t("lead.error"));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const ctaText = ctaVariant === "A" 
-    ? (language === "ru" ? "Обсудить" : "Discuss")
-    : (language === "ru" ? "Начать разговор" : "Start conversation");
-
-  const namePlaceholder = language === "ru" ? "Ваше имя" : "Your name";
-  const contactPlaceholder = language === "ru" ? "Telegram или Email" : "Telegram or Email";
+  const ctaText = ctaVariant === "A" ? t("lead.submit_a") : t("lead.submit_b");
 
   if (variant === "compact") {
     return (
@@ -82,7 +69,6 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        {/* Honeypot field - hidden from users, visible to bots */}
         <input
           type="text"
           name="website"
@@ -95,7 +81,7 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
         />
         <Input
           type="text"
-          placeholder={namePlaceholder}
+          placeholder={t("lead.name_placeholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -104,7 +90,7 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
         />
         <Input
           type="text"
-          placeholder={contactPlaceholder}
+          placeholder={t("lead.contact_placeholder")}
           value={contact}
           onChange={(e) => setContact(e.target.value)}
           required
@@ -121,7 +107,7 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
             className="h-10 sm:h-12 whitespace-nowrap w-full sm:w-auto text-sm sm:text-base"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "..." : ctaText}
+            {isSubmitting ? t("lead.sending") : ctaText}
             <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
         </motion.div>
@@ -138,16 +124,12 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
       transition={{ duration: 0.5 }}
     >
       <h3 className="text-lg sm:text-xl font-display font-bold mb-1.5 sm:mb-2">
-        {language === "ru" ? "Расскажите о задаче" : "Tell me about your task"}
+        {t("lead.title")}
       </h3>
       <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
-        {language === "ru" 
-          ? "Оставьте контакт — разберём вместе, с чего начать" 
-          : "Leave your contact — let's figure out where to start"
-        }
+        {t("lead.subtitle")}
       </p>
       <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-        {/* Honeypot field - hidden from users, visible to bots */}
         <input
           type="text"
           name="website"
@@ -161,7 +143,7 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
         <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
           <Input
             type="text"
-            placeholder={namePlaceholder}
+            placeholder={t("lead.name_placeholder")}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -170,7 +152,7 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
           />
           <Input
             type="text"
-            placeholder={contactPlaceholder}
+            placeholder={t("lead.contact_placeholder")}
             value={contact}
             onChange={(e) => setContact(e.target.value)}
             required
@@ -188,10 +170,7 @@ export function InlineLeadForm({ variant = "default", className = "" }: InlineLe
             className="w-full sm:w-auto text-sm sm:text-base"
             disabled={isSubmitting}
           >
-            {isSubmitting 
-              ? (language === "ru" ? "Отправка..." : "Sending...") 
-              : ctaText
-            }
+            {isSubmitting ? t("lead.submitting") : ctaText}
             <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
         </motion.div>

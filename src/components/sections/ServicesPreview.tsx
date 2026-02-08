@@ -6,6 +6,7 @@ import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Fallback images
 import serviceWeb from "@/assets/service-web.jpg";
@@ -14,14 +15,7 @@ import serviceReels from "@/assets/service-reels.jpg";
 import serviceAiVideo from "@/assets/service-ai-video.jpg";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Code,
-  Brain,
-  Layers,
-  Zap,
-  Briefcase,
-  Megaphone,
-  Bot,
-  BarChart3,
+  Code, Brain, Layers, Zap, Briefcase, Megaphone, Bot, BarChart3,
 };
 
 const fallbackImages = [serviceWeb, serviceBot, serviceReels, serviceAiVideo];
@@ -38,6 +32,7 @@ interface Service {
 export function ServicesPreview() {
   const prefersReducedMotion = useReducedMotion();
   const [services, setServices] = useState<Service[]>([]);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -48,33 +43,21 @@ export function ServicesPreview() {
         .order("sort_order", { ascending: true })
         .limit(4);
 
-      if (data) {
-        setServices(data);
-      }
+      if (data) setServices(data);
     };
 
     fetchServices();
 
-    // Realtime subscription
     const channel = supabase
       .channel("services-preview-realtime")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "services" },
-        () => fetchServices()
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, () => fetchServices())
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   const getIcon = (iconName: string | null, index: number) => {
-    if (iconName && iconMap[iconName]) {
-      return iconMap[iconName];
-    }
-    // Fallback icons
+    if (iconName && iconMap[iconName]) return iconMap[iconName];
     const defaultIcons = [Code, Brain, Layers, Zap];
     return defaultIcons[index % defaultIcons.length];
   };
@@ -86,19 +69,17 @@ export function ServicesPreview() {
   return (
     <section className="py-24">
       <div className="container">
-        {/* Header */}
         <FadeIn>
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              Чем я могу помочь
+              {t("services_preview.title")}
             </h2>
             <p className="text-muted-foreground">
-              AI-продукты, сайты под услуги и вертикальный контент. Беру на себя большую часть работы.
+              {t("services_preview.subtitle")}
             </p>
           </div>
         </FadeIn>
 
-        {/* Services Grid */}
         <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12" staggerDelay={0.1}>
           {services.map((service, index) => {
             const IconComponent = getIcon(service.icon, index);
@@ -110,7 +91,6 @@ export function ServicesPreview() {
                     hoverScale={1.03}
                     hoverY={-4}
                   >
-                    {/* Image */}
                     <div className="aspect-video overflow-hidden">
                       <img 
                         src={getImage(service.thumbnail, index)}
@@ -121,27 +101,18 @@ export function ServicesPreview() {
                         height={180}
                       />
                     </div>
-                    
-                    {/* Content */}
                     <div className="p-6">
                       <motion.div 
                         className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4"
-                        whileHover={!prefersReducedMotion ? { 
-                          scale: 1.1,
-                          backgroundColor: "hsl(var(--primary) / 0.2)"
-                        } : undefined}
+                        whileHover={!prefersReducedMotion ? { scale: 1.1, backgroundColor: "hsl(var(--primary) / 0.2)" } : undefined}
                         transition={{ type: "spring", stiffness: 400, damping: 25 }}
                       >
                         <IconComponent className="h-6 w-6 text-primary" />
                       </motion.div>
-                      <h3 className="text-lg font-display font-semibold mb-2">
-                        {service.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        {service.short_description}
-                      </p>
+                      <h3 className="text-lg font-display font-semibold mb-2">{service.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{service.short_description}</p>
                       <span className="inline-flex items-center gap-1 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        Подробнее <ArrowRight className="h-3 w-3" />
+                        {t("services_preview.details")} <ArrowRight className="h-3 w-3" />
                       </span>
                     </div>
                   </PremiumCard>
@@ -151,7 +122,6 @@ export function ServicesPreview() {
           })}
         </StaggerContainer>
 
-        {/* CTA */}
         <FadeIn delay={0.4}>
           <div className="text-center">
             <Link to="/services">
@@ -162,7 +132,7 @@ export function ServicesPreview() {
                 className="inline-block"
               >
                 <Button variant="outline" className="group">
-                  Все услуги
+                  {t("services_preview.all")}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </motion.div>
