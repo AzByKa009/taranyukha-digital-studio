@@ -46,6 +46,7 @@ const defaultTranslations: Record<string, string> = {
   // What I Do
   "whatido.label": "Экспертиза",
   "whatido.title": "Что я делаю",
+  "whatido.title_accent": "",
   "whatido.subtitle": "Помогаю бизнесу расти системно — через понятный маркетинг",
   
   // Featured Cases
