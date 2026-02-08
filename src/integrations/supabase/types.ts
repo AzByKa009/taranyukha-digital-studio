@@ -161,9 +161,11 @@ export type Database = {
           gallery: string[] | null
           id: string
           is_published: boolean | null
+          person_description: string | null
           result: string | null
           short_description: string
           slug: string
+          social_links: Json | null
           solution: string | null
           sort_order: number | null
           tags: string[] | null
@@ -182,9 +184,11 @@ export type Database = {
           gallery?: string[] | null
           id?: string
           is_published?: boolean | null
+          person_description?: string | null
           result?: string | null
           short_description: string
           slug: string
+          social_links?: Json | null
           solution?: string | null
           sort_order?: number | null
           tags?: string[] | null
@@ -203,9 +207,11 @@ export type Database = {
           gallery?: string[] | null
           id?: string
           is_published?: boolean | null
+          person_description?: string | null
           result?: string | null
           short_description?: string
           slug?: string
+          social_links?: Json | null
           solution?: string | null
           sort_order?: number | null
           tags?: string[] | null

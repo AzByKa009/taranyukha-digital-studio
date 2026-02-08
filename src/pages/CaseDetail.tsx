@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Loader2, Instagram, Youtube, Send, Globe, Music } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+
+interface SocialLink {
+  label: string;
+  url: string;
+  icon: string;
+}
 
 interface CaseItem {
   id: string;
@@ -21,7 +27,17 @@ interface CaseItem {
   deliverables: string[] | null;
   gallery: string[] | null;
   tags: string[] | null;
+  person_description: string | null;
+  social_links: SocialLink[] | null;
 }
+
+const socialIconMap: Record<string, React.ElementType> = {
+  instagram: Instagram,
+  youtube: Youtube,
+  send: Send,
+  globe: Globe,
+  music: Music,
+};
 
 const CaseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -48,7 +64,10 @@ const CaseDetail = () => {
         return;
       }
 
-      setCaseItem(data);
+      setCaseItem({
+        ...data,
+        social_links: (data.social_links as unknown as SocialLink[]) || [],
+      } as CaseItem);
 
       // Fetch all cases to find next one
       const { data: allCases } = await supabase
@@ -235,6 +254,38 @@ const CaseDetail = () => {
             {/* Sidebar */}
             <div className="lg:col-span-1">
               <div className="sticky top-28 space-y-8">
+                {/* Person Info */}
+                {(caseItem.person_description || (caseItem.social_links && caseItem.social_links.length > 0)) && (
+                  <div className="p-6 rounded-2xl bg-card/50 border border-border animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+                    <h3 className="text-sm font-medium text-primary uppercase tracking-wider mb-4">
+                      О клиенте
+                    </h3>
+                    {caseItem.person_description && (
+                      <p className="text-sm text-foreground/80 leading-relaxed mb-4">
+                        {caseItem.person_description}
+                      </p>
+                    )}
+                    {caseItem.social_links && caseItem.social_links.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {caseItem.social_links.map((link, index) => {
+                          const IconComponent = socialIconMap[link.icon] || Globe;
+                          return (
+                            <a
+                              key={index}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm bg-muted/50 hover:bg-muted text-foreground/80 hover:text-foreground transition-colors border border-border/50"
+                            >
+                              <IconComponent className="h-4 w-4" />
+                              {link.label}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
                 {/* Deliverables */}
                 {caseItem.deliverables && caseItem.deliverables.length > 0 && (
                   <div className="p-6 rounded-2xl bg-card/50 border border-border animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
