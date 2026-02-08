@@ -1,6 +1,10 @@
 import { Target, Lightbulb, TrendingUp, Zap } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import cardStrategy from "@/assets/card-strategy.jpg";
+import cardUnderstanding from "@/assets/card-understanding.jpg";
+import cardResults from "@/assets/card-results.jpg";
+import cardSystem from "@/assets/card-system.jpg";
 
 export function ApproachSection() {
   const { t } = useLanguage();
@@ -8,24 +12,28 @@ export function ApproachSection() {
   const approachPillars = [
     {
       icon: Target,
+      image: cardStrategy,
       title: t("approach.card_1_title"),
       description: t("approach.card_1_desc"),
       accent: t("approach.card_1_accent"),
     },
     {
       icon: Lightbulb,
+      image: cardUnderstanding,
       title: t("approach.card_2_title"),
       description: t("approach.card_2_desc"),
       accent: t("approach.card_2_accent"),
     },
     {
       icon: TrendingUp,
+      image: cardResults,
       title: t("approach.card_3_title"),
       description: t("approach.card_3_desc"),
       accent: t("approach.card_3_accent"),
     },
     {
       icon: Zap,
+      image: cardSystem,
       title: t("approach.card_4_title"),
       description: t("approach.card_4_desc"),
       accent: t("approach.card_4_accent"),
@@ -55,24 +63,35 @@ export function ApproachSection() {
 
         {/* Approach Cards */}
         <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6" staggerDelay={0.1}>
-          {approachPillars.map((pillar, index) => (
+          {approachPillars.map((pillar) => (
             <StaggerItem key={pillar.title}>
               <PremiumCard
-                className="group p-5 sm:p-7 rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full relative overflow-hidden"
+                className="group rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full relative overflow-hidden"
                 hoverScale={1.02}
                 hoverY={-4}
               >
-                {/* Decorative line */}
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <div className="relative z-10">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-primary/20 transition-colors duration-300 ring-1 ring-primary/5 group-hover:ring-primary/20">
-                    <pillar.icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary" strokeWidth={1.5} />
+                {/* Image */}
+                <div className="aspect-[4/3] overflow-hidden relative">
+                  <img
+                    src={pillar.image}
+                    alt={pillar.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+                </div>
+
+                {/* Content */}
+                <div className="p-5 sm:p-6 relative z-10">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300 ring-1 ring-primary/5 group-hover:ring-primary/20">
+                      <pillar.icon className="h-4.5 w-4.5 text-primary" strokeWidth={1.5} />
+                    </div>
+                    <h3 className="text-base sm:text-lg font-display font-semibold">
+                      {pillar.title}
+                    </h3>
                   </div>
-                  <h3 className="text-base sm:text-lg font-display font-semibold mb-2 sm:mb-3">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-3 sm:mb-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                     {pillar.description}
                   </p>
                   <div className="flex items-center gap-2">
