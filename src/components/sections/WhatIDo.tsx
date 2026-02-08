@@ -1,10 +1,10 @@
 import { Briefcase, Megaphone, Bot, BarChart3 } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import cardPackaging from "@/assets/card-packaging.jpg";
-import cardPromotion from "@/assets/card-promotion.jpg";
-import cardAutomation from "@/assets/card-automation.jpg";
-import cardAnalytics from "@/assets/card-analytics.jpg";
+import cardPackaging from "@/assets/service-packaging-light.jpg";
+import cardPromotion from "@/assets/service-promotion-light.jpg";
+import cardAutomation from "@/assets/service-automation-light.jpg";
+import cardAnalytics from "@/assets/service-websites-light.jpg";
 
 export function WhatIDo() {
   const { t } = useLanguage();
