@@ -81,7 +81,7 @@ serve(async (req) => {
     }
     // === END AUTHENTICATION CHECK ===
 
-    const { prompt, folder = "generated", referenceImage } = await req.json();
+    const { prompt, folder = "generated", referenceImage, aspectRatio = "16:9" } = await req.json();
 
     if (!prompt) {
       return new Response(
@@ -105,11 +105,11 @@ serve(async (req) => {
         },
         {
           type: "text",
-          text: `Edit this image according to these instructions: ${prompt}. Output ONLY the resulting image, no text.`
+          text: `Edit this image according to these instructions: ${prompt}. Output aspect ratio: ${aspectRatio}. Output ONLY the resulting image, no text.`
         }
       ];
     } else {
-      userContent = `Generate a professional, high-quality image for a business website. The image should be: ${prompt}. Make it look premium, modern, and suitable for a professional services portfolio. Aspect ratio should be 16:9 or 4:3 for thumbnail use.`;
+      userContent = `Generate a professional, high-quality image for a business website. The image should be: ${prompt}. Make it look premium, modern, and suitable for a professional services portfolio. Aspect ratio: ${aspectRatio}.`;
     }
 
     // Generate image using Lovable AI Gateway with Gemini image model

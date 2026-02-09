@@ -36,6 +36,7 @@ export default function AdminAITools() {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
   const [referencePreview, setReferencePreview] = useState<string | null>(null);
+  const [imageAspect, setImageAspect] = useState("16:9");
 
   // Video state
   const [videoPrompt, setVideoPrompt] = useState("");
@@ -127,7 +128,7 @@ export default function AdminAITools() {
 
     try {
       const { data, error } = await supabase.functions.invoke("generate-image", {
-        body: { prompt: imagePrompt, folder: "ai-generated", referenceImage: referenceImage || undefined }
+        body: { prompt: imagePrompt, folder: "ai-generated", referenceImage: referenceImage || undefined, aspectRatio: imageAspect }
       });
 
       if (error) throw error;
@@ -330,6 +331,29 @@ export default function AdminAITools() {
                   placeholder={referencePreview ? "Опишите, что изменить или как использовать исходное фото..." : "Опишите изображение, которое хотите создать..."}
                   rows={3}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Формат изображения</Label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { value: "1:1", label: "1:1 Квадрат" },
+                    { value: "16:9", label: "16:9 Широкий" },
+                    { value: "9:16", label: "9:16 Вертикальный" },
+                    { value: "4:3", label: "4:3 Стандарт" },
+                    { value: "3:4", label: "3:4 Портрет" },
+                  ].map((opt) => (
+                    <Button
+                      key={opt.value}
+                      type="button"
+                      size="sm"
+                      variant={imageAspect === opt.value ? "default" : "outline"}
+                      onClick={() => setImageAspect(opt.value)}
+                    >
+                      {opt.label}
+                    </Button>
+                  ))}
+                </div>
               </div>
 
               <Button 
