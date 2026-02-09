@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +15,9 @@ import {
   Send,
   Sparkles,
   Download,
-  Copy
+  Copy,
+  Upload,
+  X
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import TTSPanel from "@/components/admin/TTSPanel";
@@ -32,6 +34,8 @@ export default function AdminAITools() {
   const [imagePrompt, setImagePrompt] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [referenceImage, setReferenceImage] = useState<string | null>(null);
+  const [referencePreview, setReferencePreview] = useState<string | null>(null);
 
   // Video state
   const [videoPrompt, setVideoPrompt] = useState("");
@@ -123,7 +127,7 @@ export default function AdminAITools() {
 
     try {
       const { data, error } = await supabase.functions.invoke("generate-image", {
-        body: { prompt: imagePrompt, folder: "ai-generated" }
+        body: { prompt: imagePrompt, folder: "ai-generated", referenceImage: referenceImage || undefined }
       });
 
       if (error) throw error;
@@ -137,6 +141,27 @@ export default function AdminAITools() {
     } finally {
       setImageLoading(false);
     }
+  };
+
+  const handleReferenceUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Файл слишком большой (макс. 5 МБ)");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setReferenceImage(result);
+      setReferencePreview(result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const clearReference = () => {
+    setReferenceImage(null);
+    setReferencePreview(null);
   };
 
   // Video generation - not available via API, show info message
@@ -270,12 +295,39 @@ export default function AdminAITools() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Reference image upload */}
+              <div className="space-y-2">
+                <Label>Исходное фото (опционально)</Label>
+                <div className="flex items-start gap-3">
+                  {referencePreview ? (
+                    <div className="relative w-32 h-32 rounded-lg border overflow-hidden shrink-0">
+                      <img src={referencePreview} alt="Reference" className="w-full h-full object-cover" />
+                      <button
+                        onClick={clearReference}
+                        className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 hover:bg-black/80"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed rounded-lg cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-colors shrink-0">
+                      <Upload className="w-6 h-6 text-muted-foreground mb-1" />
+                      <span className="text-xs text-muted-foreground text-center">Загрузить фото</span>
+                      <input type="file" accept="image/*" className="hidden" onChange={handleReferenceUpload} />
+                    </label>
+                  )}
+                  <p className="text-xs text-muted-foreground pt-1">
+                    Загрузите фото, чтобы AI использовал его как основу или пример стиля для генерации нового изображения.
+                  </p>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label>Описание изображения</Label>
                 <Textarea
                   value={imagePrompt}
                   onChange={(e) => setImagePrompt(e.target.value)}
-                  placeholder="Опишите изображение, которое хотите создать..."
+                  placeholder={referencePreview ? "Опишите, что изменить или как использовать исходное фото..." : "Опишите изображение, которое хотите создать..."}
                   rows={3}
                 />
               </div>
