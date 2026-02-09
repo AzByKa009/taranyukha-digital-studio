@@ -81,7 +81,7 @@ serve(async (req) => {
     }
     // === END AUTHENTICATION CHECK ===
 
-    const { prompt, folder = "generated" } = await req.json();
+    const { prompt, folder = "generated", referenceImage } = await req.json();
 
     if (!prompt) {
       return new Response(
@@ -93,6 +93,23 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
+    }
+
+    // Build message content - text only or multimodal with reference image
+    let userContent: any;
+    if (referenceImage) {
+      userContent = [
+        {
+          type: "text",
+          text: `Using the provided reference image as inspiration/base, create a professional, high-quality image for a business website. Instructions: ${prompt}. Make it look premium, modern, and suitable for a professional services portfolio.`
+        },
+        {
+          type: "image_url",
+          image_url: { url: referenceImage }
+        }
+      ];
+    } else {
+      userContent = `Generate a professional, high-quality image for a business website. The image should be: ${prompt}. Make it look premium, modern, and suitable for a professional services portfolio. Aspect ratio should be 16:9 or 4:3 for thumbnail use.`;
     }
 
     // Generate image using Lovable AI Gateway with Gemini image model
@@ -107,7 +124,7 @@ serve(async (req) => {
         messages: [
           {
             role: "user",
-            content: `Generate a professional, high-quality image for a business website. The image should be: ${prompt}. Make it look premium, modern, and suitable for a professional services portfolio. Aspect ratio should be 16:9 or 4:3 for thumbnail use.`
+            content: userContent
           }
         ],
         modalities: ["image", "text"]
