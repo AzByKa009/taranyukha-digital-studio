@@ -100,12 +100,12 @@ serve(async (req) => {
     if (referenceImage) {
       userContent = [
         {
-          type: "text",
-          text: `Using the provided reference image as inspiration/base, create a professional, high-quality image for a business website. Instructions: ${prompt}. Make it look premium, modern, and suitable for a professional services portfolio.`
-        },
-        {
           type: "image_url",
           image_url: { url: referenceImage }
+        },
+        {
+          type: "text",
+          text: `Edit this image according to these instructions: ${prompt}. Output ONLY the resulting image, no text.`
         }
       ];
     } else {
