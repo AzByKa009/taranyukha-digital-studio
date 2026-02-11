@@ -7,32 +7,32 @@
 
 @layer base {
   :root {
-    /* Deep dark background */
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    /* AI SaaS - Deep indigo background */
+    --background: 240 20% 6%;
+    --foreground: 240 14% 96%;
 
     /* Cards - slightly elevated */
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 240 18% 13%;
+    --card-foreground: 240 14% 96%;
 
     /* Popover */
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 240 20% 11%;
+    --popover-foreground: 240 14% 96%;
 
-    /* Primary - Brand Purple */
-    --primary: 262 83% 58%;
+    /* Primary - AI Indigo */
+    --primary: 239 84% 67%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Muted purple */
-    --secondary: 262 30% 15%;
-    --secondary-foreground: 262 20% 80%;
+    /* Secondary - Muted indigo */
+    --secondary: 240 20% 11%;
+    --secondary-foreground: 240 4% 65%;
 
-    /* Muted - Dark gray */
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 55%;
+    /* Muted */
+    --muted: 240 18% 16%;
+    --muted-foreground: 240 4% 65%;
 
-    /* Accent - Purple glow */
-    --accent: 258 90% 66%;
+    /* Accent - CTA Blue */
+    --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
 
     /* Destructive */
@@ -40,39 +40,39 @@
     --destructive-foreground: 0 0% 100%;
 
     /* Borders */
-    --border: 0 0% 14%;
-    --input: 0 0% 14%;
-    --ring: 262 83% 58%;
+    --border: 240 14% 18%;
+    --input: 240 14% 18%;
+    --ring: 239 84% 67%;
 
-    --radius: 0.875rem;
+    --radius: 0.75rem;
 
     /* Custom tokens */
-    --glow-purple: 262 83% 58%;
-    --surface-elevated: 0 0% 9%;
-    --text-secondary: 0 0% 68%;
-    --text-tertiary: 0 0% 45%;
+    --glow-purple: 239 84% 67%;
+    --surface-elevated: 240 20% 11%;
+    --text-secondary: 240 4% 65%;
+    --text-tertiary: 240 4% 45%;
 
     /* Gradients */
-    --gradient-purple: linear-gradient(135deg, hsl(262, 83%, 58%) 0%, hsl(258, 90%, 66%) 100%);
-    --gradient-dark: linear-gradient(180deg, hsl(0, 0%, 7%) 0%, hsl(0, 0%, 4%) 100%);
-    --gradient-glow: radial-gradient(ellipse at center, hsl(262, 83%, 58%, 0.12) 0%, transparent 70%);
+    --gradient-purple: linear-gradient(135deg, hsl(239, 84%, 67%) 0%, hsl(217, 91%, 60%) 100%);
+    --gradient-dark: linear-gradient(180deg, hsl(240, 20%, 11%) 0%, hsl(240, 20%, 6%) 100%);
+    --gradient-glow: radial-gradient(ellipse at center, hsl(239, 84%, 67%, 0.06) 0%, transparent 70%);
 
-    /* Shadows - refined */
-    --shadow-glow: 0 0 80px -20px hsl(262, 83%, 58%, 0.4);
-    --shadow-card: 0 8px 32px -8px hsl(0, 0%, 0%, 0.6);
-    --shadow-card-hover: 0 16px 48px -12px hsl(0, 0%, 0%, 0.7);
-    --shadow-button: 0 4px 24px -4px hsl(262, 83%, 58%, 0.35);
-    --shadow-inset: inset 0 1px 0 0 hsl(0, 0%, 100%, 0.03);
+    /* Shadows - minimal, no excessive glow */
+    --shadow-glow: 0 0 40px -16px hsl(239, 84%, 67%, 0.2);
+    --shadow-card: 0 4px 24px -6px hsl(240, 40%, 3%, 0.7);
+    --shadow-card-hover: 0 8px 32px -8px hsl(240, 40%, 3%, 0.8);
+    --shadow-button: 0 2px 12px -2px hsl(217, 91%, 60%, 0.3);
+    --shadow-inset: inset 0 1px 0 0 hsl(0, 0%, 100%, 0.04);
 
     /* Sidebar */
-    --sidebar-background: 0 0% 6%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 262 83% 58%;
+    --sidebar-background: 240 20% 8%;
+    --sidebar-foreground: 240 14% 96%;
+    --sidebar-primary: 239 84% 67%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 262 83% 58%;
+    --sidebar-accent: 240 18% 16%;
+    --sidebar-accent-foreground: 240 14% 96%;
+    --sidebar-border: 240 14% 18%;
+    --sidebar-ring: 239 84% 67%;
   }
 }
 
@@ -116,7 +116,7 @@
   .premium-card::before {
     content: '';
     @apply absolute inset-0 rounded-2xl opacity-0 pointer-events-none;
-    background: linear-gradient(135deg, hsl(262, 83%, 58%, 0.08) 0%, transparent 50%);
+    background: linear-gradient(135deg, hsl(239, 84%, 67%, 0.05) 0%, transparent 50%);
     transition: opacity 0.4s ease;
   }
 
