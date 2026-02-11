@@ -5,19 +5,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold ring-offset-background transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-[hsl(38,95%,42%)] shadow-sm font-semibold",
+        default: "bg-primary text-primary-foreground hover:bg-[hsl(235,92%,74%)] shadow-md",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-border bg-transparent hover:bg-muted",
+        outline: "border border-border bg-transparent hover:bg-muted hover:border-muted-foreground/30",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-muted hover:text-foreground",
-        link: "text-accent underline-offset-4 hover:underline",
-        premium: "bg-primary text-primary-foreground hover:bg-[hsl(38,95%,42%)] shadow-sm font-semibold",
-        hero: "bg-primary text-primary-foreground text-base px-8 py-6 hover:bg-[hsl(38,95%,42%)] font-bold",
-        "hero-outline": "border border-border bg-transparent text-foreground hover:bg-muted text-base px-8 py-6 font-semibold",
+        link: "text-primary underline-offset-4 hover:underline",
+        premium: "bg-accent text-accent-foreground hover:bg-[hsl(217,91%,53%)] shadow-md font-semibold",
+        hero: "bg-accent text-accent-foreground text-base px-8 py-6 shadow-md hover:bg-[hsl(217,91%,53%)] font-semibold",
+        "hero-outline": "border-2 border-primary/40 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary text-base px-8 py-6 font-semibold",
         subtle: "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground",
       },
       size: {
