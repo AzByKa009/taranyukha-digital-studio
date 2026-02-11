@@ -46,7 +46,11 @@ const corsHeaders = {
 
 function buildCorsHeaders(origin: string | null) {
   const allowedOrigins = getAllowedOrigins();
-  const allowed = !!origin && allowedOrigins.has(origin);
+  const allowed = !!origin && (
+    allowedOrigins.has(origin) ||
+    origin.endsWith(".lovableproject.com") ||
+    origin.endsWith(".lovable.app")
+  );
   return {
     ...corsHeaders,
     "Access-Control-Allow-Origin": allowed && origin ? origin : "null",
