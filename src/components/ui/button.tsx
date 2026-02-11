@@ -9,15 +9,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-[hsl(235,92%,74%)] shadow-md",
+        default: "bg-primary text-primary-foreground hover:bg-[hsl(142,76%,36%)] shadow-md font-semibold",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "border border-border bg-transparent hover:bg-muted hover:border-muted-foreground/30",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-muted hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        premium: "bg-accent text-accent-foreground hover:bg-[hsl(217,91%,53%)] shadow-md font-semibold",
-        hero: "bg-accent text-accent-foreground text-base px-8 py-6 shadow-md hover:bg-[hsl(217,91%,53%)] font-semibold",
-        "hero-outline": "border-2 border-primary/40 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary text-base px-8 py-6 font-semibold",
+        premium: "bg-primary text-primary-foreground hover:bg-[hsl(142,76%,36%)] shadow-md font-semibold",
+        hero: "bg-primary text-primary-foreground text-base px-8 py-6 shadow-[var(--shadow-button)] hover:bg-[hsl(142,76%,36%)] font-bold",
+        "hero-outline": "border-2 border-accent/40 bg-transparent text-foreground hover:bg-accent/10 hover:border-accent text-base px-8 py-6 font-semibold",
         subtle: "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground",
       },
       size: {
