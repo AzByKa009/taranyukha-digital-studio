@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, ClipboardList, Loader2, CheckCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, ClipboardList, Loader2, CheckCircle, Sparkles, Send } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import ReactMarkdown from "react-markdown";
 
 const budgetOptions = [
   "До 50 000 ₽",
@@ -20,7 +19,7 @@ const budgetOptions = [
 const AIAudit = () => {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [plan, setPlan] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
   
   const [formData, setFormData] = useState({
     businessType: "",
@@ -28,6 +27,12 @@ const AIAudit = () => {
     painPoints: "",
     budget: "",
     goals: ""
+  });
+
+  const [contactData, setContactData] = useState({
+    name: "",
+    contact: "",
+    website: "" // honeypot
   });
 
   useEffect(() => {
@@ -38,44 +43,43 @@ const AIAudit = () => {
   }, []);
 
   const handleSubmit = async () => {
+    if (contactData.website) return; // honeypot
+    
     setIsLoading(true);
     
     try {
-      // Get current session or sign in anonymously
       let session = (await supabase.auth.getSession()).data.session;
       
       if (!session) {
-        // Sign in anonymously for the audit
         const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
-        if (anonError) {
-          console.error("Anonymous auth error:", anonError);
-          throw new Error("Не удалось авторизоваться");
-        }
+        if (anonError) throw new Error("Не удалось авторизоваться");
         session = anonData.session;
       }
 
       const { data, error } = await supabase.functions.invoke('ai-audit', {
-        body: formData
+        body: {
+          ...formData,
+          name: contactData.name,
+          contact: contactData.contact,
+        }
       });
 
       if (error) {
-        // Handle specific error codes
         if (error.message?.includes("401")) {
           throw new Error("Ошибка авторизации. Попробуйте обновить страницу.");
         }
         throw error;
       }
       
-      if (data.plan) {
-        setPlan(data.plan);
-        setStep(6);
-        toast.success("План автоматизации готов!");
+      if (data.success) {
+        setSubmitted(true);
+        setStep(7);
+        toast.success("Заявка отправлена!");
       } else if (data.error) {
         throw new Error(data.error);
       }
     } catch (error) {
-      console.error("Error generating audit:", error);
-      const message = error instanceof Error ? error.message : "Не удалось сгенерировать план";
+      const message = error instanceof Error ? error.message : "Не удалось отправить заявку";
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -83,7 +87,7 @@ const AIAudit = () => {
   };
 
   const nextStep = () => {
-    if (step < 5) {
+    if (step < 6) {
       setStep(step + 1);
     } else {
       handleSubmit();
@@ -101,13 +105,15 @@ const AIAudit = () => {
       case 3: return formData.painPoints.length > 20;
       case 4: return formData.budget !== "";
       case 5: return formData.goals.length > 10;
+      case 6: return contactData.name.trim().length > 1 && contactData.contact.trim().length > 3;
       default: return false;
     }
   };
 
+  const totalSteps = 6;
+
   return (
     <Layout>
-      {/* Back link */}
       <div className="container pt-8">
         <Link 
           to="/ai-products" 
@@ -118,7 +124,6 @@ const AIAudit = () => {
         </Link>
       </div>
 
-      {/* Hero */}
       <section className="pt-8 pb-12">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
@@ -129,21 +134,20 @@ const AIAudit = () => {
               Бесплатный AI-аудит
             </h1>
             <p className="text-lg text-muted-foreground animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              Ответьте на 5 вопросов о вашем бизнесе, и AI подготовит персонализированный план автоматизации
+              Ответьте на 5 вопросов, оставьте контакт — и мы пришлём персональный план автоматизации
             </p>
           </div>
         </div>
       </section>
 
-      {/* Form or Result */}
       <section className="pb-24">
         <div className="container">
           <div className="max-w-2xl mx-auto">
-            {step < 6 ? (
+            {!submitted ? (
               <>
                 {/* Progress */}
                 <div className="flex items-center gap-2 mb-8">
-                  {[1, 2, 3, 4, 5].map((s) => (
+                  {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
                     <div
                       key={s}
                       className={`h-2 flex-1 rounded-full transition-colors ${
@@ -153,7 +157,6 @@ const AIAudit = () => {
                   ))}
                 </div>
 
-                {/* Form Steps */}
                 <div className="glass-card rounded-2xl p-8">
                   {step === 1 && (
                     <div className="space-y-6 animate-fade-in">
@@ -263,6 +266,42 @@ const AIAudit = () => {
                     </div>
                   )}
 
+                  {step === 6 && (
+                    <div className="space-y-6 animate-fade-in">
+                      <div>
+                        <label className="text-lg font-display font-semibold mb-2 block">
+                          Куда прислать результаты аудита?
+                        </label>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Оставьте контакт — мы подготовим персональный план и свяжемся с вами
+                        </p>
+                        <div className="space-y-4">
+                          <Input
+                            value={contactData.name}
+                            onChange={(e) => setContactData({ ...contactData, name: e.target.value })}
+                            placeholder="Ваше имя"
+                            className="bg-background/50"
+                          />
+                          <Input
+                            value={contactData.contact}
+                            onChange={(e) => setContactData({ ...contactData, contact: e.target.value })}
+                            placeholder="Telegram, WhatsApp или Email"
+                            className="bg-background/50"
+                          />
+                          {/* Honeypot */}
+                          <input
+                            type="text"
+                            value={contactData.website}
+                            onChange={(e) => setContactData({ ...contactData, website: e.target.value })}
+                            className="absolute opacity-0 pointer-events-none"
+                            tabIndex={-1}
+                            autoComplete="off"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Navigation */}
                   <div className="flex items-center justify-between mt-8 pt-6 border-t border-border">
                     <Button
@@ -282,12 +321,12 @@ const AIAudit = () => {
                       {isLoading ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          Генерирую план...
+                          Отправляем...
                         </>
-                      ) : step === 5 ? (
+                      ) : step === 6 ? (
                         <>
-                          <Sparkles className="h-4 w-4" />
-                          Получить план
+                          <Send className="h-4 w-4" />
+                          Получить аудит
                         </>
                       ) : (
                         <>
@@ -300,36 +339,23 @@ const AIAudit = () => {
                 </div>
               </>
             ) : (
-              // Result
-              <div className="animate-fade-in">
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center">
-                    <CheckCircle className="h-6 w-6 text-green-500" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-display font-bold">Ваш план автоматизации готов</h2>
-                    <p className="text-sm text-muted-foreground">Персонализированные рекомендации на основе ваших ответов</p>
-                  </div>
+              // Success screen
+              <div className="animate-fade-in text-center">
+                <div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="h-10 w-10 text-green-500" />
                 </div>
-
-                <div className="glass-card rounded-2xl p-8 prose prose-invert max-w-none">
-                  <ReactMarkdown>{plan || ""}</ReactMarkdown>
-                </div>
-
-                <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                  <h3 className="font-display font-semibold text-lg mb-2">
-                    Хотите внедрить эти решения?
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Обсудим детали и поможем реализовать план автоматизации
-                  </p>
-                  <Link to="/contacts">
-                    <Button variant="hero">
-                      Обсудить внедрение
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
+                <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">
+                  Заявка принята!
+                </h2>
+                <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">
+                  Мы подготовим персональный план автоматизации и свяжемся с вами в ближайшее время
+                </p>
+                <Link to="/">
+                  <Button variant="outline" size="lg">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    На главную
+                  </Button>
+                </Link>
               </div>
             )}
           </div>
