@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Search, Map, Wrench, Rocket } from "lucide-react";
+import { ArrowRight, Check, Search, Wrench, Rocket } from "lucide-react";
 import { Scene3D } from "@/components/3d/Scene3D";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { motion } from "framer-motion";
@@ -13,9 +13,15 @@ export function HeroSection() {
 
   const processSteps = [
     { number: "01", icon: Search, title: t("hero.step_1_title"), description: t("hero.step_1_desc") },
-    { number: "02", icon: Map, title: t("hero.step_2_title"), description: t("hero.step_2_desc") },
-    { number: "03", icon: Wrench, title: t("hero.step_3_title"), description: t("hero.step_3_desc") },
-    { number: "04", icon: Rocket, title: t("hero.step_4_title"), description: t("hero.step_4_desc") },
+    { number: "02", icon: Wrench, title: t("hero.step_2_title"), description: t("hero.step_2_desc") },
+    { number: "03", icon: Rocket, title: t("hero.step_3_title"), description: t("hero.step_3_desc") },
+  ];
+
+  const checks = [
+    t("hero.check_1"),
+    t("hero.check_2"),
+    t("hero.check_3"),
+    t("hero.check_4"),
   ];
 
   const stats = [
@@ -45,34 +51,46 @@ export function HeroSection() {
       <Scene3D />
       
       <div className="container relative z-10 pt-20 sm:pt-24 pb-12 sm:pb-16">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          {/* Left side - Content */}
-          <div className="max-w-2xl">
-            {/* Badge */}
-            <FadeIn delay={0}>
-              <div className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border border-border/40 bg-card/40 backdrop-blur-sm mb-6 sm:mb-10">
-                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                <span className="text-xs sm:text-sm text-muted-foreground font-medium">{t("hero.badge")}</span>
-              </div>
-            </FadeIn>
+        <div className="max-w-3xl">
+          {/* Badge */}
+          <FadeIn delay={0}>
+            <div className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border border-border/40 bg-card/40 backdrop-blur-sm mb-6 sm:mb-10">
+              <span className="text-xs sm:text-sm text-muted-foreground font-medium">{t("hero.badge")}</span>
+            </div>
+          </FadeIn>
 
-            {/* Heading */}
-            <FadeIn delay={0.1}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.1] sm:leading-[1.08] mb-5 sm:mb-7">
-                <span className="text-gradient">{t("hero.title_1")}</span>{t("hero.title_2")}
-              </h1>
-            </FadeIn>
+          {/* Heading */}
+          <FadeIn delay={0.1}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.1] sm:leading-[1.08] mb-5 sm:mb-7">
+              <span className="text-gradient">{t("hero.title_1")}</span>{t("hero.title_2")}
+            </h1>
+          </FadeIn>
 
-            {/* Subheading */}
-            <FadeIn delay={0.2}>
-              <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mb-8 sm:mb-12 leading-relaxed">
-                {t("hero.subtitle")}
-              </p>
-            </FadeIn>
+          {/* Subheading */}
+          <FadeIn delay={0.2}>
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mb-6 sm:mb-8 leading-relaxed">
+              {t("hero.subtitle")}
+            </p>
+          </FadeIn>
 
-            {/* CTA */}
-            <FadeIn delay={0.3}>
-              <Link to="/contacts" className="inline-block">
+          {/* Checklist */}
+          <FadeIn delay={0.25}>
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-8 sm:mb-10 max-w-lg">
+              {checks.map((check, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 text-primary" />
+                  </div>
+                  <span className="text-xs sm:text-sm text-foreground/80">{check}</span>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+
+          {/* CTAs */}
+          <FadeIn delay={0.3}>
+            <div className="flex flex-wrap gap-3 sm:gap-4">
+              <Link to="/ai-audit">
                 <motion.div
                   whileHover={!prefersReducedMotion ? { scale: 1.03 } : undefined}
                   whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
@@ -84,11 +102,19 @@ export function HeroSection() {
                   </Button>
                 </motion.div>
               </Link>
-            </FadeIn>
-          </div>
-
-          {/* Right side - Stats (visible on larger screens) */}
-          <div className="hidden lg:block" />
+              <Link to="/cases">
+                <motion.div
+                  whileHover={!prefersReducedMotion ? { scale: 1.03 } : undefined}
+                  whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                >
+                  <Button variant="outline" size="lg">
+                    {t("hero.cta_secondary")}
+                  </Button>
+                </motion.div>
+              </Link>
+            </div>
+          </FadeIn>
         </div>
 
         {/* Stats Row */}
@@ -115,13 +141,13 @@ export function HeroSection() {
           </div>
         </FadeIn>
 
-        {/* How I Work */}
+        {/* How We Work - 3 steps */}
         <FadeIn delay={0.5}>
           <div className="mt-16 sm:mt-24">
             <h3 className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider mb-6 sm:mb-10">
               {t("hero.how_i_work")}
             </h3>
-            <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5" staggerDelay={0.1}>
+            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5" staggerDelay={0.1}>
               {processSteps.map((step) => (
                 <StaggerItem key={step.number}>
                   <motion.div
