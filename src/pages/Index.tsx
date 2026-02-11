@@ -6,7 +6,7 @@ import { ApproachSection } from "@/components/sections/ApproachSection";
 import { FeaturedCases } from "@/components/sections/FeaturedCases";
 import { TargetAudienceSection } from "@/components/sections/TargetAudienceSection";
 import { WhyTrustMe } from "@/components/sections/WhyTrustMe";
-import { ContactSection } from "@/components/sections/ContactSection";
+
 import { CTASection } from "@/components/sections/CTASection";
 import { UTPSection } from "@/components/sections/UTPSection";
 import { ExitIntentPopup } from "@/components/conversion/ExitIntentPopup";
@@ -31,7 +31,7 @@ const Index = () => {
       <TargetAudienceSection />
       <WhyTrustMe />
       <CTASection />
-      <ContactSection />
+      
     </Layout>
   );
 };
