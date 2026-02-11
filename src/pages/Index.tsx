@@ -1,9 +1,10 @@
 import { Layout } from "@/components/layout/Layout";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { ApproachSection } from "@/components/sections/ApproachSection";
+import { ProblemsSection } from "@/components/sections/ProblemsSection";
 import { WhatIDo } from "@/components/sections/WhatIDo";
-import { ThinkingSection } from "@/components/sections/ThinkingSection";
+import { ApproachSection } from "@/components/sections/ApproachSection";
 import { FeaturedCases } from "@/components/sections/FeaturedCases";
+import { TargetAudienceSection } from "@/components/sections/TargetAudienceSection";
 import { WhyTrustMe } from "@/components/sections/WhyTrustMe";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { CTASection } from "@/components/sections/CTASection";
@@ -13,20 +14,21 @@ import { useSEO, personSchema, websiteSchema, professionalServiceSchema } from "
 
 const Index = () => {
   useSEO({
-    title: "Алексей Тарануха — Маркетолог для бизнеса | Стратегия, упаковка, продвижение",
-    description: "Системный маркетинг для роста бизнеса. Упаковка, продвижение, автоматизация. Работаю как стратег и партнёр, не как исполнитель.",
-    keywords: "маркетолог, маркетинг для бизнеса, упаковка бизнеса, продвижение, стратегия маркетинга, автоматизация маркетинга",
+    title: "Системы привлечения заявок для бизнеса | Сайты, CRM, AI-автоматизация",
+    description: "Создаём сайты и AI-системы, которые приносят заявки. Разработка, внедрение CRM и автоматизация процессов для малого и среднего бизнеса. Запуск от 14 дней.",
+    keywords: "разработка сайтов, автоматизация бизнеса, внедрение CRM, AI для бизнеса, система привлечения клиентов, заявки для бизнеса",
   }, [personSchema, websiteSchema, professionalServiceSchema]);
 
   return (
     <Layout>
       <ExitIntentPopup />
       <HeroSection />
+      <ProblemsSection />
       <WhatIDo />
-      <ApproachSection />
       <FeaturedCases />
       <UTPSection />
-      <ThinkingSection />
+      <ApproachSection />
+      <TargetAudienceSection />
       <WhyTrustMe />
       <CTASection />
       <ContactSection />

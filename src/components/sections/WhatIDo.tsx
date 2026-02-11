@@ -1,8 +1,7 @@
-import { Briefcase, Megaphone, Bot, BarChart3 } from "lucide-react";
+import { Globe, Bot, BarChart3 } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import cardPackaging from "@/assets/service-packaging-light.jpg";
-import cardPromotion from "@/assets/service-promotion-light.jpg";
 import cardAutomation from "@/assets/service-automation-light.jpg";
 import cardAnalytics from "@/assets/service-websites-light.jpg";
 
@@ -11,32 +10,25 @@ export function WhatIDo() {
 
   const expertiseAreas = [
     {
-      icon: Briefcase,
+      icon: Globe,
       image: cardPackaging,
       title: t("whatido.card_1_title"),
       description: t("whatido.card_1_desc"),
       examples: t("whatido.card_1_tags").split(","),
     },
     {
-      icon: Megaphone,
-      image: cardPromotion,
+      icon: Bot,
+      image: cardAutomation,
       title: t("whatido.card_2_title"),
       description: t("whatido.card_2_desc"),
       examples: t("whatido.card_2_tags").split(","),
     },
     {
-      icon: Bot,
-      image: cardAutomation,
+      icon: BarChart3,
+      image: cardAnalytics,
       title: t("whatido.card_3_title"),
       description: t("whatido.card_3_desc"),
       examples: t("whatido.card_3_tags").split(","),
-    },
-    {
-      icon: BarChart3,
-      image: cardAnalytics,
-      title: t("whatido.card_4_title"),
-      description: t("whatido.card_4_desc"),
-      examples: t("whatido.card_4_tags").split(","),
     },
   ];
 
@@ -58,8 +50,8 @@ export function WhatIDo() {
           </div>
         </FadeIn>
 
-        {/* Expertise Grid */}
-        <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-12" staggerDelay={0.1}>
+        {/* Solutions Grid - 3 cards */}
+        <StaggerContainer className="grid sm:grid-cols-3 gap-4 sm:gap-6 mb-10 sm:mb-12" staggerDelay={0.1}>
           {expertiseAreas.map((area) => (
             <StaggerItem key={area.title}>
               <PremiumCard
