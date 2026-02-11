@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FadeIn } from "@/components/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -53,11 +54,18 @@ export function UTPSection() {
                   ))}
                 </div>
 
-                <div className="inline-block px-6 py-2.5 rounded-full bg-primary/10 border border-primary/20">
-                  <p className="text-base sm:text-lg text-primary font-semibold">
-                    {t("utp.timeline")}
-                  </p>
-                </div>
+                <Link to="/contacts">
+                  <motion.div
+                    whileHover={!prefersReducedMotion ? { scale: 1.05 } : undefined}
+                    whileTap={!prefersReducedMotion ? { scale: 0.97 } : undefined}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    className="inline-block px-6 py-2.5 rounded-full bg-primary/10 border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors"
+                  >
+                    <p className="text-base sm:text-lg text-primary font-semibold">
+                      {t("utp.timeline")}
+                    </p>
+                  </motion.div>
+                </Link>
               </div>
             </div>
           </div>
