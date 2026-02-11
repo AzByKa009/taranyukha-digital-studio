@@ -41,9 +41,16 @@ function getAllowedOrigins(): Set<string> {
   return new Set(origins);
 }
 
-function buildCorsHeaders(origin: string | null) {
+function isAllowedOrigin(origin: string): boolean {
   const allowedOrigins = getAllowedOrigins();
-  const allowed = !!origin && allowedOrigins.has(origin);
+  if (allowedOrigins.has(origin)) return true;
+  // Allow Lovable preview/published domains
+  if (origin.endsWith(".lovableproject.com") || origin.endsWith(".lovable.app")) return true;
+  return false;
+}
+
+function buildCorsHeaders(origin: string | null) {
+  const allowed = !!origin && isAllowedOrigin(origin);
 
   return {
     "Access-Control-Allow-Origin": allowed && origin ? origin : "null",
@@ -111,8 +118,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const allowedOrigins = getAllowedOrigins();
-  if (origin && !allowedOrigins.has(origin)) {
+  if (origin && !isAllowedOrigin(origin)) {
     return new Response(
       JSON.stringify({ error: "Origin not allowed" }),
       { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
