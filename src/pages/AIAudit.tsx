@@ -285,7 +285,7 @@ const AIAudit = () => {
                           <Input
                             value={contactData.contact}
                             onChange={(e) => setContactData({ ...contactData, contact: e.target.value })}
-                            placeholder="Telegram, WhatsApp или Email"
+                            placeholder="Telegram, Instagram или Email"
                             className="bg-background/50"
                           />
                           {/* Honeypot */}
