@@ -100,7 +100,9 @@ serve(async (req) => {
   }
 
   const allowedOrigins = getAllowedOrigins();
-  if (origin && !allowedOrigins.has(origin)) {
+  const isOriginAllowed = !origin || allowedOrigins.has(origin) || 
+    origin.endsWith(".lovableproject.com") || origin.endsWith(".lovable.app");
+  if (!isOriginAllowed) {
     return new Response(
       JSON.stringify({ error: "Origin not allowed" }),
       { status: 403, headers: { ...headers, "Content-Type": "application/json" } }
