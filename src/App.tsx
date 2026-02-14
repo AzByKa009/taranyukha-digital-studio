@@ -8,6 +8,7 @@ import { HeroSkeleton } from "@/components/ui/section-skeleton";
 import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
+import { CookieConsent } from "@/components/conversion/CookieConsent";
 
 // Eager load main pages for better UX
 import Index from "./pages/Index";
@@ -25,6 +26,7 @@ const BlogPost = lazy(() => import("./pages/BlogPost"));
 const About = lazy(() => import("./pages/About"));
 const Contacts = lazy(() => import("./pages/Contacts"));
 const FAQ = lazy(() => import("./pages/FAQ"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 
 
 // Lazy load SEO Landing Pages
@@ -79,6 +81,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AnalyticsTracker />
+            <CookieConsent />
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -93,6 +96,7 @@ const App = () => (
                 <Route path="/about" element={<About />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/faq" element={<FAQ />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 
                 {/* SEO Landing Pages */}
                 <Route path="/montazh-reels" element={<ReelsMontage />} />
