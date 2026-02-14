@@ -164,9 +164,14 @@ export function Footer() {
         </div>
 
         <div className="mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-border/40">
-          <p className="text-xs sm:text-sm text-muted-foreground text-center md:text-left">
-            {footer?.copyright || `© ${new Date().getFullYear()} Aleksey Taranukha. ${t("footer.rights")}.`}
-          </p>
+          <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-2">
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              {footer?.copyright || `© ${new Date().getFullYear()} Aleksey Taranukha. ${t("footer.rights")}.`}
+            </p>
+            <Link to="/privacy-policy" className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors duration-300">
+              Политика конфиденциальности
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
