@@ -45,6 +45,27 @@ function formatPagePath(path: string): string {
   return clean.charAt(0).toUpperCase() + clean.slice(1);
 }
 
+const SOURCE_LABELS: Record<string, { label: string; description: string }> = {
+  direct: { label: "Прямой заход", description: "Ввели адрес в браузере или из закладок" },
+  search: { label: "Поиск (Google/Яндекс)", description: "Пришли из поисковой выдачи (SEO)" },
+  social: { label: "Соцсети", description: "Из VK, Telegram, Instagram и т.д." },
+  referral: { label: "Ссылка с сайта", description: "Перешли по ссылке с другого сайта" },
+  "yandex-direct": { label: "Яндекс.Директ", description: "Платная реклама Яндекс.Директ" },
+  "google-ads": { label: "Google Ads", description: "Платная реклама Google" },
+  email: { label: "Email-рассылка", description: "Перешли из письма" },
+  telegram: { label: "Telegram", description: "Из Telegram-канала или бота" },
+  vk: { label: "ВКонтакте", description: "Из VK" },
+  instagram: { label: "Instagram", description: "Из Instagram" },
+};
+
+function formatSource(source: string): string {
+  return SOURCE_LABELS[source]?.label || source;
+}
+
+function getSourceDescription(source: string): string {
+  return SOURCE_LABELS[source]?.description || "";
+}
+
 function InfoTooltip({ text }: { text: string }) {
   return (
     <TooltipProvider>
@@ -451,15 +472,54 @@ export default function AnalyticsSection() {
 
             {/* Sources & Devices */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <ListSection
-                title="Источники трафика"
-                items={data.traffic_sources}
-                labelKey="source"
-                valueKey="count"
-                icon={Globe}
-                loading={loading}
-                tooltip="Откуда приходят посетители: direct — прямой ввод, search — поисковики, social — соцсети, referral — ссылки с других сайтов"
-              />
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-3">
+                    <Globe className="w-4 h-4" />
+                    Источники трафика
+                    <InfoTooltip text="Откуда приходят посетители. Для отслеживания рекламы используйте UTM-метки в ссылках" />
+                  </div>
+                  {loading ? (
+                    [1, 2, 3].map((i) => <Skeleton key={i} className="h-8 w-full" />)
+                  ) : !data.traffic_sources || data.traffic_sources.length === 0 ? (
+                    <div className="text-sm text-muted-foreground/60 py-2">Нет данных</div>
+                  ) : (() => {
+                    const total = data.traffic_sources.reduce((s, d) => s + d.count, 0);
+                    const maxVal = Math.max(...data.traffic_sources.map(d => d.count));
+                    return data.traffic_sources.slice(0, 7).map((item, idx) => {
+                      const pct = maxVal > 0 ? (item.count / maxVal) * 100 : 0;
+                      const share = total > 0 ? Math.round(item.count / total * 100) : 0;
+                      const desc = getSourceDescription(item.source);
+                      return (
+                        <TooltipProvider key={idx}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="relative cursor-help">
+                                <div className="absolute inset-0 bg-primary/10 rounded" style={{ width: `${pct}%` }} />
+                                <div className="relative flex items-center justify-between py-1.5 px-2 text-sm">
+                                  <span className="truncate font-medium">{formatSource(item.source)}</span>
+                                  <span className="font-medium ml-2 flex items-center gap-1.5">
+                                    {item.count}
+                                    <span className="text-xs text-muted-foreground">({share}%)</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </TooltipTrigger>
+                            {desc && (
+                              <TooltipContent side="left" className="max-w-[250px] text-xs">
+                                {desc}
+                              </TooltipContent>
+                            )}
+                          </Tooltip>
+                        </TooltipProvider>
+                      );
+                    });
+                  })()}
+                  <div className="pt-2 border-t border-border/30 mt-3">
+                    <p className="text-[11px] text-muted-foreground/60 leading-relaxed">
+                      💡 Чтобы отслеживать Яндекс.Директ, добавьте в ссылку: <code className="bg-muted px-1 rounded text-[10px]">?utm_source=yandex-direct</code>
+                    </p>
+                  </div>
+                </div>
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-3">

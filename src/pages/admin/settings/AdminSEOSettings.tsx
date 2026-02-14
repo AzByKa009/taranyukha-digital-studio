@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { toast } from "sonner";
-import { Loader2, Save, Search } from "lucide-react";
+import { Loader2, Save, Search, Eye } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -152,6 +152,25 @@ export default function AdminSEOSettings() {
               </div>
             </AccordionTrigger>
             <AccordionContent className="pt-4 space-y-4">
+              {/* SERP Preview */}
+              <div className="p-4 rounded-lg bg-muted/30 border border-border/50 space-y-1">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Eye className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">Превью в поисковой выдаче</span>
+                </div>
+                <div className="font-sans">
+                  <div className="text-[13px] text-muted-foreground truncate">
+                    taranukha.dev › {setting.page_key === "home" ? "" : setting.page_key}
+                  </div>
+                  <div className="text-[18px] text-[#1a0dab] dark:text-[#8ab4f8] leading-tight truncate cursor-pointer hover:underline">
+                    {setting.title || "Заголовок не задан"}
+                  </div>
+                  <div className="text-[13px] text-muted-foreground line-clamp-2 leading-snug mt-0.5">
+                    {setting.description || "Описание не задано. Заполните поле Description, чтобы увидеть превью."}
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label>Title (до 60 символов)</Label>
                 <Input
