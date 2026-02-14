@@ -59,8 +59,8 @@ export function FeaturedCases() {
 
   if (loading) {
     return (
-      <section className="py-20 sm:py-28 bg-card/20 border-y border-border/30">
-        <div className="container">
+      <section className="py-20 sm:py-28 bg-card/20 border-y border-border/30 section-depth-cases">
+        <div className="container relative z-[1]">
           <div className="flex justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
@@ -72,8 +72,8 @@ export function FeaturedCases() {
   if (cases.length === 0) return null;
 
   return (
-    <section className="py-20 sm:py-28 bg-card/20 border-y border-border/30">
-      <div className="container">
+    <section className="py-20 sm:py-28 bg-card/20 border-y border-border/30 section-depth-cases">
+      <div className="container relative z-[1]">
         {/* Header */}
         <FadeIn>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-10 sm:mb-14">
