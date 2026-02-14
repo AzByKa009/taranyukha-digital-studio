@@ -33,7 +33,7 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Abstract grid pattern */}
+      {/* Tech grid */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
         backgroundImage: `linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)`,
         backgroundSize: '60px 60px'
@@ -46,6 +46,13 @@ export function HeroSection() {
       {/* Background layers */}
       <div className="absolute inset-0 bg-gradient-glow opacity-30" />
       <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-primary/5 to-transparent" />
+
+      {/* Diagonal light beam */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] opacity-[0.04]" style={{
+          background: 'linear-gradient(135deg, transparent 35%, hsl(217 91% 60% / 0.15) 45%, hsl(239 84% 67% / 0.08) 55%, transparent 65%)',
+        }} />
+      </div>
       
       {/* 3D Scene */}
       <Scene3D />
