@@ -1,6 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+interface DailyData {
+  date: string;
+  visitors: number;
+  page_views: number;
+}
+
+interface TopPage {
+  page_path: string;
+  views: number;
+  unique_sessions: number;
+}
+
 interface AnalyticsData {
   total_visitors: number;
   total_page_views: number;
@@ -10,7 +22,12 @@ interface AnalyticsData {
   unique_visitors_7d: number;
   avg_session_duration: number;
   online_now: number;
-  top_pages: Array<{ page_path: string; views: number }>;
+  bounce_rate: number;
+  pages_per_session: number;
+  conversion_rate: number;
+  leads_7d: number;
+  daily_visitors: DailyData[];
+  top_pages: TopPage[];
   entry_pages: Array<{ entry_page: string; count: number }>;
   exit_pages: Array<{ exit_page: string; count: number }>;
   traffic_sources: Array<{ source: string; count: number }>;
@@ -28,6 +45,11 @@ const defaultData: AnalyticsData = {
   unique_visitors_7d: 0,
   avg_session_duration: 0,
   online_now: 0,
+  bounce_rate: 0,
+  pages_per_session: 0,
+  conversion_rate: 0,
+  leads_7d: 0,
+  daily_visitors: [],
   top_pages: [],
   entry_pages: [],
   exit_pages: [],

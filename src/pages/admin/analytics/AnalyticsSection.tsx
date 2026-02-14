@@ -11,16 +11,26 @@ import {
   Tablet,
   RefreshCw,
   TrendingUp,
+  TrendingDown,
   LogIn,
   LogOut as LogOutIcon,
-  Radio
+  Radio,
+  Target,
+  MousePointerClick,
+  Layers,
+  MessageSquare,
+  Info
 } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, PieChart, Pie, Cell } from "recharts";
+import { format, parseISO } from "date-fns";
+import { ru } from "date-fns/locale";
 
 function formatDuration(seconds: number): string {
   if (seconds < 60) return `${seconds}с`;
@@ -31,7 +41,23 @@ function formatDuration(seconds: number): string {
 
 function formatPagePath(path: string): string {
   if (path === "/") return "Главная";
-  return path.replace(/^\//, "").replace(/-/g, " ");
+  const clean = path.replace(/^\//, "").replace(/-/g, " ");
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
+}
+
+function InfoTooltip({ text }: { text: string }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Info className="w-3.5 h-3.5 text-muted-foreground/50 cursor-help" />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-[220px] text-xs">
+          {text}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 }
 
 function MetricCard({ 
@@ -39,13 +65,19 @@ function MetricCard({
   value, 
   icon: Icon, 
   subtitle,
-  loading 
+  tooltip,
+  trend,
+  loading,
+  accent
 }: { 
   title: string; 
   value: string | number; 
   icon: React.ElementType; 
   subtitle?: string;
+  tooltip?: string;
+  trend?: "up" | "down" | "neutral";
   loading?: boolean;
+  accent?: boolean;
 }) {
   if (loading) {
     return (
@@ -57,12 +89,20 @@ function MetricCard({
   }
 
   return (
-    <div className="p-4 rounded-lg bg-muted/30 border border-border/50">
+    <div className={cn(
+      "p-4 rounded-lg border transition-colors",
+      accent ? "bg-primary/5 border-primary/20" : "bg-muted/30 border-border/50"
+    )}>
       <div className="flex items-center gap-2 text-muted-foreground mb-1">
-        <Icon className="w-4 h-4" />
+        <Icon className={cn("w-4 h-4", accent && "text-primary")} />
         <span className="text-sm">{title}</span>
+        {tooltip && <InfoTooltip text={tooltip} />}
       </div>
-      <div className="text-2xl font-bold">{value}</div>
+      <div className="flex items-center gap-2">
+        <span className="text-2xl font-bold">{value}</span>
+        {trend === "up" && <TrendingUp className="w-4 h-4 text-primary" />}
+        {trend === "down" && <TrendingDown className="w-4 h-4 text-destructive" />}
+      </div>
       {subtitle && <div className="text-xs text-muted-foreground mt-1">{subtitle}</div>}
     </div>
   );
@@ -74,14 +114,16 @@ function ListSection({
   valueKey, 
   labelKey,
   icon: Icon,
-  loading 
+  loading,
+  tooltip
 }: { 
   title: string; 
-  items: Array<Record<string, unknown>>; 
+  items: Array<Record<string, any>>; 
   valueKey: string; 
   labelKey: string;
   icon: React.ElementType;
   loading?: boolean;
+  tooltip?: string;
 }) {
   if (loading) {
     return (
@@ -109,6 +151,7 @@ function ListSection({
     );
   }
 
+  const total = items.reduce((sum, item) => sum + (Number(item[valueKey]) || 0), 0);
   const maxValue = Math.max(...items.map((item) => Number(item[valueKey]) || 0));
 
   return (
@@ -116,11 +159,13 @@ function ListSection({
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-3">
         <Icon className="w-4 h-4" />
         {title}
+        {tooltip && <InfoTooltip text={tooltip} />}
       </div>
       {items.slice(0, 5).map((item, idx) => {
         const value = Number(item[valueKey]) || 0;
         const label = String(item[labelKey] || "");
         const percentage = maxValue > 0 ? (value / maxValue) * 100 : 0;
+        const share = total > 0 ? Math.round(value / total * 100) : 0;
         
         return (
           <div key={idx} className="relative">
@@ -130,7 +175,10 @@ function ListSection({
             />
             <div className="relative flex items-center justify-between py-1.5 px-2 text-sm">
               <span className="truncate">{formatPagePath(label)}</span>
-              <span className="font-medium ml-2">{value}</span>
+              <span className="font-medium ml-2 flex items-center gap-1.5">
+                {value}
+                <span className="text-xs text-muted-foreground">({share}%)</span>
+              </span>
             </div>
           </div>
         );
@@ -150,9 +198,81 @@ function DeviceIcon({ device }: { device: string }) {
   }
 }
 
+const DEVICE_COLORS = ["hsl(var(--primary))", "hsl(var(--primary) / 0.6)", "hsl(var(--primary) / 0.3)"];
+
+function DailyChart({ data, loading }: { data: Array<{ date: string; visitors: number; page_views: number }>; loading: boolean }) {
+  if (loading) return <Skeleton className="h-48 w-full" />;
+  if (!data || data.length === 0) return <div className="text-sm text-muted-foreground/60 py-8 text-center">Нет данных</div>;
+
+  const chartData = data.map(d => ({
+    date: d.date,
+    label: format(parseISO(d.date), "d MMM", { locale: ru }),
+    visitors: d.visitors,
+    views: d.page_views,
+  }));
+
+  return (
+    <ResponsiveContainer width="100%" height={200}>
+      <AreaChart data={chartData}>
+        <defs>
+          <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+          </linearGradient>
+          <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="hsl(var(--primary) / 0.5)" stopOpacity={0.2}/>
+            <stop offset="95%" stopColor="hsl(var(--primary) / 0.5)" stopOpacity={0}/>
+          </linearGradient>
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+        <XAxis dataKey="label" fontSize={11} stroke="hsl(var(--muted-foreground))" tickLine={false} />
+        <YAxis fontSize={11} stroke="hsl(var(--muted-foreground))" tickLine={false} axisLine={false} />
+        <RechartsTooltip
+          contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
+          labelStyle={{ color: "hsl(var(--foreground))" }}
+          formatter={(value: number, name: string) => [value, name === "visitors" ? "Посетители" : "Просмотры"]}
+        />
+        <Area type="monotone" dataKey="views" stroke="hsl(var(--primary) / 0.4)" fill="url(#colorViews)" strokeWidth={1.5} name="views" />
+        <Area type="monotone" dataKey="visitors" stroke="hsl(var(--primary))" fill="url(#colorVisitors)" strokeWidth={2} name="visitors" />
+      </AreaChart>
+    </ResponsiveContainer>
+  );
+}
+
+function DevicePieChart({ data, loading }: { data: Array<{ device: string; count: number }>; loading: boolean }) {
+  if (loading) return <Skeleton className="h-32 w-32 rounded-full mx-auto" />;
+  if (!data || data.length === 0) return <div className="text-sm text-muted-foreground/60 py-4 text-center">Нет данных</div>;
+
+  const total = data.reduce((s, d) => s + d.count, 0);
+
+  return (
+    <div className="flex items-center gap-4">
+      <ResponsiveContainer width={120} height={120}>
+        <PieChart>
+          <Pie data={data} dataKey="count" nameKey="device" cx="50%" cy="50%" innerRadius={30} outerRadius={50} paddingAngle={2}>
+            {data.map((_, i) => <Cell key={i} fill={DEVICE_COLORS[i % DEVICE_COLORS.length]} />)}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+      <div className="space-y-1.5">
+        {data.map((d, i) => (
+          <div key={i} className="flex items-center gap-2 text-sm">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ background: DEVICE_COLORS[i % DEVICE_COLORS.length] }} />
+            <DeviceIcon device={d.device} />
+            <span className="capitalize">{d.device}</span>
+            <span className="text-muted-foreground ml-auto">{total > 0 ? Math.round(d.count / total * 100) : 0}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function AnalyticsSection() {
   const [isOpen, setIsOpen] = useState(true);
   const { data, loading, refetch } = useAnalytics();
+
+  const visitorsTrend = data.visitors_today > data.visitors_yesterday ? "up" : data.visitors_today < data.visitors_yesterday ? "down" : "neutral";
 
   return (
     <Card className="mb-6">
@@ -163,6 +283,7 @@ export default function AnalyticsSection() {
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-primary" />
                 Аналитика и активность
+                <span className="text-xs font-normal text-muted-foreground ml-2">за 7 дней</span>
               </CardTitle>
               <div className="flex items-center gap-2">
                 <Button 
@@ -208,6 +329,56 @@ export default function AnalyticsSection() {
               </div>
             </div>
 
+            {/* Key conversion metrics */}
+            <div>
+              <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+                <Target className="w-4 h-4" />
+                Ключевые показатели
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <MetricCard
+                  title="Конверсия"
+                  value={`${data.conversion_rate}%`}
+                  icon={Target}
+                  tooltip="Процент посетителей, оставивших заявку за последние 7 дней"
+                  subtitle={`${data.leads_7d} заявок за 7д`}
+                  loading={loading}
+                  accent
+                />
+                <MetricCard
+                  title="Отказы"
+                  value={`${data.bounce_rate}%`}
+                  icon={MousePointerClick}
+                  tooltip="Процент сессий, где посетитель посмотрел только 1 страницу и ушёл"
+                  loading={loading}
+                />
+                <MetricCard
+                  title="Стр/сессия"
+                  value={data.pages_per_session}
+                  icon={Layers}
+                  tooltip="Сколько страниц в среднем просматривает посетитель за одну сессию"
+                  loading={loading}
+                />
+                <MetricCard
+                  title="Ср. сессия"
+                  value={formatDuration(data.avg_session_duration)}
+                  icon={Clock}
+                  tooltip="Среднее время, которое посетитель проводит на сайте"
+                  loading={loading}
+                />
+              </div>
+            </div>
+
+            {/* Daily chart */}
+            <div>
+              <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+                <TrendingUp className="w-4 h-4" />
+                Динамика за 14 дней
+                <InfoTooltip text="График посетителей и просмотров по дням" />
+              </h4>
+              <DailyChart data={data.daily_visitors} loading={loading} />
+            </div>
+
             {/* Traffic metrics */}
             <div>
               <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
@@ -219,6 +390,7 @@ export default function AnalyticsSection() {
                   title="Всего посетителей"
                   value={data.total_visitors}
                   icon={Users}
+                  tooltip="Уникальные посетители за всё время"
                   loading={loading}
                 />
                 <MetricCard
@@ -226,6 +398,14 @@ export default function AnalyticsSection() {
                   value={data.visitors_today}
                   icon={Users}
                   subtitle={`Вчера: ${data.visitors_yesterday}`}
+                  trend={visitorsTrend}
+                  loading={loading}
+                />
+                <MetricCard
+                  title="За 7 дней"
+                  value={data.unique_visitors_7d}
+                  icon={Users}
+                  tooltip="Уникальные посетители за последнюю неделю"
                   loading={loading}
                 />
                 <MetricCard
@@ -235,16 +415,10 @@ export default function AnalyticsSection() {
                   subtitle={`Сегодня: ${data.page_views_today}`}
                   loading={loading}
                 />
-                <MetricCard
-                  title="Ср. сессия"
-                  value={formatDuration(data.avg_session_duration)}
-                  icon={Clock}
-                  loading={loading}
-                />
               </div>
             </div>
 
-            {/* Behavior & Sources */}
+            {/* Top pages with unique sessions */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <ListSection
                 title="Популярные страницы"
@@ -253,6 +427,7 @@ export default function AnalyticsSection() {
                 valueKey="views"
                 icon={Eye}
                 loading={loading}
+                tooltip="Просмотры страниц за 7 дней. В скобках — % от общего числа"
               />
               <ListSection
                 title="Точки входа"
@@ -261,6 +436,7 @@ export default function AnalyticsSection() {
                 valueKey="count"
                 icon={LogIn}
                 loading={loading}
+                tooltip="На какую страницу попадают посетители первой"
               />
               <ListSection
                 title="Точки выхода"
@@ -269,6 +445,7 @@ export default function AnalyticsSection() {
                 valueKey="count"
                 icon={LogOutIcon}
                 loading={loading}
+                tooltip="С какой страницы посетители уходят с сайта"
               />
             </div>
 
@@ -281,28 +458,16 @@ export default function AnalyticsSection() {
                 valueKey="count"
                 icon={Globe}
                 loading={loading}
+                tooltip="Откуда приходят посетители: direct — прямой ввод, search — поисковики, social — соцсети, referral — ссылки с других сайтов"
               />
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-3">
                   <Monitor className="w-4 h-4" />
                   Устройства
+                  <InfoTooltip text="Распределение посетителей по типам устройств за 7 дней" />
                 </div>
-                {loading ? (
-                  [1, 2].map((i) => <Skeleton key={i} className="h-8 w-full" />)
-                ) : data.devices.length === 0 ? (
-                  <div className="text-sm text-muted-foreground/60 py-2">Нет данных</div>
-                ) : (
-                  data.devices.map((d, i) => (
-                    <div key={i} className="flex items-center justify-between py-1.5 px-2 rounded bg-muted/30">
-                      <div className="flex items-center gap-2">
-                        <DeviceIcon device={d.device} />
-                        <span className="text-sm capitalize">{d.device}</span>
-                      </div>
-                      <span className="font-medium text-sm">{d.count}</span>
-                    </div>
-                  ))
-                )}
+                <DevicePieChart data={data.devices} loading={loading} />
               </div>
 
               <ListSection
