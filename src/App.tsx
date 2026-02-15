@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { HeroSkeleton } from "@/components/ui/section-skeleton";
 import { AuthProvider } from "@/hooks/useAuth";
@@ -28,9 +28,12 @@ const Contacts = lazy(() => import("./pages/Contacts"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 
-// Lazy load SEO Landing Pages (legacy — kept for backward compatibility)
+
+// Lazy load SEO Landing Pages
 const ReelsMontage = lazy(() => import("./pages/landings/ReelsMontage"));
 const ReelsProducer = lazy(() => import("./pages/landings/ReelsProducer"));
+const AIBotCreation = lazy(() => import("./pages/landings/AIBotCreation"));
+const WebsiteForServices = lazy(() => import("./pages/landings/WebsiteForServices"));
 const AIVideoProduction = lazy(() => import("./pages/landings/AIVideoProduction"));
 const VibeCodingLanding = lazy(() => import("./pages/landings/VibeCodingLanding"));
 const AIAutomation = lazy(() => import("./pages/landings/AIAutomation"));
@@ -95,24 +98,14 @@ const App = () => (
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 
-                {/* Service Pages — top-level Russian URLs */}
-                <Route path="/upakovka-biznesa" element={<ServiceDetail overrideSlug="upakovka-biznesa" />} />
-                <Route path="/razrabotka-sayta" element={<ServiceDetail overrideSlug="razrabotka-sayta" />} />
-                <Route path="/vedenie-socsety" element={<ServiceDetail overrideSlug="vedenie-socsety" />} />
-                <Route path="/prodvizhenie" element={<ServiceDetail overrideSlug="prodvizhenie" />} />
-                <Route path="/avtomatizaciya" element={<ServiceDetail overrideSlug="avtomatizaciya" />} />
-
-                {/* Legacy redirects */}
-                <Route path="/razrabotka-sayta-pod-uslugi" element={<Navigate to="/razrabotka-sayta" replace />} />
-                <Route path="/ai-bot-dlya-biznesa" element={<Navigate to="/avtomatizaciya" replace />} />
-
                 {/* SEO Landing Pages */}
                 <Route path="/montazh-reels" element={<ReelsMontage />} />
                 <Route path="/produser-reels" element={<ReelsProducer />} />
+                <Route path="/ai-bot-dlya-biznesa" element={<AIBotCreation />} />
+                <Route path="/razrabotka-sayta-pod-uslugi" element={<WebsiteForServices />} />
                 <Route path="/ai-video-production" element={<AIVideoProduction />} />
                 <Route path="/vibe-coding" element={<VibeCodingLanding />} />
                 <Route path="/ai-automation" element={<AIAutomation />} />
-
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>

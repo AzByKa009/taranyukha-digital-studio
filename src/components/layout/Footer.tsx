@@ -4,7 +4,6 @@ import { useSiteSettings, ContactSettings, FooterSettings } from "@/hooks/useSit
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { getServiceUrl } from "@/lib/service-config";
 
 interface ServiceLink {
   name: string;
@@ -26,7 +25,7 @@ export function Footer() {
       .limit(6);
 
     if (!error && data) {
-      setServices(data.map(s => ({ name: s.title, href: getServiceUrl(s.slug) })));
+      setServices(data.map(s => ({ name: s.title, href: `/services/${s.slug}` })));
     }
   };
 

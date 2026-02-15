@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ArrowRight, Brain, Layers, Zap, Code, Briefcase, Megaphone, Bot, BarChart3, Share2 } from "lucide-react";
-import { getServiceUrl } from "@/lib/service-config";
+import { ArrowRight, Brain, Layers, Zap, Code, Briefcase, Megaphone, Bot, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { motion } from "framer-motion";
@@ -16,7 +15,7 @@ import serviceReels from "@/assets/service-reels.jpg";
 import serviceAiVideo from "@/assets/service-ai-video.jpg";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Code, Brain, Layers, Zap, Briefcase, Megaphone, Bot, BarChart3, Share2,
+  Code, Brain, Layers, Zap, Briefcase, Megaphone, Bot, BarChart3,
 };
 
 const fallbackImages = [serviceWeb, serviceBot, serviceReels, serviceAiVideo];
@@ -86,7 +85,7 @@ export function ServicesPreview() {
             const IconComponent = getIcon(service.icon, index);
             return (
               <StaggerItem key={service.id}>
-                <Link to={getServiceUrl(service.slug)}>
+                <Link to={`/services/${service.slug}`}>
                   <PremiumCard
                     className="group rounded-2xl border border-border bg-card/30 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full overflow-hidden"
                     hoverScale={1.03}
