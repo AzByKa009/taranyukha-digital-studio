@@ -3,43 +3,43 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Zap, Bot, BarChart3, Clock, Settings, TrendingUp, CheckCircle, Workflow, RefreshCw } from "lucide-react";
+import { ArrowRight, Megaphone, Target, TrendingUp, BarChart3, Search, Zap, Users, CheckCircle, MousePointer, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const AIAutomation = () => {
+const Promotion = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     business: "",
-    task: ""
+    goals: ""
   });
 
   useEffect(() => {
-    document.title = "AI автоматизация бизнеса — автоматизация процессов | Aleksey Taranukha";
+    document.title = "Продвижение бизнеса — реклама и трафик | Aleksey Taranukha";
     document.querySelector('meta[name="description"]')?.setAttribute("content",
-      "AI автоматизация бизнес-процессов: чат-боты, интеграции, автоматические отчёты. Снижение рутины и экономия времени команды."
+      "Продвижение бизнеса: таргетированная реклама, контекстная реклама, SEO-продвижение. Привлечение клиентов с измеримым результатом."
     );
 
     const serviceSchema = {
       "@context": "https://schema.org",
       "@type": "Service",
-      "name": "AI автоматизация бизнеса",
-      "description": "Автоматизация бизнес-процессов с помощью искусственного интеллекта.",
+      "name": "Продвижение бизнеса",
+      "description": "Комплексное продвижение бизнеса: таргетированная и контекстная реклама, SEO, performance-маркетинг.",
       "provider": { "@type": "Person", "name": "Aleksey Taranukha" },
       "areaServed": "Worldwide",
-      "serviceType": "Business Automation"
+      "serviceType": "Digital Marketing"
     };
 
     const script = document.createElement('script');
     script.type = 'application/ld+json';
-    script.setAttribute('data-schema', 'ai-automation');
+    script.setAttribute('data-schema', 'promotion');
     script.textContent = JSON.stringify(serviceSchema);
     document.head.appendChild(script);
 
     return () => {
-      const s = document.querySelector('script[data-schema="ai-automation"]');
+      const s = document.querySelector('script[data-schema="promotion"]');
       if (s) s.remove();
     };
   }, []);
@@ -49,54 +49,54 @@ const AIAutomation = () => {
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     toast({ title: "Заявка отправлена!", description: "Свяжусь с вами для обсуждения проекта." });
-    setFormData({ name: "", email: "", business: "", task: "" });
+    setFormData({ name: "", email: "", business: "", goals: "" });
     setIsSubmitting(false);
   };
 
   const features = [
-    { icon: Bot, title: "Чат-боты", description: "Автоматические ответы клиентам, запись, консультации 24/7" },
-    { icon: Settings, title: "Интеграции", description: "Связка CRM, мессенджеров, таблиц и других сервисов" },
-    { icon: BarChart3, title: "Автоматические отчёты", description: "Аналитика и отчёты формируются без ручной работы" },
-    { icon: Workflow, title: "Бизнес-процессы", description: "Автоматизация повторяющихся задач и рутины" },
-    { icon: RefreshCw, title: "Автоворонки", description: "Автоматическая обработка и прогрев лидов" },
-    { icon: Clock, title: "Экономия времени", description: "Команда фокусируется на важном, рутину делает AI" },
+    { icon: Target, title: "Таргетированная реклама", description: "Точное попадание в целевую аудиторию в соцсетях" },
+    { icon: Search, title: "Контекстная реклама", description: "Яндекс.Директ и Google Ads — клиенты, которые уже ищут" },
+    { icon: TrendingUp, title: "SEO-продвижение", description: "Органический трафик из поиска без оплаты за клики" },
+    { icon: BarChart3, title: "Аналитика и отчёты", description: "Прозрачные метрики: CPA, ROI, конверсии в реальном времени" },
+    { icon: MousePointer, title: "Ретаргетинг", description: "Возвращаем тех, кто уже был на сайте, но не купил" },
+    { icon: Eye, title: "A/B тестирование", description: "Тестируем гипотезы и масштабируем лучшие результаты" },
   ];
 
-  const automationTypes = [
+  const promoTypes = [
     {
-      title: "Базовая автоматизация",
-      description: "Автоматизация 1-2 ключевых процессов для быстрого результата",
-      features: ["1 бот или интеграция", "Базовая настройка", "Обучение команды"],
-      ideal: "Малый бизнес, тестирование автоматизации"
+      title: "Быстрый старт",
+      description: "Запуск рекламы за 3-5 дней для быстрого потока заявок",
+      features: ["Настройка 1 канала", "Базовая аналитика", "Еженедельные отчёты"],
+      ideal: "Тестирование спроса, быстрый запуск"
     },
     {
-      title: "Комплексная автоматизация",
-      description: "Связка нескольких процессов в единую систему",
-      features: ["3-5 автоматизаций", "CRM-интеграция", "Аналитика", "Поддержка 1 мес"],
-      ideal: "Растущие компании, отделы продаж"
+      title: "Комплексное продвижение",
+      description: "Мультиканальная стратегия для стабильного потока клиентов",
+      features: ["2-3 рекламных канала", "Сквозная аналитика", "Оптимизация воронки", "Ежемесячные отчёты"],
+      ideal: "Бизнесы с постоянным потоком заявок"
     },
     {
-      title: "AI-трансформация",
-      description: "Полная перестройка процессов с использованием AI",
-      features: ["Аудит процессов", "AI-решения", "Обучение нейросетей", "Долгосрочная поддержка"],
-      ideal: "Компании, готовые к цифровой трансформации"
+      title: "Performance-маркетинг",
+      description: "Полная система привлечения с фокусом на ROI",
+      features: ["Все каналы трафика", "CRM-интеграция", "Автоматизация", "Масштабирование"],
+      ideal: "Компании с бюджетом от 300 000 ₽/мес"
     },
   ];
 
   const whyImportant = [
-    "Экономия 10-20 часов в неделю на рутинных задачах",
-    "Снижение ошибок от человеческого фактора до минимума",
-    "Масштабирование бизнеса без найма новых сотрудников",
-    "Быстрая обработка заявок — клиенты не ждут и не уходят",
+    "Без продвижения даже лучший продукт не найдут",
+    "Платная реклама даёт результат в первую неделю",
+    "SEO приносит бесплатных клиентов на годы вперёд",
+    "Аналитика показывает, куда вкладывать каждый рубль",
   ];
 
   const process = [
-    { step: "01", title: "Аудит", description: "Анализируем процессы и находим точки автоматизации" },
-    { step: "02", title: "Стратегия", description: "Определяем приоритеты и выбираем инструменты" },
-    { step: "03", title: "Разработка", description: "Создаём ботов, интеграции и автоматизации" },
-    { step: "04", title: "Тестирование", description: "Проверяем все сценарии и исправляем ошибки" },
-    { step: "05", title: "Запуск", description: "Внедряем в работу и обучаем команду" },
-    { step: "06", title: "Поддержка", description: "Мониторим, оптимизируем и масштабируем" },
+    { step: "01", title: "Аудит", description: "Анализируем нишу, конкурентов и текущие каналы" },
+    { step: "02", title: "Стратегия", description: "Определяем каналы, бюджеты и KPI" },
+    { step: "03", title: "Запуск", description: "Настраиваем рекламу и запускаем кампании" },
+    { step: "04", title: "Оптимизация", description: "Тестируем креативы и улучшаем конверсии" },
+    { step: "05", title: "Масштаб", description: "Увеличиваем бюджет на лучшие связки" },
+    { step: "06", title: "Отчёт", description: "Прозрачная отчётность по всем метрикам" },
   ];
 
   return (
@@ -107,18 +107,18 @@ const AIAutomation = () => {
         <div className="container relative">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 animate-fade-in-up">
-              <Zap className="h-4 w-4" />
-              <span className="text-sm font-medium">AI Автоматизация</span>
+              <Megaphone className="h-4 w-4" />
+              <span className="text-sm font-medium">Маркетинг</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 animate-fade-in-up">
-              AI автоматизация<br />бизнеса
+              Продвижение<br />бизнеса
             </h1>
             <p className="text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              Снимаю рутину с вашей команды с помощью AI. Чат-боты, интеграции, автоматические отчёты — больше времени на важные задачи
+              Привлекаю клиентов через рекламу и SEO с измеримым результатом. Каждый рубль в рекламе — под контролем
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
               <Button variant="hero" size="lg" onClick={() => document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' })}>
-                Обсудить автоматизацию
+                Обсудить продвижение
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </div>
@@ -130,7 +130,7 @@ const AIAutomation = () => {
       <section className="py-16">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-12">
-            Что можно автоматизировать
+            Что включает продвижение
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
@@ -146,17 +146,17 @@ const AIAutomation = () => {
         </div>
       </section>
 
-      {/* Automation Types */}
+      {/* Promo Types */}
       <section className="py-16 bg-card/30">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-4">
-            Какой формат автоматизации нужен
+            Какой формат продвижения нужен
           </h2>
           <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Подберём решение под масштаб вашего бизнеса
+            Подберём стратегию под ваши цели и бюджет
           </p>
           <div className="grid md:grid-cols-3 gap-6">
-            {automationTypes.map((type, index) => (
+            {promoTypes.map((type, index) => (
               <div key={index} className="glass-card p-6 rounded-2xl animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <h3 className="text-xl font-display font-semibold mb-3">{type.title}</h3>
                 <p className="text-muted-foreground mb-4">{type.description}</p>
@@ -184,7 +184,7 @@ const AIAutomation = () => {
         <div className="container">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-12">
-              Результаты автоматизации
+              Зачем нужно продвижение
             </h2>
             <div className="space-y-4">
               {whyImportant.map((item, index) => (
@@ -221,8 +221,8 @@ const AIAutomation = () => {
         <div className="container">
           <div className="max-w-xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Заказать автоматизацию</h2>
-              <p className="text-muted-foreground">Расскажите о процессах — предложу решение</p>
+              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Заказать продвижение</h2>
+              <p className="text-muted-foreground">Расскажите о бизнесе, и я подготовлю стратегию</p>
             </div>
             <form onSubmit={handleSubmit} className="glass-card p-8 rounded-2xl space-y-6">
               <div>
@@ -235,14 +235,14 @@ const AIAutomation = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Ваш бизнес</label>
-                <Input placeholder="Ниша, размер команды, текущие инструменты..." value={formData.business} onChange={(e) => setFormData({ ...formData, business: e.target.value })} required />
+                <Input placeholder="Ниша, продукт, текущий трафик..." value={formData.business} onChange={(e) => setFormData({ ...formData, business: e.target.value })} required />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Что хотите автоматизировать?</label>
-                <Textarea placeholder="Опишите процессы, которые занимают много времени..." rows={4} value={formData.task} onChange={(e) => setFormData({ ...formData, task: e.target.value })} required />
+                <label className="block text-sm font-medium mb-2">Цели продвижения</label>
+                <Textarea placeholder="Сколько заявок нужно, какой бюджет, какие каналы интересуют..." rows={4} value={formData.goals} onChange={(e) => setFormData({ ...formData, goals: e.target.value })} required />
               </div>
               <Button type="submit" variant="hero" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Отправка..." : "Получить предложение"}
+                {isSubmitting ? "Отправка..." : "Получить стратегию"}
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </form>
@@ -253,4 +253,4 @@ const AIAutomation = () => {
   );
 };
 
-export default AIAutomation;
+export default Promotion;
