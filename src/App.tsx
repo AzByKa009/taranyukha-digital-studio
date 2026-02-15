@@ -109,6 +109,9 @@ const App = () => (
                 <Route path="/ai-video-production" element={<AIVideoProduction />} />
                 <Route path="/vibe-coding" element={<VibeCodingLanding />} />
                 <Route path="/ai-automation" element={<AIAutomation />} />
+                <Route path="/upakovka-biznesa" element={<BusinessPackaging />} />
+                <Route path="/socseti" element={<SocialMedia />} />
+                <Route path="/prodvizhenie" element={<Promotion />} />
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
