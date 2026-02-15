@@ -2,19 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowLeft, ArrowRight, CheckCircle, Clock, Loader2, Film, Users, Video, Cpu, Code, Bot, Globe } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Loader2, Film, Users, Video, Cpu, Code, Bot, Globe, AlertTriangle, Target, Layers, Handshake, UserCheck, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-interface ProcessStep {
-  step: string;
-  description: string;
-}
+import { serviceContent } from "@/data/service-content";
 
 interface ServiceItem {
   id: string;
@@ -27,18 +17,10 @@ interface ServiceItem {
   price_from: number | null;
   price_label: string | null;
   features: string[] | null;
-  faq: FAQItem[] | null;
-  process_steps: ProcessStep[] | null;
 }
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Film,
-  Users,
-  Video,
-  Cpu,
-  Code,
-  Bot,
-  Globe,
+  Film, Users, Video, Cpu, Code, Bot, Globe,
 };
 
 const ServiceDetail = () => {
@@ -64,16 +46,8 @@ const ServiceDetail = () => {
       return;
     }
 
-    // Parse JSON fields
-    const parsedService = {
-      ...data,
-      faq: data.faq ? (data.faq as unknown as FAQItem[]) : null,
-      process_steps: data.process_steps ? (data.process_steps as unknown as ProcessStep[]) : null,
-    };
+    setService(data);
 
-    setService(parsedService);
-
-    // Fetch all services to find next one
     const { data: allServices } = await supabase
       .from("services")
       .select("slug, title, sort_order")
@@ -90,37 +64,23 @@ const ServiceDetail = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
+    setNotFound(false);
     fetchService();
   }, [slug]);
 
-  // Subscribe to real-time updates
   useEffect(() => {
     const channel = supabase
       .channel('service-detail-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'services'
-        },
-        () => {
-          fetchService();
-        }
-      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'services' }, () => fetchService())
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [slug]);
 
   useEffect(() => {
     if (service) {
       document.title = `${service.title} — Aleksey Taranukha`;
-      document.querySelector('meta[name="description"]')?.setAttribute("content", 
-        service.short_description
-      );
+      document.querySelector('meta[name="description"]')?.setAttribute("content", service.short_description);
     }
   }, [service]);
 
@@ -138,185 +98,262 @@ const ServiceDetail = () => {
     return <Navigate to="/services" replace />;
   }
 
+  const content = slug ? serviceContent[slug] : null;
   const IconComponent = service.icon ? (iconMap[service.icon] || Film) : Film;
 
-  // JSON-LD structured data
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": service.title,
-    "description": service.full_description || service.short_description,
-    "provider": {
-      "@type": "Person",
-      "name": "Aleksey Taranukha",
-      "url": "https://alekseytaranukha.com"
-    },
-    "serviceType": service.title
+    "description": content?.hero.subheadline || service.short_description,
+    "provider": { "@type": "Person", "name": "Aleksey Taranukha", "url": "https://alekseytaranukha.com" },
+    "serviceType": service.title,
   };
 
   return (
     <Layout>
-      {/* JSON-LD Script */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Back link */}
       <div className="container pt-8">
-        <Link 
-          to="/services" 
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
+        <Link to="/services" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="h-4 w-4" />
           Все услуги
         </Link>
       </div>
 
-      {/* Hero */}
-      <section className="pt-8 pb-12">
-        <div className="container">
-          <div className="max-w-4xl">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 animate-fade-in">
-              <IconComponent className="h-8 w-8 text-primary" />
+      {content ? (
+        <article>
+          {/* 1. Hero */}
+          <section className="pt-10 pb-16">
+            <div className="container">
+              <div className="max-w-3xl">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+                  <IconComponent className="h-7 w-7 text-primary" />
+                </div>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-6 leading-tight">
+                  {content.hero.headline}
+                </h1>
+                <p className="text-xl text-muted-foreground mb-6">
+                  {content.hero.subheadline}
+                </p>
+                <p className="text-foreground/80 leading-relaxed">
+                  {content.hero.positioning}
+                </p>
+              </div>
             </div>
-            
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              {service.title}
-            </h1>
-            
-            <p className="text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-              {service.full_description || service.short_description}
-            </p>
+          </section>
 
-            {/* Quick info */}
-            <div className="flex flex-wrap gap-6 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-              {service.price_from && (
-                <div className="flex items-center gap-2">
-                  <span className="text-primary font-semibold text-lg">
-                    от {service.price_from.toLocaleString()} ₽
-                  </span>
+          {/* 2. Business Problem */}
+          <section className="py-16 bg-card/30 border-y border-border/50">
+            <div className="container">
+              <div className="max-w-4xl mx-auto">
+                <div className="flex items-center gap-3 mb-4">
+                  <AlertTriangle className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-medium text-primary uppercase tracking-wider">Проблема</span>
                 </div>
-              )}
-              {service.price_label && (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-primary" />
-                  <span className="text-muted-foreground">{service.price_label}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Content Grid */}
-      <section className="pb-16">
-        <div className="container">
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-16">
-              {/* Process */}
-              {service.process_steps && service.process_steps.length > 0 && (
-                <div className="animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
-                  <h2 className="text-2xl font-display font-bold mb-6">
-                    Процесс работы
-                  </h2>
-                  <div className="space-y-6">
-                    {service.process_steps.map((step, index) => (
-                      <div key={index} className="flex gap-4">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <span className="text-primary font-display font-bold">{index + 1}</span>
-                        </div>
-                        <div>
-                          <h3 className="font-display font-semibold mb-1">{step.step}</h3>
-                          <p className="text-muted-foreground">{step.description}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* FAQ */}
-              {service.faq && service.faq.length > 0 && (
-                <div className="animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
-                  <h2 className="text-2xl font-display font-bold mb-6">
-                    Частые вопросы
-                  </h2>
-                  <Accordion type="single" collapsible className="space-y-3">
-                    {service.faq.map((faq, index) => (
-                      <AccordionItem 
-                        key={index} 
-                        value={`faq-${index}`}
-                        className="border border-border rounded-xl px-6 data-[state=open]:bg-card/50"
-                      >
-                        <AccordionTrigger className="text-left hover:no-underline py-4">
-                          <span className="font-medium">{faq.question}</span>
-                        </AccordionTrigger>
-                        <AccordionContent className="text-muted-foreground pb-4">
-                          {faq.answer}
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                </div>
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-28 space-y-8">
-                {/* What's Included */}
-                {service.features && service.features.length > 0 && (
-                  <div className="p-6 rounded-2xl bg-card/50 border border-border animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
-                    <h3 className="font-display font-semibold text-lg mb-4">
-                      Что входит
-                    </h3>
-                    <ul className="space-y-3">
-                      {service.features.map((item, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                          <span className="text-sm text-foreground/90">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* CTA */}
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
-                  <h3 className="font-display font-semibold text-lg mb-2">
-                    Хотите заказать?
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Обсудим вашу задачу и подготовлю предложение
-                  </p>
-                  <Link to="/contacts">
-                    <Button variant="hero" className="w-full">
-                      Обсудить проект
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">
+                  {content.problem.title}
+                </h2>
+                <p className="text-muted-foreground mb-10 text-lg">
+                  {content.problem.intro}
+                </p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {content.problem.points.map((point, i) => (
+                    <div key={i} className="p-6 rounded-2xl bg-background border border-border/50">
+                      <h3 className="font-display font-semibold mb-2">{point.title}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{point.description}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
+          </section>
+
+          {/* 3. What's Included */}
+          <section className="py-16">
+            <div className="container">
+              <div className="max-w-4xl mx-auto">
+                <div className="flex items-center gap-3 mb-4">
+                  <Layers className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-medium text-primary uppercase tracking-wider">Состав</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-display font-bold mb-10">
+                  {content.includes.title}
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {content.includes.blocks.map((block, i) => (
+                    <div key={i} className="p-6 rounded-2xl border border-border/50 bg-card/30">
+                      <h3 className="font-display font-semibold mb-2">{block.name}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{block.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 4. How We Work */}
+          <section className="py-16 bg-card/30 border-y border-border/50">
+            <div className="container">
+              <div className="max-w-3xl mx-auto">
+                <div className="flex items-center gap-3 mb-4">
+                  <Target className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-medium text-primary uppercase tracking-wider">Процесс</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-display font-bold mb-10">
+                  Как строится работа
+                </h2>
+                <div className="space-y-8">
+                  {content.process.steps.map((step, i) => (
+                    <div key={i} className="flex gap-5">
+                      <div className="flex flex-col items-center">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                          <span className="text-primary font-display font-bold text-sm">{i + 1}</span>
+                        </div>
+                        {i < content.process.steps.length - 1 && (
+                          <div className="w-px flex-1 bg-border/50 mt-2" />
+                        )}
+                      </div>
+                      <div className="pb-8">
+                        <span className="text-xs font-medium text-primary uppercase tracking-wider">{step.name}</span>
+                        <h3 className="font-display font-semibold text-lg mt-1 mb-2">{step.title}</h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 5. Format of Cooperation */}
+          <section className="py-16">
+            <div className="container">
+              <div className="max-w-3xl mx-auto">
+                <div className="flex items-center gap-3 mb-4">
+                  <Handshake className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-medium text-primary uppercase tracking-wider">Формат</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-display font-bold mb-8">
+                  Формат сотрудничества
+                </h2>
+                <div className="space-y-4">
+                  {content.cooperation.points.map((point, i) => (
+                    <div key={i} className="flex items-start gap-4 p-5 rounded-xl border border-border/50 bg-card/20">
+                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <CheckCircle className="h-3.5 w-3.5 text-primary" />
+                      </div>
+                      <p className="text-foreground/90 leading-relaxed">{point}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 6. Who This Is For */}
+          <section className="py-16 bg-card/30 border-y border-border/50">
+            <div className="container">
+              <div className="max-w-3xl mx-auto">
+                <div className="flex items-center gap-3 mb-4">
+                  <UserCheck className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-medium text-primary uppercase tracking-wider">Аудитория</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-display font-bold mb-8">
+                  Кому подойдёт
+                </h2>
+                <div className="space-y-4">
+                  {content.audience.items.map((item, i) => (
+                    <div key={i} className="flex items-start gap-4 p-5 rounded-xl border border-border/50 bg-background">
+                      <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                      <p className="text-foreground/90 leading-relaxed">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 7. Expected Result */}
+          <section className="py-16">
+            <div className="container">
+              <div className="max-w-3xl mx-auto">
+                <div className="flex items-center gap-3 mb-4">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-medium text-primary uppercase tracking-wider">Результат</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">
+                  Ожидаемый результат
+                </h2>
+                <p className="text-muted-foreground mb-8 text-lg">
+                  {content.result.intro}
+                </p>
+                <div className="space-y-3">
+                  {content.result.points.map((point, i) => (
+                    <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/10">
+                      <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                      <span className="text-foreground/90">{point}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 8. Final CTA */}
+          <section className="py-20">
+            <div className="container">
+              <div className="max-w-2xl mx-auto text-center">
+                <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">
+                  Обсудить задачу
+                </h2>
+                <p className="text-muted-foreground mb-8">
+                  Расскажите о вашей ситуации — разберём, что можно сделать и с чего начать
+                </p>
+                <Link to="/contacts">
+                  <Button variant="hero" size="lg">
+                    Обсудить задачу
+                    <ArrowRight className="h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </section>
+        </article>
+      ) : (
+        /* Fallback for services without structured content */
+        <section className="pt-8 pb-16">
+          <div className="container">
+            <div className="max-w-3xl">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-6">
+                {service.title}
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8">
+                {service.full_description || service.short_description}
+              </p>
+              <Link to="/contacts">
+                <Button variant="hero" size="lg">
+                  Обсудить задачу
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Next Service */}
       {nextService && (
         <section className="py-16 border-t border-border">
           <div className="container">
-            <Link 
+            <Link
               to={`/services/${nextService.slug}`}
               className="group block glass-card rounded-2xl p-8 hover-lift"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                  <span className="text-sm text-muted-foreground mb-2 block">
-                    Другая услуга
-                  </span>
+                  <span className="text-sm text-muted-foreground mb-2 block">Другая услуга</span>
                   <h3 className="text-2xl md:text-3xl font-display font-bold group-hover:text-gradient transition-colors">
                     {nextService.title}
                   </h3>
