@@ -1,29 +1,40 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+function isAllowedOrigin(origin: string): boolean {
+  const envOrigins = Deno.env.get("ALLOWED_ORIGINS") || "";
+  const origins = envOrigins
+    ? new Set(envOrigins.split(",").map((o) => o.trim()).filter(Boolean))
+    : new Set(["http://localhost:5173", "http://localhost:8080"]);
+
+  if (origins.has(origin)) return true;
+  if (origin.endsWith(".lovableproject.com") || origin.endsWith(".lovable.app")) return true;
+  return false;
+}
+
+function buildCorsHeaders(origin: string | null) {
+  const allowed = !!origin && isAllowedOrigin(origin);
+  return {
+    "Access-Control-Allow-Origin": allowed && origin ? origin : "null",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+  };
+}
 
 function extractImageDataUrl(gatewayPayload: any): string | null {
   const msg = gatewayPayload?.choices?.[0]?.message;
   if (!msg) return null;
 
-  // Primary: Lovable AI image schema
   const img0 = msg?.images?.[0];
   const direct = img0?.image_url?.url;
   if (typeof direct === "string" && direct.startsWith("data:image/")) return direct;
 
-  // Variant: image_url might be directly a string
   const direct2 = img0?.image_url;
   if (typeof direct2 === "string" && direct2.startsWith("data:image/")) return direct2;
 
-  // Variant: some gateways return message.content as a string data URL
   if (typeof msg?.content === "string" && msg.content.startsWith("data:image/")) return msg.content;
 
-  // Variant: OpenAI-style multimodal content array
   if (Array.isArray(msg?.content)) {
     for (const part of msg.content) {
       const url = part?.image_url?.url ?? part?.image_url;
@@ -35,8 +46,18 @@ function extractImageDataUrl(gatewayPayload: any): string | null {
 }
 
 serve(async (req) => {
+  const origin = req.headers.get("Origin");
+  const corsHeaders = buildCorsHeaders(origin);
+
   if (req.method === "OPTIONS") {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  if (origin && !isAllowedOrigin(origin)) {
+    return new Response(
+      JSON.stringify({ error: "Origin not allowed" }),
+      { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 
   try {
