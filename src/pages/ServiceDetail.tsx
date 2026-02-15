@@ -3,8 +3,9 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowLeft, ArrowRight, CheckCircle, Clock, Loader2, Film, Users, Video, Cpu, Code, Bot, Globe } from "lucide-react";
+import { ArrowRight, ArrowLeft, CheckCircle, Loader2, Film, Users, Video, Cpu, Code, Bot, Globe, Share2, Megaphone, Briefcase, AlertTriangle, Target } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getServiceConfig, getServiceUrl, resolveSlug } from "@/lib/service-config";
 
 interface FAQItem {
   question: string;
@@ -32,21 +33,20 @@ interface ServiceItem {
 }
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Film,
-  Users,
-  Video,
-  Cpu,
-  Code,
-  Bot,
-  Globe,
+  Film, Users, Video, Cpu, Code, Bot, Globe, Share2, Megaphone, Briefcase,
 };
 
-const ServiceDetail = () => {
-  const { slug } = useParams<{ slug: string }>();
+const ServiceDetail = ({ overrideSlug }: { overrideSlug?: string }) => {
+  const { slug: paramSlug } = useParams<{ slug: string }>();
+  const rawSlug = overrideSlug || paramSlug;
+  const slug = rawSlug ? resolveSlug(rawSlug) : undefined;
+
   const [service, setService] = useState<ServiceItem | null>(null);
-  const [nextService, setNextService] = useState<{ slug: string; title: string } | null>(null);
+  const [allServices, setAllServices] = useState<{ slug: string; title: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  const config = slug ? getServiceConfig(slug) : undefined;
 
   const fetchService = async () => {
     if (!slug) return;
@@ -64,7 +64,6 @@ const ServiceDetail = () => {
       return;
     }
 
-    // Parse JSON fields
     const parsedService = {
       ...data,
       faq: data.faq ? (data.faq as unknown as FAQItem[]) : null,
@@ -73,54 +72,35 @@ const ServiceDetail = () => {
 
     setService(parsedService);
 
-    // Fetch all services to find next one
-    const { data: allServices } = await supabase
+    const { data: services } = await supabase
       .from("services")
-      .select("slug, title, sort_order")
+      .select("slug, title")
       .eq("is_published", true)
       .order("sort_order", { ascending: true });
 
-    if (allServices && allServices.length > 0) {
-      const currentIndex = allServices.findIndex((s) => s.slug === slug);
-      const next = currentIndex < allServices.length - 1 ? allServices[currentIndex + 1] : allServices[0];
-      setNextService(next);
-    }
-
+    if (services) setAllServices(services);
     setLoading(false);
   };
 
   useEffect(() => {
+    setLoading(true);
+    setNotFound(false);
+    setService(null);
     fetchService();
   }, [slug]);
 
-  // Subscribe to real-time updates
   useEffect(() => {
     const channel = supabase
       .channel('service-detail-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'services'
-        },
-        () => {
-          fetchService();
-        }
-      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'services' }, () => fetchService())
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [slug]);
 
   useEffect(() => {
     if (service) {
-      document.title = `${service.title} — Aleksey Taranukha`;
-      document.querySelector('meta[name="description"]')?.setAttribute("content", 
-        service.short_description
-      );
+      document.title = `${service.title} — Алексей Тарануха`;
+      document.querySelector('meta[name="description"]')?.setAttribute("content", service.short_description);
     }
   }, [service]);
 
@@ -140,183 +120,247 @@ const ServiceDetail = () => {
 
   const IconComponent = service.icon ? (iconMap[service.icon] || Film) : Film;
 
-  // JSON-LD structured data
+  // Related services
+  const relatedServices = config?.relatedSlugs
+    ?.map(rs => allServices.find(s => s.slug === rs))
+    .filter(Boolean) || [];
+
+  // Next service (not current, not in related)
+  const currentIndex = allServices.findIndex(s => s.slug === slug);
+  const nextService = currentIndex >= 0 && allServices.length > 1
+    ? allServices[(currentIndex + 1) % allServices.length]
+    : null;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": service.title,
     "description": service.full_description || service.short_description,
-    "provider": {
-      "@type": "Person",
-      "name": "Aleksey Taranukha",
-      "url": "https://alekseytaranukha.com"
-    },
-    "serviceType": service.title
+    "provider": { "@type": "Person", "name": "Алексей Тарануха", "url": "https://alekseytaranukha.com" },
+    "serviceType": service.title,
   };
 
   return (
     <Layout>
-      {/* JSON-LD Script */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
-      {/* Back link */}
-      <div className="container pt-8">
-        <Link 
-          to="/services" 
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Все услуги
-        </Link>
-      </div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Hero */}
-      <section className="pt-8 pb-12">
-        <div className="container">
-          <div className="max-w-4xl">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 animate-fade-in">
-              <IconComponent className="h-8 w-8 text-primary" />
+      <section className="pt-12 pb-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent" />
+        <div className="container relative">
+          <Link to="/services" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 text-sm">
+            <ArrowLeft className="h-4 w-4" />
+            Все услуги
+          </Link>
+
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 animate-fade-in">
+              <IconComponent className="h-4 w-4" />
+              <span className="text-sm font-medium">{service.title}</span>
             </div>
-            
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-6 animate-fade-in-up">
               {service.title}
             </h1>
-            
-            <p className="text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
               {service.full_description || service.short_description}
             </p>
 
-            {/* Quick info */}
-            <div className="flex flex-wrap gap-6 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-              {service.price_from && (
-                <div className="flex items-center gap-2">
-                  <span className="text-primary font-semibold text-lg">
-                    от {service.price_from.toLocaleString()} ₽
-                  </span>
-                </div>
-              )}
-              {service.price_label && (
-                <div className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-primary" />
-                  <span className="text-muted-foreground">{service.price_label}</span>
-                </div>
-              )}
+            <div className="flex flex-wrap gap-4 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+              <Link to="/contacts">
+                <Button variant="hero" size="lg">
+                  Обсудить проект
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Content Grid */}
-      <section className="pb-16">
-        <div className="container">
-          <div className="grid lg:grid-cols-3 gap-12">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-16">
-              {/* Process */}
-              {service.process_steps && service.process_steps.length > 0 && (
-                <div className="animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
-                  <h2 className="text-2xl font-display font-bold mb-6">
-                    Процесс работы
-                  </h2>
-                  <div className="space-y-6">
-                    {service.process_steps.map((step, index) => (
-                      <div key={index} className="flex gap-4">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <span className="text-primary font-display font-bold">{index + 1}</span>
-                        </div>
-                        <div>
-                          <h3 className="font-display font-semibold mb-1">{step.step}</h3>
-                          <p className="text-muted-foreground">{step.description}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* FAQ */}
-              {service.faq && service.faq.length > 0 && (
-                <div className="animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
-                  <h2 className="text-2xl font-display font-bold mb-6">
-                    Частые вопросы
-                  </h2>
-                  <Accordion type="single" collapsible className="space-y-3">
-                    {service.faq.map((faq, index) => (
-                      <AccordionItem 
-                        key={index} 
-                        value={`faq-${index}`}
-                        className="border border-border rounded-xl px-6 data-[state=open]:bg-card/50"
-                      >
-                        <AccordionTrigger className="text-left hover:no-underline py-4">
-                          <span className="font-medium">{faq.question}</span>
-                        </AccordionTrigger>
-                        <AccordionContent className="text-muted-foreground pb-4">
-                          {faq.answer}
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                </div>
-              )}
+      {/* Problem */}
+      {config && (
+        <section className="py-16 bg-card/30 border-y border-border/30">
+          <div className="container">
+            <div className="max-w-3xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 text-destructive mb-6">
+                <AlertTriangle className="h-4 w-4" />
+                <span className="text-sm font-medium">Проблема</span>
+              </div>
+              <p className="text-xl md:text-2xl lg:text-3xl font-display font-bold leading-tight">
+                {config.problem}
+              </p>
             </div>
+          </div>
+        </section>
+      )}
 
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-28 space-y-8">
-                {/* What's Included */}
-                {service.features && service.features.length > 0 && (
-                  <div className="p-6 rounded-2xl bg-card/50 border border-border animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
-                    <h3 className="font-display font-semibold text-lg mb-4">
-                      Что входит
-                    </h3>
-                    <ul className="space-y-3">
-                      {service.features.map((item, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                          <span className="text-sm text-foreground/90">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+      {/* What's Included */}
+      {service.features && service.features.length > 0 && (
+        <section className="py-16">
+          <div className="container">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-center mb-12">
+              Что входит в услугу
+            </h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              {service.features.map((item, index) => (
+                <div
+                  key={index}
+                  className="glass-card p-6 rounded-2xl text-center animate-fade-in-up"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <CheckCircle className="h-8 w-8 text-primary mx-auto mb-4" />
+                  <span className="font-display font-semibold text-lg">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-                {/* CTA */}
-                <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
-                  <h3 className="font-display font-semibold text-lg mb-2">
-                    Хотите заказать?
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Обсудим вашу задачу и подготовлю предложение
-                  </p>
-                  <Link to="/contacts">
-                    <Button variant="hero" className="w-full">
-                      Обсудить проект
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
+      {/* Process Steps */}
+      {service.process_steps && service.process_steps.length > 0 && (
+        <section className="py-16 bg-card/30 border-y border-border/30">
+          <div className="container">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-center mb-12">
+              Процесс работы
+            </h2>
+            <div className="max-w-4xl mx-auto">
+              <div className="relative">
+                <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 via-primary/30 to-primary/10 hidden sm:block" />
+                <div className="space-y-8">
+                  {service.process_steps.map((step, index) => (
+                    <div
+                      key={index}
+                      className="flex gap-6 animate-fade-in-up"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 relative z-10 border-2 border-background">
+                        <span className="text-primary font-display font-bold text-sm">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                      </div>
+                      <div className="pt-2">
+                        <h3 className="text-lg font-display font-semibold mb-1">{step.step}</h3>
+                        <p className="text-muted-foreground">{step.description}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* Result */}
+      {config && (
+        <section className="py-16">
+          <div className="container">
+            <div className="max-w-3xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary mb-6">
+                <Target className="h-4 w-4" />
+                <span className="text-sm font-medium">Результат</span>
+              </div>
+              <p className="text-xl md:text-2xl lg:text-3xl font-display font-bold leading-tight">
+                {config.result}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* FAQ */}
+      {service.faq && service.faq.length > 0 && (
+        <section className="py-16 bg-card/30 border-y border-border/30">
+          <div className="container">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-center mb-12">
+              Частые вопросы
+            </h2>
+            <div className="max-w-3xl mx-auto">
+              <Accordion type="single" collapsible className="space-y-3">
+                {service.faq.map((faq, index) => (
+                  <AccordionItem
+                    key={index}
+                    value={`faq-${index}`}
+                    className="border border-border rounded-xl px-6 data-[state=open]:bg-card/50"
+                  >
+                    <AccordionTrigger className="text-left hover:no-underline py-4">
+                      <span className="font-medium">{faq.question}</span>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground pb-4">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Related Services */}
+      {relatedServices.length > 0 && (
+        <section className="py-16">
+          <div className="container">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-center mb-4">
+              Связанные решения
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+              Эти инструменты усиливают результат при совместном использовании
+            </p>
+            <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+              {relatedServices.map((rs) => (
+                <Link
+                  key={rs!.slug}
+                  to={getServiceUrl(rs!.slug)}
+                  className="group glass-card rounded-2xl p-6 hover:border-primary/30 transition-all duration-300"
+                >
+                  <h3 className="text-lg font-display font-semibold mb-2 group-hover:text-gradient transition-colors">
+                    {rs!.title}
+                  </h3>
+                  <span className="inline-flex items-center gap-1 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    Подробнее <ArrowRight className="h-3 w-3" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CTA */}
+      <section className="py-16 sm:py-24 bg-card/30 border-t border-border/30">
+        <div className="container">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-4">
+              Готовы <span className="text-gradient">начать</span>?
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Расскажите о задаче — разберём вместе, как решить её системно и с измеримым результатом.
+            </p>
+            <Link to="/contacts">
+              <Button variant="hero" size="lg" className="shadow-xl shadow-primary/20">
+                Обсудить проект
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Next Service */}
-      {nextService && (
+      {nextService && nextService.slug !== slug && (
         <section className="py-16 border-t border-border">
           <div className="container">
-            <Link 
-              to={`/services/${nextService.slug}`}
+            <Link
+              to={getServiceUrl(nextService.slug)}
               className="group block glass-card rounded-2xl p-8 hover-lift"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                  <span className="text-sm text-muted-foreground mb-2 block">
-                    Другая услуга
-                  </span>
+                  <span className="text-sm text-muted-foreground mb-2 block">Другая услуга</span>
                   <h3 className="text-2xl md:text-3xl font-display font-bold group-hover:text-gradient transition-colors">
                     {nextService.title}
                   </h3>
