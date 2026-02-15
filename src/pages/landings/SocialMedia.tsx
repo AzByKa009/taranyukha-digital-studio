@@ -3,43 +3,43 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Zap, Bot, BarChart3, Clock, Settings, TrendingUp, CheckCircle, Workflow, RefreshCw } from "lucide-react";
+import { ArrowRight, Instagram, Video, PenTool, BarChart3, Calendar, Users, TrendingUp, CheckCircle, Camera, Megaphone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const AIAutomation = () => {
+const SocialMedia = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    business: "",
-    task: ""
+    accounts: "",
+    goals: ""
   });
 
   useEffect(() => {
-    document.title = "AI автоматизация бизнеса — автоматизация процессов | Aleksey Taranukha";
+    document.title = "Ведение соцсетей для бизнеса — контент и продвижение | Aleksey Taranukha";
     document.querySelector('meta[name="description"]')?.setAttribute("content",
-      "AI автоматизация бизнес-процессов: чат-боты, интеграции, автоматические отчёты. Снижение рутины и экономия времени команды."
+      "Ведение соцсетей для бизнеса: контент-стратегия, съёмка Reels, оформление профиля, рост аудитории. Контент, который приносит заявки."
     );
 
     const serviceSchema = {
       "@context": "https://schema.org",
       "@type": "Service",
-      "name": "AI автоматизация бизнеса",
-      "description": "Автоматизация бизнес-процессов с помощью искусственного интеллекта.",
+      "name": "Ведение соцсетей для бизнеса",
+      "description": "Комплексное ведение социальных сетей: контент-стратегия, создание контента, продвижение и аналитика.",
       "provider": { "@type": "Person", "name": "Aleksey Taranukha" },
       "areaServed": "Worldwide",
-      "serviceType": "Business Automation"
+      "serviceType": "Social Media Management"
     };
 
     const script = document.createElement('script');
     script.type = 'application/ld+json';
-    script.setAttribute('data-schema', 'ai-automation');
+    script.setAttribute('data-schema', 'social-media');
     script.textContent = JSON.stringify(serviceSchema);
     document.head.appendChild(script);
 
     return () => {
-      const s = document.querySelector('script[data-schema="ai-automation"]');
+      const s = document.querySelector('script[data-schema="social-media"]');
       if (s) s.remove();
     };
   }, []);
@@ -49,76 +49,76 @@ const AIAutomation = () => {
     setIsSubmitting(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     toast({ title: "Заявка отправлена!", description: "Свяжусь с вами для обсуждения проекта." });
-    setFormData({ name: "", email: "", business: "", task: "" });
+    setFormData({ name: "", email: "", accounts: "", goals: "" });
     setIsSubmitting(false);
   };
 
   const features = [
-    { icon: Bot, title: "Чат-боты", description: "Автоматические ответы клиентам, запись, консультации 24/7" },
-    { icon: Settings, title: "Интеграции", description: "Связка CRM, мессенджеров, таблиц и других сервисов" },
-    { icon: BarChart3, title: "Автоматические отчёты", description: "Аналитика и отчёты формируются без ручной работы" },
-    { icon: Workflow, title: "Бизнес-процессы", description: "Автоматизация повторяющихся задач и рутины" },
-    { icon: RefreshCw, title: "Автоворонки", description: "Автоматическая обработка и прогрев лидов" },
-    { icon: Clock, title: "Экономия времени", description: "Команда фокусируется на важном, рутину делает AI" },
+    { icon: PenTool, title: "Контент-стратегия", description: "Рубрикатор, темы, тональность — план на месяц вперёд" },
+    { icon: Video, title: "Reels и видео", description: "Съёмка, монтаж и продакшн вертикальных видео" },
+    { icon: Camera, title: "Визуальный контент", description: "Фото, графика, карусели в едином стиле бренда" },
+    { icon: Calendar, title: "Регулярный постинг", description: "Публикации по расписанию без пропусков" },
+    { icon: BarChart3, title: "Аналитика", description: "Отчёты по охватам, вовлечённости и росту аудитории" },
+    { icon: Megaphone, title: "Продвижение", description: "Таргет, коллаборации, Reels-стратегия для роста" },
   ];
 
-  const automationTypes = [
+  const serviceTypes = [
     {
-      title: "Базовая автоматизация",
-      description: "Автоматизация 1-2 ключевых процессов для быстрого результата",
-      features: ["1 бот или интеграция", "Базовая настройка", "Обучение команды"],
-      ideal: "Малый бизнес, тестирование автоматизации"
+      title: "Контент-пакет",
+      description: "Создание контента без ведения — вы публикуете сами",
+      features: ["12-16 постов/месяц", "Reels-сценарии", "Визуальное оформление"],
+      ideal: "Те, кто хочет сам управлять аккаунтом"
     },
     {
-      title: "Комплексная автоматизация",
-      description: "Связка нескольких процессов в единую систему",
-      features: ["3-5 автоматизаций", "CRM-интеграция", "Аналитика", "Поддержка 1 мес"],
-      ideal: "Растущие компании, отделы продаж"
+      title: "Полное ведение",
+      description: "Полный цикл: от стратегии до публикации и аналитики",
+      features: ["Контент-план", "Создание контента", "Публикация", "Аналитика"],
+      ideal: "Бизнесы, у которых нет времени на соцсети"
     },
     {
-      title: "AI-трансформация",
-      description: "Полная перестройка процессов с использованием AI",
-      features: ["Аудит процессов", "AI-решения", "Обучение нейросетей", "Долгосрочная поддержка"],
-      ideal: "Компании, готовые к цифровой трансформации"
+      title: "Рост и продвижение",
+      description: "Ведение + активное продвижение для роста аудитории",
+      features: ["Полное ведение", "Таргетированная реклама", "Коллаборации", "Рост подписчиков"],
+      ideal: "Компании, готовые инвестировать в рост"
     },
   ];
 
   const whyImportant = [
-    "Экономия 10-20 часов в неделю на рутинных задачах",
-    "Снижение ошибок от человеческого фактора до минимума",
-    "Масштабирование бизнеса без найма новых сотрудников",
-    "Быстрая обработка заявок — клиенты не ждут и не уходят",
+    "Соцсети — первое место, куда заходит клиент перед покупкой",
+    "Регулярный контент формирует доверие и экспертность",
+    "Reels дают бесплатный органический охват тысяч людей",
+    "Соцсети — это ваш актив, который растёт в цене каждый день",
   ];
 
   const process = [
-    { step: "01", title: "Аудит", description: "Анализируем процессы и находим точки автоматизации" },
-    { step: "02", title: "Стратегия", description: "Определяем приоритеты и выбираем инструменты" },
-    { step: "03", title: "Разработка", description: "Создаём ботов, интеграции и автоматизации" },
-    { step: "04", title: "Тестирование", description: "Проверяем все сценарии и исправляем ошибки" },
-    { step: "05", title: "Запуск", description: "Внедряем в работу и обучаем команду" },
-    { step: "06", title: "Поддержка", description: "Мониторим, оптимизируем и масштабируем" },
+    { step: "01", title: "Аудит", description: "Анализируем текущие соцсети, конкурентов и аудиторию" },
+    { step: "02", title: "Стратегия", description: "Создаём контент-план и визуальную концепцию" },
+    { step: "03", title: "Контент", description: "Производим фото, видео, тексты и графику" },
+    { step: "04", title: "Публикация", description: "Размещаем контент по оптимальному расписанию" },
+    { step: "05", title: "Продвижение", description: "Запускаем рекламу и Reels-стратегию" },
+    { step: "06", title: "Аналитика", description: "Анализируем результаты и корректируем план" },
   ];
 
   return (
     <Layout>
       {/* Hero */}
       <section className="pt-12 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-primary/5 to-transparent" />
         <div className="container relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 animate-fade-in-up">
-              <Zap className="h-4 w-4" />
-              <span className="text-sm font-medium">AI Автоматизация</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent mb-6 animate-fade-in-up">
+              <Instagram className="h-4 w-4" />
+              <span className="text-sm font-medium">Социальные сети</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 animate-fade-in-up">
-              AI автоматизация<br />бизнеса
+              Ведение соцсетей<br />для бизнеса
             </h1>
             <p className="text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-              Снимаю рутину с вашей команды с помощью AI. Чат-боты, интеграции, автоматические отчёты — больше времени на важные задачи
+              Контент, который не просто набирает лайки, а приносит заявки. Стратегия, съёмка, публикация и аналитика
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
               <Button variant="hero" size="lg" onClick={() => document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' })}>
-                Обсудить автоматизацию
+                Обсудить проект
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </div>
@@ -130,7 +130,7 @@ const AIAutomation = () => {
       <section className="py-16">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-12">
-            Что можно автоматизировать
+            Что включает ведение
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
@@ -146,17 +146,17 @@ const AIAutomation = () => {
         </div>
       </section>
 
-      {/* Automation Types */}
+      {/* Service Types */}
       <section className="py-16 bg-card/30">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-4">
-            Какой формат автоматизации нужен
+            Какой формат вам подходит
           </h2>
           <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Подберём решение под масштаб вашего бизнеса
+            Подберём оптимальный пакет под ваши задачи и бюджет
           </p>
           <div className="grid md:grid-cols-3 gap-6">
-            {automationTypes.map((type, index) => (
+            {serviceTypes.map((type, index) => (
               <div key={index} className="glass-card p-6 rounded-2xl animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <h3 className="text-xl font-display font-semibold mb-3">{type.title}</h3>
                 <p className="text-muted-foreground mb-4">{type.description}</p>
@@ -184,7 +184,7 @@ const AIAutomation = () => {
         <div className="container">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-12">
-              Результаты автоматизации
+              Зачем бизнесу соцсети
             </h2>
             <div className="space-y-4">
               {whyImportant.map((item, index) => (
@@ -221,8 +221,8 @@ const AIAutomation = () => {
         <div className="container">
           <div className="max-w-xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Заказать автоматизацию</h2>
-              <p className="text-muted-foreground">Расскажите о процессах — предложу решение</p>
+              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Заказать ведение соцсетей</h2>
+              <p className="text-muted-foreground">Расскажите о проекте, и я подготовлю предложение</p>
             </div>
             <form onSubmit={handleSubmit} className="glass-card p-8 rounded-2xl space-y-6">
               <div>
@@ -234,12 +234,12 @@ const AIAutomation = () => {
                 <Input type="email" placeholder="email@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Ваш бизнес</label>
-                <Input placeholder="Ниша, размер команды, текущие инструменты..." value={formData.business} onChange={(e) => setFormData({ ...formData, business: e.target.value })} required />
+                <label className="block text-sm font-medium mb-2">Какие соцсети ведёте?</label>
+                <Input placeholder="Instagram, Telegram, VK..." value={formData.accounts} onChange={(e) => setFormData({ ...formData, accounts: e.target.value })} required />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Что хотите автоматизировать?</label>
-                <Textarea placeholder="Опишите процессы, которые занимают много времени..." rows={4} value={formData.task} onChange={(e) => setFormData({ ...formData, task: e.target.value })} required />
+                <label className="block text-sm font-medium mb-2">Цели и задачи</label>
+                <Textarea placeholder="Какой результат хотите? Рост подписчиков, заявки, узнаваемость..." rows={4} value={formData.goals} onChange={(e) => setFormData({ ...formData, goals: e.target.value })} required />
               </div>
               <Button type="submit" variant="hero" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? "Отправка..." : "Получить предложение"}
@@ -253,4 +253,4 @@ const AIAutomation = () => {
   );
 };
 
-export default AIAutomation;
+export default SocialMedia;
