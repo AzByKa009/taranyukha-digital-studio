@@ -37,6 +37,9 @@ const WebsiteForServices = lazy(() => import("./pages/landings/WebsiteForService
 const AIVideoProduction = lazy(() => import("./pages/landings/AIVideoProduction"));
 const VibeCodingLanding = lazy(() => import("./pages/landings/VibeCodingLanding"));
 const AIAutomation = lazy(() => import("./pages/landings/AIAutomation"));
+const BusinessPackaging = lazy(() => import("./pages/landings/BusinessPackaging"));
+const SocialMedia = lazy(() => import("./pages/landings/SocialMedia"));
+const Promotion = lazy(() => import("./pages/landings/Promotion"));
 
 // Lazy load Admin Pages
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
