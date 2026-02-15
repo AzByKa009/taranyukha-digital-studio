@@ -6,6 +6,7 @@ import { ArrowRight, Target, Briefcase, Megaphone, Share2, Bot, Globe, Loader2, 
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
+import { getServiceUrl } from "@/lib/service-config";
 
 import servicePackaging from "@/assets/service-packaging-light.jpg";
 import serviceWebsites from "@/assets/service-websites-light.jpg";
@@ -13,57 +14,56 @@ import serviceSocial from "@/assets/service-social-light.jpg";
 import servicePromotion from "@/assets/service-promotion-light.jpg";
 import serviceAutomation from "@/assets/service-automation-light.jpg";
 
-// Strategic services - tools for implementing growth strategy
 const strategicServices = [
   {
     icon: Briefcase,
     image: servicePackaging,
+    slug: "upakovka-biznesa",
     title: "Упаковка бизнеса",
     problemSolved: "Клиенты не понимают, чем вы лучше конкурентов",
     whyNeeded: "Позиционирование → понятное предложение → больше конверсий. Упаковка — фундамент всего маркетинга.",
     includes: ["Позиционирование", "Ценностное предложение", "Коммерческие материалы"],
     result: "Клиент понимает ценность за 5 секунд",
-    href: "/contacts",
   },
   {
     icon: Globe,
     image: serviceWebsites,
+    slug: "razrabotka-sayta",
     title: "Сайты",
     problemSolved: "Сайт есть, но заявок с него нет",
     whyNeeded: "Сайт — не визитка, а инструмент продаж. Правильная структура и тексты конвертируют посетителей в заявки.",
     includes: ["Продающая структура", "Конверсионные формы", "SEO-оптимизация"],
     result: "Сайт приносит заявки, а не просто «есть»",
-    href: "/razrabotka-sayta-pod-uslugi",
   },
   {
     icon: Share2,
     image: serviceSocial,
+    slug: "vedenie-socsety",
     title: "Соцсети",
     problemSolved: "Ведёте соцсети, но они не приносят клиентов",
     whyNeeded: "Контент без стратегии — просто посты. Системный подход превращает соцсети в канал продаж.",
     includes: ["Контент-стратегия", "Визуальный стиль", "Регулярный постинг"],
     result: "Соцсети работают на узнаваемость и продажи",
-    href: "/contacts",
   },
   {
     icon: Megaphone,
     image: servicePromotion,
+    slug: "prodvizhenie",
     title: "Продвижение",
     problemSolved: "Нет стабильного потока новых клиентов",
     whyNeeded: "Органика — долго, реклама — можно слить бюджет. Нужна система, которая окупается.",
     includes: ["Таргетированная реклама", "SEO-продвижение", "Контент-маркетинг"],
     result: "Предсказуемый поток заявок каждый месяц",
-    href: "/contacts",
   },
   {
     icon: Bot,
     image: serviceAutomation,
+    slug: "avtomatizaciya",
     title: "Автоматизация",
     problemSolved: "Команда тонет в рутине, время уходит на повторяющиеся задачи",
     whyNeeded: "Автоматизация освобождает время для важного. AI и интеграции работают 24/7 без усталости.",
     includes: ["Чат-боты", "CRM-интеграции", "Автоворонки"],
     result: "Рутина на автопилоте, команда занята важным",
-    href: "/ai-bot-dlya-biznesa",
   },
 ];
 
@@ -88,26 +88,16 @@ const Services = () => {
     fetchServices();
   }, []);
 
-  // Subscribe to real-time updates
   useEffect(() => {
     const channel = supabase
       .channel('services-changes')
       .on(
         'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'services'
-        },
-        () => {
-          fetchServices();
-        }
+        { event: '*', schema: 'public', table: 'services' },
+        () => { fetchServices(); }
       )
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   useSEO({
@@ -158,16 +148,15 @@ const Services = () => {
       <section className="pb-20 sm:pb-28">
         <div className="container">
           <StaggerContainer className="space-y-4 sm:space-y-6" staggerDelay={0.1}>
-            {strategicServices.map((service, index) => (
-              <StaggerItem key={service.title}>
-                <Link to={service.href}>
+            {strategicServices.map((service) => (
+              <StaggerItem key={service.slug}>
+                <Link to={getServiceUrl(service.slug)}>
                   <PremiumCard
                     className="group rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-all duration-300 overflow-hidden"
                     hoverScale={1.01}
                     hoverY={-4}
                   >
                     <div className="flex flex-col lg:flex-row">
-                      {/* Image */}
                       <div className="lg:w-1/3 aspect-[4/3] lg:aspect-auto overflow-hidden relative">
                         <img
                           src={service.image}
@@ -179,7 +168,6 @@ const Services = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent lg:hidden" />
                       </div>
 
-                      {/* Content */}
                       <div className="p-6 sm:p-8 md:p-10 lg:w-2/3 flex flex-col justify-center">
                         <div className="flex items-center gap-3 mb-4">
                           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors duration-300">
@@ -256,26 +244,25 @@ const Services = () => {
           <FadeIn delay={0.2}>
             <div className="max-w-4xl mx-auto">
               <div className="relative">
-                {/* Connection line */}
                 <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 via-primary/30 to-primary/10 hidden sm:block" />
                 
                 <div className="space-y-6 sm:space-y-8">
                   {[
-                    { step: "01", title: "Упаковка", desc: "Формируем понятное предложение, которое отличает вас от конкурентов" },
-                    { step: "02", title: "Сайт", desc: "Превращаем упаковку в конверсионный инструмент, который продаёт 24/7" },
-                    { step: "03", title: "Соцсети", desc: "Выстраиваем доверие и узнаваемость через регулярный контент" },
-                    { step: "04", title: "Продвижение", desc: "Запускаем трафик, который конвертируется в заявки" },
-                    { step: "05", title: "Автоматизация", desc: "Масштабируем результат без увеличения нагрузки на команду" },
-                  ].map((item, index) => (
-                    <div key={item.step} className="flex gap-4 sm:gap-8">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 relative z-10 border-2 border-background">
+                    { step: "01", title: "Упаковка", desc: "Формируем понятное предложение, которое отличает вас от конкурентов", slug: "upakovka-biznesa" },
+                    { step: "02", title: "Сайт", desc: "Превращаем упаковку в конверсионный инструмент, который продаёт 24/7", slug: "razrabotka-sayta" },
+                    { step: "03", title: "Соцсети", desc: "Выстраиваем доверие и узнаваемость через регулярный контент", slug: "vedenie-socsety" },
+                    { step: "04", title: "Продвижение", desc: "Запускаем трафик, который конвертируется в заявки", slug: "prodvizhenie" },
+                    { step: "05", title: "Автоматизация", desc: "Масштабируем результат без увеличения нагрузки на команду", slug: "avtomatizaciya" },
+                  ].map((item) => (
+                    <Link key={item.step} to={getServiceUrl(item.slug)} className="flex gap-4 sm:gap-8 group">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 relative z-10 border-2 border-background group-hover:bg-primary/20 transition-colors">
                         <span className="text-primary font-display font-bold text-sm">{item.step}</span>
                       </div>
                       <div className="pt-2">
-                        <h3 className="text-lg sm:text-xl font-display font-semibold mb-1">{item.title}</h3>
+                        <h3 className="text-lg sm:text-xl font-display font-semibold mb-1 group-hover:text-primary transition-colors">{item.title}</h3>
                         <p className="text-sm sm:text-base text-muted-foreground">{item.desc}</p>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
