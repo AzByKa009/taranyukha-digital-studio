@@ -16,6 +16,14 @@ export function Footer() {
   const { t } = useLanguage();
   const [services, setServices] = useState<ServiceLink[]>([]);
 
+  const slugToLanding: Record<string, string> = {
+    "upakovka-biznesa": "/upakovka-biznesa",
+    "razrabotka-sayta": "/razrabotka-sayta-pod-uslugi",
+    "vedenie-socsety": "/socseti",
+    "prodvizhenie": "/prodvizhenie",
+    "avtomatizaciya": "/ai-automation",
+  };
+
   const fetchServices = async () => {
     const { data, error } = await supabase
       .from("services")
@@ -25,7 +33,7 @@ export function Footer() {
       .limit(6);
 
     if (!error && data) {
-      setServices(data.map(s => ({ name: s.title, href: `/services/${s.slug}` })));
+      setServices(data.map(s => ({ name: s.title, href: slugToLanding[s.slug] || `/services/${s.slug}` })));
     }
   };
 
