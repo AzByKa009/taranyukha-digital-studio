@@ -1,8 +1,15 @@
+import serviceHeroPackaging from "@/assets/service-hero-packaging.jpg";
+import serviceHeroWebsites from "@/assets/service-hero-websites.jpg";
+import serviceHeroSocial from "@/assets/service-hero-social.jpg";
+import serviceHeroPromotion from "@/assets/service-hero-promotion.jpg";
+import serviceHeroAutomation from "@/assets/service-hero-automation.jpg";
+
 export interface ServiceContentBlock {
   hero: {
     headline: string;
     subheadline: string;
     positioning: string;
+    image: string;
   };
   problem: {
     title: string;
@@ -34,6 +41,7 @@ export const serviceContent: Record<string, ServiceContentBlock> = {
       headline: "Упаковка бизнеса, которая формирует доверие и отличает от конкурентов",
       subheadline: "Позиционирование, смыслы и коммерческие материалы — чтобы клиент выбирал вас, а не сравнивал с остальными",
       positioning: "Упаковка — это фундамент. Без чёткого позиционирования реклама, сайт и соцсети работают вхолостую. Вы тратите бюджет, но клиент не понимает, почему должен выбрать именно вас.",
+      image: serviceHeroPackaging,
     },
     problem: {
       title: "Почему бизнес теряет клиентов на этапе выбора",
@@ -97,6 +105,7 @@ export const serviceContent: Record<string, ServiceContentBlock> = {
       headline: "Сайт, который работает на бизнес-результат, а не просто существует в интернете",
       subheadline: "Конверсионная структура, понятная подача и техническая надёжность — чтобы посетители становились заявками",
       positioning: "Сайт — это не дизайн ради дизайна. Это инструмент, который должен объяснять, убеждать и конвертировать. Если он этого не делает — он не работает.",
+      image: serviceHeroWebsites,
     },
     problem: {
       title: "Почему большинство сайтов не приносят заявок",
@@ -160,6 +169,7 @@ export const serviceContent: Record<string, ServiceContentBlock> = {
       headline: "Соцсети, которые привлекают клиентов, а не просто набирают подписчиков",
       subheadline: "Стратегия, контент и системный подход — чтобы каждая публикация работала на бизнес-результат",
       positioning: "Соцсети без стратегии — это хаотичный постинг. Красивые фото и регулярные публикации не приносят заявок, если за ними нет понимания аудитории, логики воронки и чёткого позиционирования.",
+      image: serviceHeroSocial,
     },
     problem: {
       title: "Почему соцсети не приносят клиентов",
@@ -223,6 +233,7 @@ export const serviceContent: Record<string, ServiceContentBlock> = {
       headline: "Продвижение, которое выстраивает стабильный поток заявок",
       subheadline: "Реклама, SEO и контент-маркетинг — не по отдельности, а как единая система привлечения клиентов",
       positioning: "Отдельно работающий таргет, SEO или контент дают фрагментарный результат. Системное продвижение — это когда каждый канал усиливает другой и работает на общую цель: заявки.",
+      image: serviceHeroPromotion,
     },
     problem: {
       title: "Почему реклама не приносит стабильного результата",
@@ -286,6 +297,7 @@ export const serviceContent: Record<string, ServiceContentBlock> = {
       headline: "Автоматизация, которая снимает рутину и ускоряет рост бизнеса",
       subheadline: "Чат-боты, CRM-интеграции и автоворонки — чтобы бизнес работал системно, а не на ручном управлении",
       positioning: "Автоматизация — это не про технологии ради технологий. Это про то, чтобы освободить команду от повторяющихся задач и дать бизнесу возможность расти без пропорционального увеличения штата.",
+      image: serviceHeroAutomation,
     },
     problem: {
       title: "Почему бизнес тормозит без автоматизации",
