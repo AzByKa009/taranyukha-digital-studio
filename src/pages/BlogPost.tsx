@@ -149,6 +149,18 @@ const BlogPost = () => {
               </span>
             </div>
           </div>
+
+          {/* Hero Image */}
+          {post.thumbnail && (
+            <div className="mt-8 max-w-4xl rounded-2xl overflow-hidden animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+              <img
+                src={post.thumbnail}
+                alt={post.title}
+                className="w-full h-64 md:h-80 lg:h-96 object-cover"
+                loading="eager"
+              />
+            </div>
+          )}
         </div>
       </section>
 
