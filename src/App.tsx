@@ -40,6 +40,11 @@ const AIAutomation = lazy(() => import("./pages/landings/AIAutomation"));
 const BusinessPackaging = lazy(() => import("./pages/landings/BusinessPackaging"));
 const SocialMedia = lazy(() => import("./pages/landings/SocialMedia"));
 const Promotion = lazy(() => import("./pages/landings/Promotion"));
+const WebsiteSmallBusiness = lazy(() => import("./pages/landings/WebsiteSmallBusiness"));
+const WebsiteForExpert = lazy(() => import("./pages/landings/WebsiteForExpert"));
+const LandingOnlineSchool = lazy(() => import("./pages/landings/LandingOnlineSchool"));
+const AIWebsiteStartup = lazy(() => import("./pages/landings/AIWebsiteStartup"));
+const WebsiteMarketingStrategy = lazy(() => import("./pages/landings/WebsiteMarketingStrategy"));
 
 // Lazy load Admin Pages
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -112,6 +117,11 @@ const App = () => (
                 <Route path="/upakovka-biznesa" element={<BusinessPackaging />} />
                 <Route path="/socseti" element={<SocialMedia />} />
                 <Route path="/prodvizhenie" element={<Promotion />} />
+                <Route path="/sayt-dlya-malogo-biznesa" element={<WebsiteSmallBusiness />} />
+                <Route path="/sayt-dlya-eksperta" element={<WebsiteForExpert />} />
+                <Route path="/landing-online-school" element={<LandingOnlineSchool />} />
+                <Route path="/ai-sayt-dlya-startapa" element={<AIWebsiteStartup />} />
+                <Route path="/sayt-marketing-strategiya" element={<WebsiteMarketingStrategy />} />
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
