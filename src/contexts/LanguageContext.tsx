@@ -20,6 +20,7 @@ const defaultTranslations: Record<string, string> = {
   "nav.services": "Услуги",
   "nav.ai_products": "AI-решения",
   "nav.about": "О нас",
+  "nav.blog": "Блог",
   "nav.faq": "FAQ",
   "nav.contact": "Связаться",
   
