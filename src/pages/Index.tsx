@@ -6,6 +6,7 @@ import { ApproachSection } from "@/components/sections/ApproachSection";
 import { FeaturedCases } from "@/components/sections/FeaturedCases";
 import { TargetAudienceSection } from "@/components/sections/TargetAudienceSection";
 import { WhyTrustMe } from "@/components/sections/WhyTrustMe";
+import { BlogPreview } from "@/components/sections/BlogPreview";
 
 import { CTASection } from "@/components/sections/CTASection";
 import { UTPSection } from "@/components/sections/UTPSection";
@@ -16,7 +17,7 @@ const Index = () => {
   useSEO({
     title: "Системы привлечения заявок для бизнеса | Сайты, CRM, AI-автоматизация",
     description: "Создаём сайты и AI-системы, которые приносят заявки. Разработка, внедрение CRM и автоматизация процессов для малого и среднего бизнеса. Запуск от 14 дней.",
-    keywords: "разработка сайтов, автоматизация бизнеса, внедрение CRM, AI для бизнеса, система привлечения клиентов, заявки для бизнеса",
+    keywords: "разработка сайтов, автоматизация бизнеса, внедрение CRM, AI для бизнеса, система привлечения клиентов, заявки для бизнеса, создание сайтов, заказать сайт, сайт для бизнеса, digital агентство",
   }, [personSchema, websiteSchema, professionalServiceSchema]);
 
   return (
@@ -30,6 +31,7 @@ const Index = () => {
       <ApproachSection />
       <TargetAudienceSection />
       <WhyTrustMe />
+      <BlogPreview />
       <CTASection />
       
     </Layout>
