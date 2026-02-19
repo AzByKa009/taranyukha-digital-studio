@@ -13,8 +13,9 @@ const BASE_URL = "https://taranukha.dev";
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
 
-  // Update canonical URL on route change
+  // Scroll to top and update canonical URL on route change
   useEffect(() => {
+    window.scrollTo(0, 0);
     const canonicalUrl = `${BASE_URL}${location.pathname}`;
     
     let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
