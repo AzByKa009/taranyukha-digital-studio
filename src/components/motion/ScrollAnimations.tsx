@@ -65,6 +65,11 @@ export function RevealText({ children, className, delay = 0 }: RevealTextProps) 
     [0, 1], 
     prefersReducedMotion || isMobile ? [0, 0] : [20, 0]
   );
+  const blur = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion || isMobile ? [0, 0] : [4, 0]
+  );
 
   if (prefersReducedMotion || isMobile) {
     return <span className={className}>{children}</span>;
@@ -73,7 +78,12 @@ export function RevealText({ children, className, delay = 0 }: RevealTextProps) 
   return (
     <motion.span
       ref={ref}
-      style={{ opacity, y, display: "inline-block" }}
+      style={{ 
+        opacity, 
+        y, 
+        filter: blur as any,
+        display: "inline-block" 
+      }}
       className={className}
     >
       {children}
@@ -93,7 +103,7 @@ export function SectionReveal({ children, className }: SectionRevealProps) {
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 0.9", "start 0.3"],
+    offset: ["start 0.95", "start 0.4"],
   });
 
   const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
@@ -101,6 +111,11 @@ export function SectionReveal({ children, className }: SectionRevealProps) {
     scrollYProgress, 
     [0, 1], 
     prefersReducedMotion || isMobile ? [1, 1] : [0.97, 1]
+  );
+  const blur = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion || isMobile ? [0, 0] : [4, 0]
   );
 
   if (prefersReducedMotion || isMobile) {
@@ -110,7 +125,11 @@ export function SectionReveal({ children, className }: SectionRevealProps) {
   return (
     <motion.div
       ref={ref}
-      style={{ opacity, scale }}
+      style={{ 
+        opacity, 
+        scale,
+        filter: blur as any,
+      }}
       className={className}
     >
       {children}

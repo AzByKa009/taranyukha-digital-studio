@@ -14,7 +14,7 @@ interface PremiumCardProps extends Omit<HTMLMotionProps<"div">, "children"> {
 }
 
 export const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(
-  ({ children, className, hoverScale = 1.02, hoverY = -4, glowOnHover = false, ...props }, ref) => {
+  ({ children, className, hoverScale = 1.01, hoverY = -4, glowOnHover = false, ...props }, ref) => {
     const prefersReducedMotion = useReducedMotion();
     const isMobile = useIsMobile();
 
@@ -28,13 +28,12 @@ export const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(
           y: hoverY,
         } : undefined}
         transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 25,
+          duration: 0.4,
+          ease: [0.22, 1, 0.36, 1],
         }}
         className={cn(
-          "transition-shadow duration-300",
-          glowOnHover && "hover:shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)]",
+          "transition-shadow duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+          glowOnHover && "hover:shadow-[0_0_30px_-5px_hsl(var(--primary)/0.2)]",
           className
         )}
         {...props}
@@ -62,9 +61,8 @@ export const PremiumButton = forwardRef<HTMLButtonElement, PremiumButtonProps>(
         whileHover={!prefersReducedMotion ? { scale: 1.02 } : undefined}
         whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
         transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 30,
+          duration: 0.4,
+          ease: [0.22, 1, 0.36, 1],
         }}
         className={className}
         {...props}
