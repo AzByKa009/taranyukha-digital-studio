@@ -109,7 +109,7 @@ export function Scene3D() {
   }, [isDesktop]);
 
   return (
-    <div className="absolute top-0 left-0 right-0 bottom-[15%] pointer-events-none">
+    <div className="absolute inset-0 pointer-events-none">
       {/* Soft ambient glow behind 3D object */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.12] blur-[100px]"
         style={{ background: 'radial-gradient(circle, hsl(239 84% 67% / 0.5), hsl(270 60% 50% / 0.2), transparent 70%)' }}
