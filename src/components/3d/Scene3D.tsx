@@ -55,9 +55,10 @@ function InnerGlow() {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#7C3AED" />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8B5CF6" />
+      <ambientLight intensity={0.4} />
+      <pointLight position={[10, 10, 10]} intensity={1.2} color="#7C3AED" />
+      <pointLight position={[-10, -10, -10]} intensity={0.6} color="#8B5CF6" />
+      <pointLight position={[0, 5, 8]} intensity={0.3} color="#3B82F6" />
       <AnimatedSphere />
       <InnerGlow />
     </>
@@ -109,6 +110,11 @@ export function Scene3D() {
 
   return (
     <div className="absolute inset-0 pointer-events-none">
+      {/* Soft ambient glow behind 3D object */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.12] blur-[100px]"
+        style={{ background: 'radial-gradient(circle, hsl(239 84% 67% / 0.5), hsl(270 60% 50% / 0.2), transparent 70%)' }}
+      />
+
       {/* Static fallback for mobile and initial load */}
       {!shouldRender && <Fallback />}
       
