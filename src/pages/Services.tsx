@@ -236,7 +236,7 @@ const Services = () => {
       </section>
 
       {/* How it works together */}
-      <section className="py-16 sm:py-24 bg-card/30 border-y border-border/30">
+      <section className="py-16 sm:py-24">
         <div className="container">
           <FadeIn>
             <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16">

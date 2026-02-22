@@ -318,7 +318,7 @@ const Contacts = () => {
       </section>
 
       {/* How Work Happens */}
-      <section className="py-20 bg-card/20 border-y border-border/30">
+      <section className="py-20">
         <div className="container">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">

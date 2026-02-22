@@ -306,7 +306,7 @@ const ServiceDetail = () => {
 
       {/* Next Service */}
       {nextService && (
-        <section className="py-16 border-t border-border">
+        <section className="py-16">
           <div className="container">
             <Link 
               to={`/services/${nextService.slug}`}

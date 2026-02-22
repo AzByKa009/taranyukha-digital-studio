@@ -173,7 +173,7 @@ const AIProducts = () => {
 
       {/* Category Tabs */}
       {categories.length > 0 && (
-        <section className="pb-8 sticky top-20 z-20 bg-background/80 backdrop-blur-lg border-b border-border/50">
+        <section className="pb-8 sticky top-20 z-20 bg-background/80 backdrop-blur-lg">
           <div className="container">
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => {
@@ -304,7 +304,7 @@ const AIProducts = () => {
       </section>
 
       {/* AI Audit Section */}
-      <section className="py-16 bg-gradient-to-br from-primary/10 to-primary/5 border-y border-primary/20">
+      <section className="py-16">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <ClipboardList className="h-12 w-12 text-primary mx-auto mb-6" />
