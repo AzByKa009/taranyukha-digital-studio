@@ -7,6 +7,7 @@ const ShootingStar = memo(function ShootingStar() {
     <>
       <div className="shooting-star shooting-star-1" />
       <div className="shooting-star shooting-star-2" />
+      <div className="shooting-star shooting-star-3" />
     </>
   );
 });
@@ -17,6 +18,7 @@ const StarsLayer = memo(function StarsLayer() {
     <div className="cosmic-stars" aria-hidden="true">
       <div className="stars-small" />
       <div className="stars-medium" />
+      <div className="stars-bright" />
     </div>
   );
 });
