@@ -47,9 +47,6 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-glow opacity-30" />
       <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-primary/5 to-transparent" />
 
-      {/* Bottom fade — smooth transition to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/80 to-transparent z-[5] pointer-events-none" />
-
       {/* Diagonal light beam */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] opacity-[0.04]" style={{
