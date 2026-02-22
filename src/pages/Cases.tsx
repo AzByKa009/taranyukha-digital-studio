@@ -104,7 +104,7 @@ const Cases = () => {
       </section>
 
       {/* Filters */}
-      <section className="pb-8 sm:pb-10 sticky top-14 sm:top-16 lg:top-18 z-20 bg-background/90 backdrop-blur-xl">
+      <section className="pb-8 sm:pb-10 sticky top-14 sm:top-16 lg:top-18 z-20" style={{ background: 'linear-gradient(to bottom, hsl(var(--background)) 60%, transparent)' }}>
         <div className="container">
           <div className="flex flex-wrap gap-2 animate-fade-in-up py-2" style={{ animationDelay: "0.2s" }}>
             {categoryFilters.map((filter) => (

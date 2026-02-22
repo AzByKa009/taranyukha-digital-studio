@@ -173,7 +173,7 @@ const AIProducts = () => {
 
       {/* Category Tabs */}
       {categories.length > 0 && (
-        <section className="pb-8 sticky top-20 z-20 bg-background/80 backdrop-blur-lg">
+        <section className="pb-8 sticky top-20 z-20" style={{ background: 'linear-gradient(to bottom, hsl(var(--background)) 60%, transparent)' }}>
           <div className="container">
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => {
