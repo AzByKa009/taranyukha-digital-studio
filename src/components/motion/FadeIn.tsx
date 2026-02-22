@@ -4,6 +4,8 @@ import { motion, useInView, Variants } from "framer-motion";
 import { useRef, ReactNode } from "react";
 import { useReducedMotion, useIsMobile } from "@/hooks/useReducedMotion";
 
+const PREMIUM_EASING = [0.22, 1, 0.36, 1] as const;
+
 interface FadeInProps {
   children: ReactNode;
   delay?: number;
@@ -12,47 +14,53 @@ interface FadeInProps {
   direction?: "up" | "down" | "left" | "right" | "none";
   distance?: number;
   once?: boolean;
+  blur?: number;
 }
 
 export function FadeIn({
   children,
   delay = 0,
-  duration = 0.5,
+  duration = 0.9,
   className,
   direction = "up",
-  distance = 24,
+  distance = 30,
   once = true,
+  blur = 6,
 }: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once, margin: "-50px" });
+  const isInView = useInView(ref, { once, margin: "-60px" });
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
 
-  // Reduce animations on mobile
   const shouldAnimate = !prefersReducedMotion && !isMobile;
-  const actualDistance = shouldAnimate ? distance : 0;
-  const actualDuration = shouldAnimate ? duration : 0.2;
 
-  const getInitialPosition = () => {
+  const getInitial = () => {
+    if (!shouldAnimate) return { opacity: 0 };
+    const base = { opacity: 0, filter: `blur(${blur}px)` };
     switch (direction) {
-      case "up": return { y: actualDistance };
-      case "down": return { y: -actualDistance };
-      case "left": return { x: actualDistance };
-      case "right": return { x: -actualDistance };
-      case "none": return {};
-      default: return { y: actualDistance };
+      case "up": return { ...base, y: distance };
+      case "down": return { ...base, y: -distance };
+      case "left": return { ...base, x: distance };
+      case "right": return { ...base, x: -distance };
+      case "none": return base;
+      default: return { ...base, y: distance };
     }
+  };
+
+  const getAnimate = () => {
+    if (!shouldAnimate) return { opacity: 1 };
+    return { opacity: 1, x: 0, y: 0, filter: "blur(0px)" };
   };
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, ...getInitialPosition() }}
-      animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, ...getInitialPosition() }}
+      initial={getInitial()}
+      animate={isInView ? getAnimate() : getInitial()}
       transition={{
-        duration: actualDuration,
+        duration: shouldAnimate ? duration : 0.2,
         delay: shouldAnimate ? delay : 0,
-        ease: [0.25, 0.4, 0.25, 1],
+        ease: shouldAnimate ? PREMIUM_EASING as unknown as number[] : "easeOut",
       }}
       className={className}
     >
@@ -70,10 +78,10 @@ interface StaggerContainerProps {
 export function StaggerContainer({
   children,
   className,
-  staggerDelay = 0.1,
+  staggerDelay = 0.12,
 }: StaggerContainerProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
   const prefersReducedMotion = useReducedMotion();
 
   const containerVariants: Variants = {
@@ -101,23 +109,46 @@ export function StaggerContainer({
 interface StaggerItemProps {
   children: ReactNode;
   className?: string;
+  direction?: "up" | "left" | "right";
+  distance?: number;
+  blur?: number;
 }
 
-export function StaggerItem({ children, className }: StaggerItemProps) {
+export function StaggerItem({ 
+  children, 
+  className, 
+  direction = "up",
+  distance = 30,
+  blur = 6,
+}: StaggerItemProps) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
+  const shouldAnimate = !prefersReducedMotion && !isMobile;
+
+  const getOffset = () => {
+    if (!shouldAnimate) return {};
+    switch (direction) {
+      case "up": return { y: distance };
+      case "left": return { x: distance };
+      case "right": return { x: -distance };
+      default: return { y: distance };
+    }
+  };
 
   const itemVariants: Variants = {
     hidden: { 
       opacity: 0, 
-      y: prefersReducedMotion || isMobile ? 0 : 20 
+      filter: shouldAnimate ? `blur(${blur}px)` : "blur(0px)",
+      ...getOffset(),
     },
     visible: {
       opacity: 1,
+      x: 0,
       y: 0,
+      filter: "blur(0px)",
       transition: {
-        duration: prefersReducedMotion || isMobile ? 0.2 : 0.5,
-        ease: [0.25, 0.4, 0.25, 1],
+        duration: shouldAnimate ? 0.9 : 0.2,
+        ease: shouldAnimate ? [0.22, 1, 0.36, 1] : "easeOut",
       },
     },
   };
