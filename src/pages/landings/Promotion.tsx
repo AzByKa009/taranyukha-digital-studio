@@ -3,7 +3,8 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Megaphone, Target, TrendingUp, BarChart3, Search, Zap, Users, CheckCircle, MousePointer, Eye } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight, ArrowLeft, Megaphone, Target, TrendingUp, BarChart3, Search, Zap, Users, CheckCircle, MousePointer, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Promotion = () => {
@@ -101,8 +102,14 @@ const Promotion = () => {
 
   return (
     <Layout>
+      <div className="container pt-8">
+        <Link to="/services" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="h-4 w-4" />
+          Все услуги
+        </Link>
+      </div>
       {/* Hero */}
-      <section className="pt-12 pb-16 relative overflow-hidden">
+      <section className="pt-8 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent" />
         <div className="container relative">
           <div className="max-w-3xl">
