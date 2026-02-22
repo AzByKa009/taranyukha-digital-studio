@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { FloatingTextRenderer } from "@/components/floating/FloatingTextRenderer";
+import { CosmicBackground } from "@/components/background/CosmicBackground";
 
 interface LayoutProps {
   children: ReactNode;
@@ -31,6 +32,7 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <CosmicBackground />
       <Header />
       <main className="flex-1 pt-20">
         {children}
