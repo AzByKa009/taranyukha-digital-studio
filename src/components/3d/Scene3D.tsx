@@ -20,7 +20,7 @@ function AnimatedSphere() {
 
   return (
     <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1}>
-      <mesh ref={meshRef} scale={1.5}>
+      <mesh ref={meshRef} scale={2.2}>
         <icosahedronGeometry args={[1, 4]} />
         <MeshDistortMaterial
           color="#7C3AED"
