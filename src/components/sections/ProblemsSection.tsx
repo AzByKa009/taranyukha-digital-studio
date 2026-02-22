@@ -14,7 +14,7 @@ export function ProblemsSection() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 relative bg-card/30 border-y border-border/30">
+    <section className="py-20 sm:py-28 relative">
       <div className="container relative z-10">
         <FadeIn>
           <div className="max-w-2xl mb-12 sm:mb-16">
