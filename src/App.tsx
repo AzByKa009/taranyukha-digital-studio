@@ -45,6 +45,7 @@ const WebsiteForExpert = lazy(() => import("./pages/landings/WebsiteForExpert"))
 const LandingOnlineSchool = lazy(() => import("./pages/landings/LandingOnlineSchool"));
 const AIWebsiteStartup = lazy(() => import("./pages/landings/AIWebsiteStartup"));
 const WebsiteMarketingStrategy = lazy(() => import("./pages/landings/WebsiteMarketingStrategy"));
+const LaunchOffer = lazy(() => import("./pages/landings/LaunchOffer"));
 
 // Lazy load Admin Pages
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -122,6 +123,7 @@ const App = () => (
                 <Route path="/landing-online-school" element={<LandingOnlineSchool />} />
                 <Route path="/ai-sayt-dlya-startapa" element={<AIWebsiteStartup />} />
                 <Route path="/sayt-marketing-strategiya" element={<WebsiteMarketingStrategy />} />
+                <Route path="/zapusk" element={<LaunchOffer />} />
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>

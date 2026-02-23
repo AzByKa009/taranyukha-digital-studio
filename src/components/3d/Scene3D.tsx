@@ -137,8 +137,8 @@ function Scene() {
       <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.8}>
         <CoreShape />
         <WireframeShell />
-        <OrbitalRing radius={2.2} tilt={[0.5, 0.3, 0]} speed={0.06} opacity={0.12} />
-        <OrbitalRing radius={2.5} tilt={[-0.8, 0.6, 0.2]} speed={-0.04} opacity={0.06} />
+        <OrbitalRing radius={3.8} tilt={[0.5, 0.3, 0]} speed={0.06} opacity={0.15} />
+        <OrbitalRing radius={4.5} tilt={[-0.8, 0.6, 0.2]} speed={-0.04} opacity={0.08} />
         <Particles />
       </Float>
     </>
