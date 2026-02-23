@@ -44,8 +44,6 @@ export function HeroSection() {
       <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-foreground/[0.015] rounded-full blur-[100px]" />
       
       {/* Background layers */}
-      <div className="absolute inset-0 bg-gradient-glow opacity-30" />
-      <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-foreground/[0.02] to-transparent" />
 
       {/* Diagonal light beam - silver */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
