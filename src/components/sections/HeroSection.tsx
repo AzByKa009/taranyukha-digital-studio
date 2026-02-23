@@ -34,23 +34,23 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Tech grid */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)`,
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: `linear-gradient(hsl(0 0% 100% / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100% / 0.15) 1px, transparent 1px)`,
         backgroundSize: '60px 60px'
       }} />
       
-      {/* Gradient orbs */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/8 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-accent/6 rounded-full blur-[100px]" />
+      {/* Gradient orbs - monochrome */}
+      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-foreground/[0.02] rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-foreground/[0.015] rounded-full blur-[100px]" />
       
       {/* Background layers */}
       <div className="absolute inset-0 bg-gradient-glow opacity-30" />
-      <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-primary/5 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-foreground/[0.02] to-transparent" />
 
-      {/* Diagonal light beam */}
+      {/* Diagonal light beam - silver */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] opacity-[0.04]" style={{
-          background: 'linear-gradient(135deg, transparent 35%, hsl(217 91% 60% / 0.15) 45%, hsl(239 84% 67% / 0.08) 55%, transparent 65%)',
+        <div className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] opacity-[0.03]" style={{
+          background: 'linear-gradient(135deg, transparent 35%, hsl(0 0% 100% / 0.08) 45%, hsl(0 0% 100% / 0.04) 55%, transparent 65%)',
         }} />
       </div>
       
@@ -85,8 +85,8 @@ export function HeroSection() {
             <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-8 sm:mb-10 max-w-lg">
               {checks.map((check, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                    <Check className="w-3 h-3 text-primary" />
+                   <div className="w-5 h-5 rounded-full bg-foreground/10 flex items-center justify-center shrink-0">
+                     <Check className="w-3 h-3 text-foreground/70" />
                   </div>
                   <span className="text-xs sm:text-sm text-foreground/80">{check}</span>
                 </div>
@@ -103,7 +103,7 @@ export function HeroSection() {
                   whileTap={!prefersReducedMotion ? { scale: 0.98 } : undefined}
                   transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 >
-                  <Button variant="hero" size="lg" className="shadow-xl shadow-primary/25">
+                  <Button variant="hero" size="lg" className="shadow-xl shadow-foreground/5">
                     {t("hero.cta_primary")}
                     <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
@@ -162,14 +162,14 @@ export function HeroSection() {
                       y: -4, 
                       transition: { type: "spring", stiffness: 400, damping: 25 } 
                     } : undefined}
-                    className="group p-4 sm:p-7 rounded-xl sm:rounded-2xl border border-border/40 bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-primary/30 transition-all duration-400"
-                  >
-                    <div className="flex items-center gap-3 mb-3 sm:mb-4">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                        <step.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                      </div>
-                      <span className="text-lg sm:text-2xl font-display font-bold text-primary/40 group-hover:text-primary/60 transition-colors duration-400">
-                        {step.number}
+                     className="group p-4 sm:p-7 rounded-xl sm:rounded-2xl border border-foreground/[0.05] bg-card/30 backdrop-blur-sm hover:bg-card/50 hover:border-foreground/10 transition-all duration-400"
+                   >
+                     <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                       <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-300">
+                         <step.icon className="h-4 w-4 sm:h-5 sm:w-5 text-foreground/70" />
+                       </div>
+                       <span className="text-lg sm:text-2xl font-display font-bold text-foreground/20 group-hover:text-foreground/40 transition-colors duration-400">
+                         {step.number}
                       </span>
                     </div>
                     <h4 className="text-sm sm:text-lg font-display font-semibold mb-1 sm:mb-2">

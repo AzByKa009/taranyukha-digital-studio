@@ -33,7 +33,7 @@ export const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(
         }}
         className={cn(
           "transition-shadow duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] outline-none focus:outline-none focus-visible:outline-none",
-          glowOnHover && "hover:shadow-[0_0_30px_-5px_hsl(var(--primary)/0.2)]",
+          glowOnHover && "hover:shadow-[0_0_30px_-5px_hsl(0,0%,100%,0.06)]",
           className
         )}
         {...props}
@@ -129,9 +129,9 @@ export function GlowPulse({ children, className }: GlowPulseProps) {
     <motion.div
       animate={{
         boxShadow: [
-          "0 0 20px -5px hsl(var(--primary) / 0.2)",
-          "0 0 40px -5px hsl(var(--primary) / 0.4)",
-          "0 0 20px -5px hsl(var(--primary) / 0.2)",
+          "0 0 20px -5px hsl(0 0% 100% / 0.05)",
+          "0 0 40px -5px hsl(0 0% 100% / 0.1)",
+          "0 0 20px -5px hsl(0 0% 100% / 0.05)",
         ],
       }}
       transition={{

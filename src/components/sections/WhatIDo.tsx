@@ -38,7 +38,7 @@ export function WhatIDo() {
         {/* Header */}
         <FadeIn>
           <div className="max-w-2xl mb-12 sm:mb-16">
-            <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
+            <span className="text-foreground/60 text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
               {t("whatido.label")}
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
@@ -55,7 +55,7 @@ export function WhatIDo() {
           {expertiseAreas.map((area) => (
             <StaggerItem key={area.title}>
               <PremiumCard
-                className="group rounded-xl sm:rounded-2xl border border-border bg-background/50 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full relative overflow-hidden outline-none focus:outline-none focus-visible:outline-none"
+                className="group rounded-xl sm:rounded-2xl border border-foreground/[0.05] bg-card/50 hover:bg-card hover:border-foreground/10 transition-colors duration-300 h-full relative overflow-hidden outline-none focus:outline-none focus-visible:outline-none"
                 hoverScale={1.02}
                 hoverY={-4}
               >
@@ -73,9 +73,9 @@ export function WhatIDo() {
                 {/* Content */}
                 <div className="p-5 sm:p-6 relative z-10">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300 ring-1 ring-primary/5 group-hover:ring-primary/20">
-                      <area.icon className="h-4.5 w-4.5 text-primary" strokeWidth={1.5} />
-                    </div>
+                     <div className="w-9 h-9 rounded-lg bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-300 ring-1 ring-foreground/[0.03] group-hover:ring-foreground/10">
+                       <area.icon className="h-4.5 w-4.5 text-foreground/70" strokeWidth={1.5} />
+                     </div>
                     <h3 className="text-base sm:text-lg font-display font-semibold">
                       {area.title}
                     </h3>
@@ -87,8 +87,8 @@ export function WhatIDo() {
                     {area.examples.map((example) => (
                       <span
                         key={example}
-                        className="px-2.5 py-1 text-xs rounded-lg bg-primary/5 text-muted-foreground border border-border/40"
-                      >
+                       className="px-2.5 py-1 text-xs rounded-lg bg-foreground/[0.03] text-muted-foreground border border-foreground/[0.05]"
+                     >
                         {example}
                       </span>
                     ))}
