@@ -106,7 +106,7 @@ export function FeaturedCases() {
             <StaggerItem key={caseItem.id}>
               <Link to={`/cases/${caseItem.slug}`}>
                 <PremiumCard 
-                  className="group block premium-card overflow-hidden cursor-pointer"
+                  className="group block premium-card overflow-hidden cursor-pointer outline-none focus:outline-none focus-visible:outline-none"
                   hoverScale={1.02}
                   hoverY={-6}
                   glowOnHover

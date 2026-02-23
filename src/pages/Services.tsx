@@ -161,8 +161,8 @@ const Services = () => {
             {strategicServices.map((service, index) => (
               <StaggerItem key={service.title}>
                 <Link to={service.href}>
-                  <PremiumCard
-                    className="group rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-all duration-300 overflow-hidden"
+                    <PremiumCard
+                      className="group rounded-xl sm:rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:bg-card hover:border-foreground/15 transition-all duration-300 overflow-hidden outline-none focus:outline-none focus-visible:outline-none"
                     hoverScale={1.01}
                     hoverY={-4}
                   >

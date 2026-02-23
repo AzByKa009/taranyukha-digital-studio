@@ -59,7 +59,7 @@ export function WhyTrustMe() {
             {trustFactors.map((factor) => (
               <StaggerItem key={factor.title}>
                 <PremiumCard
-                  className="group p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-background/50 border border-border hover:border-primary/30 transition-colors h-full relative overflow-hidden"
+                  className="group p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-card/50 border border-border hover:border-foreground/15 transition-colors h-full relative overflow-hidden outline-none focus:outline-none focus-visible:outline-none"
                   hoverScale={1.03}
                   hoverY={-4}
                 >
