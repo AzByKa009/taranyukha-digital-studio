@@ -237,15 +237,15 @@ const defaultTranslations: Record<string, string> = {
   "footer.social": "Соцсети",
   
   // Exit Popup
-  "popup.title": "Уходите?",
-  "popup.subtitle": "Оставьте контакт — покажем, как увеличить заявки",
-  "popup.cta": "Получить аудит",
+  "popup.title": "Увеличьте продажи на 10–15%",
+  "popup.subtitle": "Покажем конкретные точки роста в вашей воронке — бесплатно",
+  "popup.cta": "Получить бесплатный аудит",
   "popup.close": "Нет, спасибо",
-  "popup.consultation": "Бесплатный аудит",
+  "popup.consultation": "Абсолютно бесплатно",
   "popup.email_placeholder": "Ваш email",
   "popup.sending": "Отправка...",
   "popup.success": "Отлично! Свяжемся в ближайшее время",
-  "popup.no_spam": "Никакого спама — только конкретика",
+  "popup.no_spam": "Только факты. Без воды и рассылок.",
   
   // Admin
   "admin.dashboard": "Дашборд",
