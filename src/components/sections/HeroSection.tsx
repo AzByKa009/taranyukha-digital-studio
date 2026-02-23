@@ -162,7 +162,7 @@ export function HeroSection() {
                       y: -4, 
                       transition: { type: "spring", stiffness: 400, damping: 25 } 
                     } : undefined}
-                     className="group p-4 sm:p-7 rounded-xl sm:rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:bg-card hover:border-foreground/15 transition-all duration-400"
+                     className="group p-4 sm:p-7 rounded-xl sm:rounded-2xl border border-foreground/10 bg-card backdrop-blur-sm hover:bg-card hover:border-foreground/25 hover:shadow-[0_0_25px_-8px_hsl(0_0%_100%/0.1)] transition-all duration-400"
                    >
                      <div className="flex items-center gap-3 mb-3 sm:mb-4">
                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-300">

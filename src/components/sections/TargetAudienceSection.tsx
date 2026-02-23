@@ -33,7 +33,7 @@ export function TargetAudienceSection() {
         <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
           {/* Fits */}
           <FadeIn delay={0.1}>
-            <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl border border-primary/20 bg-primary/5">
+            <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl border border-foreground/20 bg-card shadow-[0_0_30px_-8px_hsl(0_0%_100%/0.08)]">
               <h3 className="text-lg sm:text-xl font-display font-bold mb-6 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
                   <Check className="w-4 h-4 text-primary" />
@@ -58,7 +58,7 @@ export function TargetAudienceSection() {
 
           {/* No Fits */}
           <FadeIn delay={0.2}>
-            <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl border border-destructive/20 bg-destructive/5">
+            <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl border border-destructive/30 bg-card shadow-[0_0_30px_-8px_hsl(0_80%_62%/0.1)]">
               <h3 className="text-lg sm:text-xl font-display font-bold mb-6 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-destructive/20 flex items-center justify-center">
                   <X className="w-4 h-4 text-destructive" />
