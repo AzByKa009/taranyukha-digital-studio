@@ -51,7 +51,7 @@ export function ApproachSection() {
             <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
               {t("approach.label")}
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6 text-glow">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
               {t("approach.title")}<br />
               <span className="text-gradient">{t("approach.title_accent")}</span>
             </h2>

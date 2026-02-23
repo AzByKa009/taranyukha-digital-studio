@@ -21,7 +21,7 @@ export function ProblemsSection() {
             <span className="text-destructive text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
               {t("problems.label")}
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6 text-glow">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
               {t("problems.title")}<span className="text-destructive">{t("problems.title_accent")}</span>
             </h2>
           </div>
