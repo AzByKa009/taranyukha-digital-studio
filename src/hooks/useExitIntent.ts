@@ -9,7 +9,7 @@ interface UseExitIntentOptions {
 const STORAGE_KEY = "exit_intent_shown";
 
 export function useExitIntent(options: UseExitIntentOptions = {}) {
-  const { threshold = 10, delayMs = 5000, cookieExpireDays = 7 } = options;
+  const { delayMs = 30000, cookieExpireDays = 7 } = options;
   const [showPopup, setShowPopup] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
 
@@ -41,24 +41,16 @@ export function useExitIntent(options: UseExitIntentOptions = {}) {
       return;
     }
 
+    // Show popup after timer (works on both desktop and mobile)
     const timer = setTimeout(() => {
-      const handleMouseLeave = (e: MouseEvent) => {
-        if (e.clientY <= threshold && !hasTriggered) {
-          setShowPopup(true);
-          setHasTriggered(true);
-          document.removeEventListener("mouseleave", handleMouseLeave);
-        }
-      };
-
-      document.addEventListener("mouseleave", handleMouseLeave);
-
-      return () => {
-        document.removeEventListener("mouseleave", handleMouseLeave);
-      };
+      if (!hasTriggered) {
+        setShowPopup(true);
+        setHasTriggered(true);
+      }
     }, delayMs);
 
     return () => clearTimeout(timer);
-  }, [threshold, delayMs, hasTriggered, checkCookie]);
+  }, [delayMs, hasTriggered, checkCookie]);
 
   return { showPopup, closePopup };
 }
