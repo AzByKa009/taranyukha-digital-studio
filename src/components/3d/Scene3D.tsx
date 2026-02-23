@@ -23,12 +23,14 @@ function AnimatedSphere() {
       <mesh ref={meshRef} scale={2.2}>
         <icosahedronGeometry args={[1, 4]} />
         <MeshDistortMaterial
-          color="#D4D4D4"
+          color="#E8E0D8"
           attach="material"
           distort={0.4}
           speed={2}
-          roughness={0.3}
-          metalness={0.9}
+          roughness={0.15}
+          metalness={0.95}
+          emissive="#FFFFFF"
+          emissiveIntensity={0.08}
         />
       </mesh>
     </Float>
@@ -55,10 +57,11 @@ function InnerGlow() {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={1.0} color="#FFFFFF" />
-      <pointLight position={[-10, -10, -10]} intensity={0.4} color="#CCCCCC" />
-      <pointLight position={[0, 5, 8]} intensity={0.2} color="#FFFFFF" />
+      <ambientLight intensity={0.4} />
+      <pointLight position={[10, 10, 10]} intensity={1.5} color="#FFFFFF" />
+      <pointLight position={[-10, -10, -10]} intensity={0.6} color="#E0D8D0" />
+      <pointLight position={[0, 5, 8]} intensity={0.4} color="#FFFFFF" />
+      <pointLight position={[5, -5, 5]} intensity={0.3} color="#D0C8C0" />
       <AnimatedSphere />
       <InnerGlow />
     </>
@@ -111,8 +114,8 @@ export function Scene3D() {
   return (
     <div className="absolute inset-0 pointer-events-none">
       {/* Soft silver ambient glow behind 3D object */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.06] blur-[100px]"
-        style={{ background: 'radial-gradient(circle, hsl(0 0% 100% / 0.4), hsl(0 0% 100% / 0.1), transparent 70%)' }}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.12] blur-[120px]"
+        style={{ background: 'radial-gradient(circle, hsl(30 10% 90% / 0.5), hsl(0 0% 100% / 0.15), transparent 70%)' }}
       />
 
       {/* Static fallback for mobile and initial load */}

@@ -30,7 +30,7 @@ export function ProblemsSection() {
         <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5" staggerDelay={0.08}>
           {problems.map((problem, i) => (
             <StaggerItem key={i}>
-              <div className="group p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-border/60 bg-background/50 hover:border-destructive/30 transition-all duration-300 h-full">
+              <div className="group p-5 sm:p-6 rounded-xl sm:rounded-2xl border border-border bg-card/50 hover:border-destructive/40 transition-all duration-300 h-full">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-destructive/10 flex items-center justify-center mb-4 group-hover:bg-destructive/20 transition-colors duration-300">
                   <problem.icon className="h-5 w-5 sm:h-6 sm:w-6 text-destructive" strokeWidth={1.5} />
                 </div>

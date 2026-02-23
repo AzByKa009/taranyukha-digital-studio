@@ -66,7 +66,7 @@ export function ApproachSection() {
           {approachPillars.map((pillar) => (
             <StaggerItem key={pillar.title}>
               <PremiumCard
-                className="group rounded-xl sm:rounded-2xl border border-border bg-card/30 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full relative overflow-hidden"
+                className="group rounded-xl sm:rounded-2xl border border-border bg-card/50 backdrop-blur-sm hover:bg-card hover:border-foreground/15 transition-colors duration-300 h-full relative overflow-hidden outline-none focus:outline-none focus-visible:outline-none"
                 hoverScale={1.02}
                 hoverY={-4}
               >
