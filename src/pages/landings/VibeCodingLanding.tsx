@@ -120,7 +120,7 @@ const VibeCodingLanding = () => {
           </div>
         </section>
 
-        <section className="py-16 bg-card/30" aria-labelledby="whatbuild-heading">
+        <section className="py-16" aria-labelledby="whatbuild-heading">
           <div className="container">
             <div className="max-w-3xl mx-auto">
               <h2 id="whatbuild-heading" className="text-3xl md:text-4xl font-display font-bold text-center mb-12">
@@ -155,7 +155,7 @@ const VibeCodingLanding = () => {
           </div>
         </section>
 
-        <section id="order-form" className="py-16 bg-card/30" aria-labelledby="order-heading">
+        <section id="order-form" className="py-16" aria-labelledby="order-heading">
           <div className="container">
             <div className="max-w-xl mx-auto">
               <div className="text-center mb-8">

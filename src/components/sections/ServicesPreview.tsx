@@ -67,7 +67,7 @@ export function ServicesPreview() {
   };
 
   return (
-    <section className="py-24 section-depth-services">
+    <section className="py-24">
       <div className="container relative z-[1]">
         <FadeIn>
           <div className="text-center max-w-2xl mx-auto mb-16">

@@ -148,7 +148,7 @@ const LaunchOffer = () => {
       </section>
 
       {/* Included checklist */}
-      <section className="py-20 sm:py-28 bg-card/30">
+      <section className="py-20 sm:py-28">
         <div className="container">
           <div className="max-w-3xl mx-auto">
             <FadeIn>

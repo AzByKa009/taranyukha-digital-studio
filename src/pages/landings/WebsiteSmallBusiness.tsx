@@ -130,7 +130,7 @@ const WebsiteSmallBusiness = () => {
       </section>
 
       {/* What we include */}
-      <section className="py-16 bg-card/30">
+      <section className="py-16">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-12">Что входит в разработку</h2>
           <div className="max-w-3xl mx-auto space-y-4">
@@ -170,7 +170,7 @@ const WebsiteSmallBusiness = () => {
       </section>
 
       {/* Expert content block */}
-      <section className="py-16 bg-card/30">
+      <section className="py-16">
         <div className="container">
           <div className="max-w-3xl mx-auto prose prose-invert">
             <h2 className="text-3xl font-display font-bold mb-6">Сайт для малого бизнеса: с чего начать и на что обратить внимание</h2>

@@ -114,7 +114,7 @@ const AIWebsiteStartup = () => {
       </section>
 
       {/* Expert content */}
-      <section className="py-16 bg-card/30">
+      <section className="py-16">
         <div className="container">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-display font-bold mb-6">Почему стартапу нужен AI-сайт</h2>
@@ -141,7 +141,7 @@ const AIWebsiteStartup = () => {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 bg-card/30">
+      <section className="py-16">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-12">Частые вопросы</h2>
           <div className="max-w-2xl mx-auto space-y-3">
