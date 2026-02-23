@@ -25,8 +25,8 @@ export function Header() {
       <nav className="container flex items-center justify-between h-14 sm:h-16 lg:h-18">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-purple flex items-center justify-center shadow-lg shadow-primary/20 transition-transform duration-300 group-hover:scale-105">
-            <span className="text-primary-foreground font-display font-bold text-xs sm:text-sm">AT</span>
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-foreground flex items-center justify-center shadow-lg shadow-foreground/5 transition-transform duration-300 group-hover:scale-105">
+            <span className="text-background font-display font-bold text-xs sm:text-sm">AT</span>
           </div>
           <span className="font-display font-semibold text-sm sm:text-base hidden sm:block tracking-tight">
             Aleksey Taranukha
@@ -55,7 +55,7 @@ export function Header() {
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="hidden lg:block">
             <Link to="/contacts">
-              <Button variant="premium" size="sm" className="shadow-lg shadow-primary/20">
+              <Button variant="premium" size="sm" className="shadow-lg shadow-foreground/5">
                 {t("nav.contact")}
               </Button>
             </Link>
@@ -93,7 +93,7 @@ export function Header() {
             ))}
             <div className="pt-3 sm:pt-4 pb-2">
               <Link to="/contacts" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="premium" className="w-full shadow-lg shadow-primary/20">
+                <Button variant="premium" className="w-full shadow-lg shadow-foreground/5">
                   {t("nav.contact")}
                 </Button>
               </Link>

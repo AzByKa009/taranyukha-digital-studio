@@ -23,12 +23,12 @@ function AnimatedSphere() {
       <mesh ref={meshRef} scale={2.2}>
         <icosahedronGeometry args={[1, 4]} />
         <MeshDistortMaterial
-          color="#7C3AED"
+          color="#D4D4D4"
           attach="material"
           distort={0.4}
           speed={2}
-          roughness={0.2}
-          metalness={0.8}
+          roughness={0.3}
+          metalness={0.9}
         />
       </mesh>
     </Float>
@@ -47,7 +47,7 @@ function InnerGlow() {
   return (
     <mesh ref={meshRef} scale={1.5}>
       <torusGeometry args={[1, 0.02, 16, 100]} />
-      <meshBasicMaterial color="#8B5CF6" transparent opacity={0.6} />
+      <meshBasicMaterial color="#999999" transparent opacity={0.4} />
     </mesh>
   );
 }
@@ -55,10 +55,10 @@ function InnerGlow() {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={0.4} />
-      <pointLight position={[10, 10, 10]} intensity={1.2} color="#7C3AED" />
-      <pointLight position={[-10, -10, -10]} intensity={0.6} color="#8B5CF6" />
-      <pointLight position={[0, 5, 8]} intensity={0.3} color="#3B82F6" />
+      <ambientLight intensity={0.3} />
+      <pointLight position={[10, 10, 10]} intensity={1.0} color="#FFFFFF" />
+      <pointLight position={[-10, -10, -10]} intensity={0.4} color="#CCCCCC" />
+      <pointLight position={[0, 5, 8]} intensity={0.2} color="#FFFFFF" />
       <AnimatedSphere />
       <InnerGlow />
     </>
@@ -69,7 +69,7 @@ function Scene() {
 function Fallback() {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
-      <div className="w-64 h-64 rounded-full bg-gradient-to-br from-primary/30 to-primary/5 blur-3xl animate-pulse" />
+      <div className="w-64 h-64 rounded-full bg-foreground/5 blur-3xl animate-pulse" />
     </div>
   );
 }
@@ -110,9 +110,9 @@ export function Scene3D() {
 
   return (
     <div className="absolute inset-0 pointer-events-none">
-      {/* Soft ambient glow behind 3D object */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.12] blur-[100px]"
-        style={{ background: 'radial-gradient(circle, hsl(239 84% 67% / 0.5), hsl(270 60% 50% / 0.2), transparent 70%)' }}
+      {/* Soft silver ambient glow behind 3D object */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.06] blur-[100px]"
+        style={{ background: 'radial-gradient(circle, hsl(0 0% 100% / 0.4), hsl(0 0% 100% / 0.1), transparent 70%)' }}
       />
 
       {/* Static fallback for mobile and initial load */}
