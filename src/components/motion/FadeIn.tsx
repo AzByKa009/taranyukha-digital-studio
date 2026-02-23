@@ -32,10 +32,16 @@ export function FadeIn({
   const isMobile = useIsMobile();
   const isInView = useInView(ref, { once, margin: isMobile ? "0px" : "-60px" });
 
-  const shouldAnimate = !prefersReducedMotion && !isMobile;
+  // On mobile: skip all animations, render immediately visible
+  if (isMobile || prefersReducedMotion) {
+    return (
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    );
+  }
 
   const getInitial = () => {
-    if (!shouldAnimate) return { opacity: 0 };
     const base = { opacity: 0, filter: `blur(${blur}px)` };
     switch (direction) {
       case "up": return { ...base, y: distance };
@@ -48,7 +54,6 @@ export function FadeIn({
   };
 
   const getAnimate = () => {
-    if (!shouldAnimate) return { opacity: 1 };
     return { opacity: 1, x: 0, y: 0, filter: "blur(0px)" };
   };
 
@@ -58,9 +63,9 @@ export function FadeIn({
       initial={getInitial()}
       animate={isInView ? getAnimate() : getInitial()}
       transition={{
-        duration: shouldAnimate ? duration : 0.2,
-        delay: shouldAnimate ? delay : 0,
-        ease: shouldAnimate ? PREMIUM_EASING as unknown as number[] : "easeOut",
+        duration,
+        delay,
+        ease: PREMIUM_EASING as unknown as number[],
       }}
       className={className}
     >
@@ -81,14 +86,24 @@ export function StaggerContainer({
   staggerDelay = 0.12,
 }: StaggerContainerProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
   const prefersReducedMotion = useReducedMotion();
+  const isMobile = useIsMobile();
+  const isInView = useInView(ref, { once: true, margin: isMobile ? "0px" : "-60px" });
+
+  // On mobile: render children immediately without motion wrapper
+  if (isMobile || prefersReducedMotion) {
+    return (
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    );
+  }
 
   const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: prefersReducedMotion ? 0 : staggerDelay,
+        staggerChildren: staggerDelay,
       },
     },
   };
@@ -123,10 +138,13 @@ export function StaggerItem({
 }: StaggerItemProps) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
-  const shouldAnimate = !prefersReducedMotion && !isMobile;
+
+  // On mobile: render immediately without any filter/animation
+  if (isMobile || prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   const getOffset = () => {
-    if (!shouldAnimate) return {};
     switch (direction) {
       case "up": return { y: distance };
       case "left": return { x: distance };
@@ -138,7 +156,7 @@ export function StaggerItem({
   const itemVariants: Variants = {
     hidden: { 
       opacity: 0, 
-      filter: shouldAnimate ? `blur(${blur}px)` : "blur(0px)",
+      filter: `blur(${blur}px)`,
       ...getOffset(),
     },
     visible: {
@@ -147,8 +165,8 @@ export function StaggerItem({
       y: 0,
       filter: "blur(0px)",
       transition: {
-        duration: shouldAnimate ? 0.9 : 0.2,
-        ease: shouldAnimate ? [0.22, 1, 0.36, 1] : "easeOut",
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
