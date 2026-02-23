@@ -190,9 +190,7 @@ serve(async (req) => {
       console.error("AI Gateway returned no image. Payload preview:", preview);
       return new Response(
         JSON.stringify({
-          error:
-            "AI Gateway вернул ответ без изображения. Попробуйте уточнить промпт (например: 'сгенерируй именно картинку') или повторить запрос.",
-          debug: preview,
+          error: "Не удалось сгенерировать изображение. Попробуйте уточнить промпт или повторить запрос.",
         }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
