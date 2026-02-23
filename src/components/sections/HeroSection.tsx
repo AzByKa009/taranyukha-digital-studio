@@ -59,7 +59,7 @@ export function HeroSection() {
         <div className="max-w-3xl">
           {/* Badge */}
           <FadeIn delay={0}>
-            <div className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border border-border/40 bg-card/40 backdrop-blur-sm mb-6 sm:mb-10">
+            <div className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border border-border/40 bg-card/40 sm:backdrop-blur-sm mb-6 sm:mb-10">
               <span className="text-xs sm:text-sm text-muted-foreground font-medium">{t("hero.badge")}</span>
             </div>
           </FadeIn>
@@ -160,7 +160,7 @@ export function HeroSection() {
                       y: -4, 
                       transition: { type: "spring", stiffness: 400, damping: 25 } 
                     } : undefined}
-                     className="group p-4 sm:p-7 rounded-xl sm:rounded-2xl border border-foreground/10 bg-card backdrop-blur-sm hover:bg-card hover:border-foreground/25 hover:shadow-[0_0_25px_-8px_hsl(0_0%_100%/0.1)] transition-all duration-400"
+                     className="group p-4 sm:p-7 rounded-xl sm:rounded-2xl border border-foreground/10 bg-card hover:bg-card hover:border-foreground/25 hover:shadow-[0_0_25px_-8px_hsl(0_0%_100%/0.1)] transition-all duration-400"
                    >
                      <div className="flex items-center gap-3 mb-3 sm:mb-4">
                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors duration-300">
