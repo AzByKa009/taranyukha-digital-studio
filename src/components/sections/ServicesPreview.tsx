@@ -87,7 +87,7 @@ export function ServicesPreview() {
               <StaggerItem key={service.id}>
                 <Link to={`/services/${service.slug}`}>
                     <PremiumCard
-                      className="group rounded-2xl border border-border bg-card/50 hover:bg-card hover:border-foreground/15 transition-colors duration-300 h-full overflow-hidden outline-none focus:outline-none focus-visible:outline-none"
+                      className="group rounded-2xl border border-border bg-card hover:border-foreground/15 transition-colors duration-300 h-full overflow-hidden outline-none focus:outline-none focus-visible:outline-none"
                     hoverScale={1.03}
                     hoverY={-4}
                   >

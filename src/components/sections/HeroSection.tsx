@@ -73,7 +73,7 @@ export function HeroSection() {
 
           {/* Subheading */}
           <FadeIn delay={0.2}>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mb-6 sm:mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-foreground/75 max-w-xl mb-6 sm:mb-8 leading-relaxed">
               {t("hero.subtitle")}
             </p>
           </FadeIn>
@@ -86,7 +86,7 @@ export function HeroSection() {
                    <div className="w-5 h-5 rounded-full bg-foreground/10 flex items-center justify-center shrink-0">
                      <Check className="w-3 h-3 text-foreground/70" />
                   </div>
-                  <span className="text-xs sm:text-sm text-foreground/80">{check}</span>
+                  <span className="text-xs sm:text-sm text-foreground/90">{check}</span>
                 </div>
               ))}
             </div>

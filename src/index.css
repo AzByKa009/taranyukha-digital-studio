@@ -11,8 +11,8 @@
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
 
-    /* Cards - #161616 */
-    --card: 0 0% 9%;
+    /* Cards - #1A1A1A */
+    --card: 0 0% 10%;
     --card-foreground: 0 0% 100%;
 
     /* Popover - #0D0D0D */
@@ -24,12 +24,12 @@
     --primary-foreground: 0 0% 0%;
 
     /* Secondary */
-    --secondary: 0 0% 5%;
-    --secondary-foreground: 0 0% 65%;
+    --secondary: 0 0% 6%;
+    --secondary-foreground: 0 0% 72%;
 
     /* Muted */
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 72%;
 
     /* Accent - same silver */
     --accent: 0 0% 85%;
@@ -40,8 +40,8 @@
     --destructive-foreground: 0 0% 100%;
 
     /* Borders - more visible */
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
     --ring: 0 0% 85%;
 
     --radius: 0.75rem;
@@ -53,7 +53,7 @@
     --text-tertiary: 0 0% 35%;
 
     /* Gradients - monochrome */
-    --gradient-purple: linear-gradient(135deg, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 70%) 100%);
+    --gradient-purple: linear-gradient(135deg, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 78%) 100%);
     --gradient-dark: linear-gradient(180deg, hsl(0, 0%, 5%) 0%, hsl(0, 0%, 0%) 100%);
     --gradient-glow: radial-gradient(ellipse at center, hsl(0, 0%, 100%, 0.03) 0%, transparent 70%);
 
@@ -332,7 +332,7 @@
 
   /* Glass Card */
   .glass-card {
-    @apply relative rounded-2xl backdrop-blur-xl bg-card/60 border border-border/40;
+    @apply relative rounded-2xl backdrop-blur-xl bg-card border border-border/40;
     box-shadow: var(--shadow-inset);
   }
 
