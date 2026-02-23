@@ -68,7 +68,7 @@ export function Footer() {
   ].filter(link => link.href && link.href !== "#");
 
   return (
-    <footer className="border-t border-border/40 bg-card/20">
+    <footer className="border-t border-border/40">
       <div className="container py-12 sm:py-20">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-8">
           <div className="col-span-2 lg:col-span-2">

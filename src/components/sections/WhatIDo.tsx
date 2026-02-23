@@ -33,7 +33,7 @@ export function WhatIDo() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 relative bg-card/30">
+    <section className="py-20 sm:py-28 relative">
       <div className="container relative z-10">
         {/* Header */}
         <FadeIn>
