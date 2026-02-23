@@ -116,7 +116,7 @@ const WebsiteForExpert = () => {
       </section>
 
       {/* For whom */}
-      <section className="py-16 bg-card/30">
+      <section className="py-16">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-center mb-12">Для кого мы создаём сайты</h2>
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
@@ -151,7 +151,7 @@ const WebsiteForExpert = () => {
       </section>
 
       {/* Links */}
-      <section className="py-12 bg-card/30">
+      <section className="py-12">
         <div className="container">
           <h2 className="text-2xl font-display font-bold text-center mb-8">Связанные услуги</h2>
           <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">

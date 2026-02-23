@@ -107,7 +107,7 @@ const FAQ = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-card/30">
+      <section className="py-16">
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">

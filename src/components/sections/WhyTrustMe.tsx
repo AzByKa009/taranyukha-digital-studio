@@ -29,7 +29,7 @@ export function WhyTrustMe() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-card/30">
+    <section className="py-16 sm:py-24">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left side - Content */}

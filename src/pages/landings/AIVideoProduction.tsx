@@ -113,7 +113,7 @@ const AIVideoProduction = () => {
           </div>
         </section>
 
-        <section className="py-16 bg-card/30" aria-labelledby="usecases-heading">
+        <section className="py-16" aria-labelledby="usecases-heading">
           <div className="container">
             <div className="max-w-3xl mx-auto">
               <h2 id="usecases-heading" className="text-3xl md:text-4xl font-display font-bold text-center mb-12">

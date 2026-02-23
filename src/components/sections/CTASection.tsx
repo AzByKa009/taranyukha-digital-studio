@@ -18,7 +18,7 @@ export function CTASection() {
         } : undefined}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
-      <div className="absolute inset-0 bg-card/30" />
+      <div className="absolute inset-0" />
       
       <div className="container relative z-10">
         <div className="max-w-2xl mx-auto">
