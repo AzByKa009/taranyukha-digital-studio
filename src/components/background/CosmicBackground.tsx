@@ -1,21 +1,14 @@
-import { useEffect, useRef, memo } from "react";
+import { memo } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-// Lightweight shooting star via CSS-only approach
 const ShootingStar = memo(function ShootingStar() {
-  return (
-    <>
-      <div className="shooting-star shooting-star-1" />
-      <div className="shooting-star shooting-star-2" />
-      <div className="shooting-star shooting-star-3" />
-    </>
-  );
+  return <div className="shooting-star shooting-star-1" />;
 });
 
-// Stars layer — static dots via CSS radial-gradient (no canvas)
 const StarsLayer = memo(function StarsLayer() {
   return (
     <div className="cosmic-stars" aria-hidden="true">
+      <div className="stars-depth" />
       <div className="stars-small" />
       <div className="stars-medium" />
       <div className="stars-bright" />
@@ -23,7 +16,6 @@ const StarsLayer = memo(function StarsLayer() {
   );
 });
 
-// Digital dust — very subtle floating particles via CSS
 const DustLayer = memo(function DustLayer() {
   return <div className="cosmic-dust" aria-hidden="true" />;
 });
