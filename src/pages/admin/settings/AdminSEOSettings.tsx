@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { toast } from "sonner";
-import { Loader2, Save, Search, Eye } from "lucide-react";
+import { Loader2, Save, Search, Eye, Trash2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -35,6 +35,8 @@ const pageLabels: Record<string, string> = {
   blog: "Блог",
   faq: "FAQ",
 };
+
+const protectedPages = new Set(Object.keys(pageLabels));
 
 export default function AdminSEOSettings() {
   const [settings, setSettings] = useState<SEOSetting[]>([]);
@@ -243,7 +245,7 @@ export default function AdminSEOSettings() {
                 </div>
               </div>
 
-              <div className="pt-4">
+              <div className="pt-4 flex items-center gap-3">
                 <Button
                   onClick={() => handleSave(setting)}
                   disabled={saving === setting.page_key}
@@ -256,6 +258,29 @@ export default function AdminSEOSettings() {
                   )}
                   Сохранить
                 </Button>
+                {!protectedPages.has(setting.page_key) && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="gap-2"
+                    onClick={async () => {
+                      if (!confirm(`Удалить SEO-настройки для «${setting.page_key}»?`)) return;
+                      const { error } = await supabase
+                        .from("seo_settings")
+                        .delete()
+                        .eq("id", setting.id);
+                      if (error) {
+                        toast.error("Ошибка удаления: " + error.message);
+                      } else {
+                        toast.success("Удалено");
+                        fetchSettings();
+                      }
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Удалить
+                  </Button>
+                )}
               </div>
             </AccordionContent>
           </AccordionItem>
