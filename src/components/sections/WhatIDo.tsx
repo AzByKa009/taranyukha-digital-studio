@@ -1,9 +1,9 @@
 import { Globe, Bot, BarChart3 } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem, PremiumCard } from "@/components/motion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import cardPackaging from "@/assets/service-packaging-light.jpg";
-import cardAutomation from "@/assets/service-automation-light.jpg";
-import cardAnalytics from "@/assets/service-websites-light.jpg";
+import cardPackaging from "@/assets/card-whatido-websites.jpg";
+import cardAutomation from "@/assets/card-whatido-automation.jpg";
+import cardAnalytics from "@/assets/card-whatido-analytics.jpg";
 
 export function WhatIDo() {
   const { t } = useLanguage();
@@ -55,7 +55,7 @@ export function WhatIDo() {
           {expertiseAreas.map((area) => (
             <StaggerItem key={area.title}>
               <PremiumCard
-                className="group rounded-xl sm:rounded-2xl border border-border bg-background/50 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full relative overflow-hidden"
+                className="group rounded-xl sm:rounded-2xl border border-border bg-background/50 hover:bg-card hover:border-primary/30 transition-colors duration-300 h-full relative overflow-hidden outline-none focus:outline-none focus-visible:outline-none"
                 hoverScale={1.02}
                 hoverY={-4}
               >

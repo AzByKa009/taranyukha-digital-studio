@@ -32,7 +32,7 @@ export const PremiumCard = forwardRef<HTMLDivElement, PremiumCardProps>(
           ease: [0.22, 1, 0.36, 1],
         }}
         className={cn(
-          "transition-shadow duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+          "transition-shadow duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] outline-none focus:outline-none focus-visible:outline-none",
           glowOnHover && "hover:shadow-[0_0_30px_-5px_hsl(var(--primary)/0.2)]",
           className
         )}
