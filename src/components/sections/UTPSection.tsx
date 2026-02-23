@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { FadeIn } from "@/components/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Globe, Video, Cpu, ArrowRight } from "lucide-react";
+import { Globe, Video, Cpu, ArrowRight, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function UTPSection() {
   const prefersReducedMotion = useReducedMotion();
@@ -17,26 +18,31 @@ export function UTPSection() {
 
   return (
     <section className="py-20 sm:py-28 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px]" />
+      {/* Background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-foreground/[0.03] rounded-full blur-[200px]" />
       
       <div className="container relative z-10">
         <FadeIn>
-          <div className="max-w-3xl mx-auto">
-            {/* Gradient border card */}
-            <div className="relative p-px rounded-2xl sm:rounded-3xl bg-gradient-to-b from-primary/30 via-border/30 to-border/10">
-              <div className="rounded-2xl sm:rounded-3xl bg-card/80 backdrop-blur-sm p-8 sm:p-12 text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6 sm:mb-8">
-                  <ArrowRight className="w-4 h-4" />
+          <div className="max-w-4xl mx-auto">
+            {/* Main card with strong border */}
+            <div className="relative rounded-2xl sm:rounded-3xl border border-foreground/20 bg-card shadow-[0_0_60px_-15px_hsl(0_0%_100%/0.08)] overflow-hidden">
+              {/* Top accent line */}
+              <div className="absolute top-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-foreground/40 to-transparent" />
+              
+              <div className="p-8 sm:p-12 lg:p-16 text-center">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-foreground/20 bg-foreground/5 text-foreground/80 text-sm font-medium mb-8">
+                  <Sparkles className="w-3.5 h-3.5" />
                   {t("utp.badge")}
                 </div>
 
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-bold mb-8 leading-tight">
+                {/* Title - big and bold */}
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-10 leading-tight">
                   {t("utp.title")}
                 </h2>
 
-                <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
+                {/* Feature pills */}
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-10">
                   {features.map((feature, i) => (
                     <motion.div
                       key={i}
@@ -44,29 +50,34 @@ export function UTPSection() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 + 0.2 }}
-                      className="flex items-center gap-2.5 px-5 py-3 rounded-xl bg-background/60 border border-border/50 text-sm sm:text-base"
+                      className="flex items-center gap-2.5 px-5 py-3 rounded-xl border border-foreground/15 bg-foreground/[0.03] text-sm sm:text-base"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <feature.icon className="w-4 h-4 text-primary" strokeWidth={1.5} />
+                      <div className="w-8 h-8 rounded-lg bg-foreground/10 flex items-center justify-center">
+                        <feature.icon className="w-4 h-4 text-foreground/70" strokeWidth={1.5} />
                       </div>
                       <span className="text-foreground font-medium">{feature.label}</span>
                     </motion.div>
                   ))}
                 </div>
 
-                <Link to="/contacts">
+                {/* CTA - prominent button */}
+                <Link to="/ai-audit">
                   <motion.div
-                    whileHover={!prefersReducedMotion ? { scale: 1.05 } : undefined}
+                    whileHover={!prefersReducedMotion ? { scale: 1.03 } : undefined}
                     whileTap={!prefersReducedMotion ? { scale: 0.97 } : undefined}
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    className="inline-block px-6 py-2.5 rounded-full bg-primary/10 border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors"
+                    className="inline-block"
                   >
-                    <p className="text-base sm:text-lg text-primary font-semibold">
+                    <Button variant="hero" size="lg" className="shadow-[0_0_30px_-5px_hsl(0_0%_100%/0.12)]">
                       {t("utp.timeline")}
-                    </p>
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </Button>
                   </motion.div>
                 </Link>
               </div>
+              
+              {/* Bottom accent line */}
+              <div className="absolute bottom-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent" />
             </div>
           </div>
         </FadeIn>
