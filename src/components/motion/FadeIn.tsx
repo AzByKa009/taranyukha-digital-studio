@@ -28,9 +28,9 @@ export function FadeIn({
   blur = 6,
 }: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once, margin: "-60px" });
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
+  const isInView = useInView(ref, { once, margin: isMobile ? "0px" : "-60px" });
 
   const shouldAnimate = !prefersReducedMotion && !isMobile;
 

@@ -85,7 +85,7 @@ export function ThinkingSection() {
             </FadeIn>
             
             <FadeIn delay={0.3}>
-              <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl bg-card/50 border border-border/60 mb-6 sm:mb-8 relative overflow-hidden">
+              <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl bg-card border border-border/60 mb-6 sm:mb-8 relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
                 <Quote className="h-8 w-8 text-primary/20 mb-4" strokeWidth={1.5} />
                 <p className="text-base sm:text-lg text-foreground/90 italic leading-relaxed mb-4">
