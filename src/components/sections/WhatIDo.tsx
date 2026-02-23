@@ -41,7 +41,7 @@ export function WhatIDo() {
             <span className="text-foreground/60 text-xs sm:text-sm font-medium uppercase tracking-wider mb-3 sm:mb-4 block">
               {t("whatido.label")}
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 sm:mb-6 text-glow">
               {t("whatido.title")}
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">

@@ -38,7 +38,7 @@ export function UTPSection() {
 
                 {/* Title - structured layout */}
                 <div className="mb-10">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold leading-tight mb-3">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold leading-tight mb-3 text-glow-strong">
                     {t("utp.title")}
                   </h2>
                   <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
