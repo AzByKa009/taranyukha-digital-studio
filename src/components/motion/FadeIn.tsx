@@ -30,7 +30,7 @@ export function FadeIn({
   const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
-  const isInView = useInView(ref, { once, margin: isMobile ? "0px" : "-60px" });
+  const isInView = useInView(ref, { once, margin: "50px" });
 
   // On mobile: skip all animations, render immediately visible
   if (isMobile || prefersReducedMotion) {
@@ -88,7 +88,7 @@ export function StaggerContainer({
   const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
-  const isInView = useInView(ref, { once: true, margin: isMobile ? "0px" : "-60px" });
+  const isInView = useInView(ref, { once: true, margin: "50px" });
 
   // On mobile: render children immediately without motion wrapper
   if (isMobile || prefersReducedMotion) {
