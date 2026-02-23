@@ -36,10 +36,15 @@ export function UTPSection() {
                   {t("utp.badge")}
                 </div>
 
-                {/* Title - big and bold */}
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-10 leading-tight">
-                  {t("utp.title")}
-                </h2>
+                {/* Title - structured layout */}
+                <div className="mb-10">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold leading-tight mb-3">
+                    {t("utp.title")}
+                  </h2>
+                  <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                    Сайт, видео и автоматизация — единый пакет для запуска вашего бизнеса в digital
+                  </p>
+                </div>
 
                 {/* Feature pills */}
                 <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-10">
@@ -60,8 +65,8 @@ export function UTPSection() {
                   ))}
                 </div>
 
-                {/* CTA - prominent button */}
-                <Link to="/ai-audit">
+                {/* CTA */}
+                <Link to="/zapusk">
                   <motion.div
                     whileHover={!prefersReducedMotion ? { scale: 1.03 } : undefined}
                     whileTap={!prefersReducedMotion ? { scale: 0.97 } : undefined}
