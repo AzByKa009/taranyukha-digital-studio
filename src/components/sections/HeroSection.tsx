@@ -68,7 +68,7 @@ export function HeroSection() {
 
           {/* Heading */}
           <FadeIn delay={0.1}>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.1] sm:leading-[1.08] mb-5 sm:mb-7">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.1] sm:leading-[1.08] mb-5 sm:mb-7 text-glow">
               <span className="text-gradient">{t("hero.title_1")}</span>{t("hero.title_2")}
             </h1>
           </FadeIn>
@@ -139,7 +139,7 @@ export function HeroSection() {
                   ease: [0.25, 0.4, 0.25, 1]
                 }}
               >
-                <div className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gradient mb-1 sm:mb-2">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gradient text-glow-strong mb-1 sm:mb-2">
                   {stat.value}
                 </div>
                 <div className="text-xs sm:text-sm text-muted-foreground">{stat.label}</div>

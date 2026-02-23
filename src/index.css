@@ -376,6 +376,15 @@
     box-shadow: var(--shadow-glow);
   }
 
+  /* Subtle white text glow for key headings */
+  .text-glow {
+    text-shadow: 0 0 40px hsl(0 0% 100% / 0.15), 0 0 80px hsl(0 0% 100% / 0.05);
+  }
+
+  .text-glow-strong {
+    text-shadow: 0 0 30px hsl(0 0% 100% / 0.25), 0 0 60px hsl(0 0% 100% / 0.1);
+  }
+
   .glass {
     @apply backdrop-blur-xl bg-background/80 border border-border/50;
   }
