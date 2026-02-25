@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ExitIntentPopup() {
-  const { showPopup, closePopup } = useExitIntent({ delayMs: 8000 });
+  const { showPopup, closePopup } = useExitIntent({ delayMs: 30000 });
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
