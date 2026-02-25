@@ -18,10 +18,35 @@ export function ExitIntentPopup() {
     if (!email.trim()) return;
 
     setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 800));
-    toast.success(t("popup.success"));
-    setIsSubmitting(false);
-    closePopup();
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-lead`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            name: "Попап-заявка",
+            contact: email.trim(),
+            message: "Заявка из exit-intent попапа",
+            source_page: "exit-popup",
+          }),
+        }
+      );
+
+      if (response.ok) {
+        toast.success(t("popup.success"));
+      } else {
+        toast.error("Ошибка при отправке. Попробуйте позже.");
+      }
+    } catch {
+      toast.error("Ошибка сети. Попробуйте позже.");
+    } finally {
+      setIsSubmitting(false);
+      closePopup();
+    }
   };
 
   return (
