@@ -58,17 +58,17 @@ export function ExitIntentPopup() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[60]"
             onClick={closePopup}
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[92vw] sm:w-[90vw] max-w-md px-4 sm:px-0"
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 60 }}
+            transition={{ duration: 0.35, ease: [0.25, 0.4, 0.25, 1] }}
+            className="fixed inset-x-0 bottom-0 sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-[60] sm:w-[90vw] sm:max-w-md"
           >
-            <div className="relative rounded-xl sm:rounded-2xl border border-border/60 bg-card p-5 sm:p-8 shadow-2xl">
+            <div className="relative rounded-t-2xl sm:rounded-2xl border border-border/60 bg-card p-5 pb-8 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto">
               <button
                 onClick={closePopup}
                 className="absolute right-3 top-3 sm:right-4 sm:top-4 p-1.5 sm:p-2 rounded-lg hover:bg-muted transition-colors"
