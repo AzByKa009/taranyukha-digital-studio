@@ -1,11 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Gift } from "lucide-react";
+import { X, Send, Gift, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useExitIntent } from "@/hooks/useExitIntent";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+const TIMER_DURATION = 15 * 60; // 15 minutes in seconds
+
+function CountdownTimer() {
+  const [seconds, setSeconds] = useState(TIMER_DURATION);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setSeconds((prev) => {
+        if (prev <= 1) {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  const isUrgent = seconds < 5 * 60; // last 5 minutes
+
+  return (
+    <div className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg ${isUrgent ? "bg-destructive/10 border border-destructive/20" : "bg-primary/5 border border-primary/10"} transition-colors`}>
+      <Clock className={`h-4 w-4 ${isUrgent ? "text-destructive animate-pulse" : "text-primary"}`} />
+      <span className={`text-xs font-medium ${isUrgent ? "text-destructive" : "text-muted-foreground"}`}>
+        Предложение действует:
+      </span>
+      <div className="flex items-center gap-1 font-mono">
+        <span className={`text-lg font-bold tabular-nums ${isUrgent ? "text-destructive" : "text-foreground"}`}>
+          {String(mins).padStart(2, "0")}
+        </span>
+        <span className={`text-lg font-bold ${isUrgent ? "text-destructive animate-pulse" : "text-muted-foreground"}`}>:</span>
+        <span className={`text-lg font-bold tabular-nums ${isUrgent ? "text-destructive" : "text-foreground"}`}>
+          {String(secs).padStart(2, "0")}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export function ExitIntentPopup() {
   const { showPopup, closePopup } = useExitIntent({ delayMs: 30000 });
@@ -30,7 +75,7 @@ export function ExitIntentPopup() {
           body: JSON.stringify({
             name: "Попап-заявка",
             contact: email.trim(),
-            message: "Заявка из exit-intent попапа",
+            message: "Заявка из exit-intent попапа (15 мин оффер)",
             source_page: "exit-popup",
           }),
         }
@@ -77,7 +122,7 @@ export function ExitIntentPopup() {
                 <X className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
               </button>
 
-              <div className="flex items-center gap-2.5 sm:gap-3 mb-4 sm:mb-6">
+              <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
                 <div className="p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-primary/10">
                   <Gift className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                 </div>
@@ -91,7 +136,9 @@ export function ExitIntentPopup() {
                 </div>
               </div>
 
-              <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
+              <CountdownTimer />
+
+              <p className="text-sm sm:text-base text-muted-foreground mt-3 sm:mt-4 mb-4 sm:mb-5 leading-relaxed">
                 {t("popup.subtitle")}
               </p>
 
