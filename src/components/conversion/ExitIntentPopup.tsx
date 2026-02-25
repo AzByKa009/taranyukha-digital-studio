@@ -144,8 +144,8 @@ export function ExitIntentPopup() {
 
               <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <Input
-                  type="email"
-                  placeholder={t("popup.email_placeholder")}
+                  type="text"
+                  placeholder="Email, Telegram или телефон"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
