@@ -36,21 +36,19 @@ export function useExitIntent(options: UseExitIntentOptions = {}) {
   }, [setCookie]);
 
   useEffect(() => {
-    if (checkCookie()) {
-      setHasTriggered(true);
+    if (checkCookie() || hasTriggered) {
       return;
     }
 
     // Show popup after timer (works on both desktop and mobile)
     const timer = setTimeout(() => {
-      if (!hasTriggered) {
-        setShowPopup(true);
-        setHasTriggered(true);
-      }
+      setShowPopup(true);
+      setHasTriggered(true);
     }, delayMs);
 
     return () => clearTimeout(timer);
-  }, [delayMs, hasTriggered, checkCookie]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [delayMs, checkCookie]);
 
   return { showPopup, closePopup };
 }
