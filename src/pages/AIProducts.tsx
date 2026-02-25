@@ -6,6 +6,12 @@ import { ArrowRight, CheckCircle, Sparkles, ClipboardList, Loader2, MessageSquar
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface Category {
   id: string;
@@ -321,6 +327,54 @@ const AIProducts = () => {
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16">
+        <div className="container">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-8 text-center">
+              Вопросы об AI-решениях
+            </h2>
+            <Accordion type="single" collapsible className="space-y-4">
+              {[
+                {
+                  q: "Нужны ли технические знания для использования AI-продуктов?",
+                  a: "Нет. Все решения создаются с простым интерфейсом — вы работаете через привычные инструменты: мессенджеры, CRM, дашборды. Техническую настройку и интеграцию беру на себя полностью.",
+                },
+                {
+                  q: "Как AI-бот отличается от обычного чат-бота?",
+                  a: "Обычный бот работает по жёстким сценариям и «ломается» на нестандартных вопросах. AI-бот понимает контекст, ведёт естественный диалог, квалифицирует лида и передаёт горячие заявки менеджеру. Конверсия в 2–3 раза выше.",
+                },
+                {
+                  q: "Можно ли интегрировать AI с моей текущей CRM?",
+                  a: "Да, интегрирую с любой популярной CRM: Bitrix24, AmoCRM, HubSpot и другие. Также настраиваю связки через Make/Zapier с любыми сервисами, которые вы уже используете.",
+                },
+                {
+                  q: "Что если AI-решение не подойдёт моему бизнесу?",
+                  a: "Перед разработкой провожу бесплатный AI-аудит вашего бизнеса. Если автоматизация не даст ощутимого результата — скажу об этом честно и предложу альтернативу.",
+                },
+                {
+                  q: "Как быстро окупается внедрение AI?",
+                  a: "Типичный срок окупаемости — 1–3 месяца. AI-бот, который обрабатывает 50 заявок в день вместо менеджера, экономит от 30 000₽/мес. А рост конверсии за счёт мгновенного ответа увеличивает выручку с первого месяца.",
+                },
+              ].map((faq, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`ai-faq-${i}`}
+                  className="glass-card rounded-2xl px-6 border-none"
+                >
+                  <AccordionTrigger className="text-left font-display font-semibold py-6 hover:no-underline">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-6">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </div>
       </section>
