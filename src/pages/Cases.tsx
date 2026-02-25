@@ -6,6 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { useSEO } from "@/hooks/useSEO";
 import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface CaseItem {
   id: string;
@@ -215,6 +221,50 @@ const Cases = () => {
               </p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16 sm:py-20">
+        <div className="container">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-8 text-center">
+              Вопросы о кейсах
+            </h2>
+            <Accordion type="single" collapsible className="space-y-4">
+              {[
+                {
+                  q: "Как вы выбираете проекты для портфолио?",
+                  a: "В портфолио попадают проекты, которые принесли измеримый результат клиенту — рост заявок, увеличение конверсии, сокращение затрат на обработку лидов. Каждый кейс содержит конкретные цифры и описание решения.",
+                },
+                {
+                  q: "Можете ли вы сделать похожий проект для моего бизнеса?",
+                  a: "Да, но не копию — каждый проект адаптируется под специфику вашего бизнеса. Используем проверенные подходы из кейсов, но стратегию, дизайн и автоматизации настраиваем индивидуально под ваши задачи и аудиторию.",
+                },
+                {
+                  q: "Сколько времени занимает типичный проект?",
+                  a: "Зависит от масштаба: лендинг с воронкой — 1–2 недели, комплексная система с CRM и автоматизацией — 3–6 недель. Конкретные сроки обсуждаем на консультации после анализа задачи.",
+                },
+                {
+                  q: "Работаете ли вы с бизнесом в моей нише?",
+                  a: "Работаю с бизнесом в сфере услуг, образования, e-commerce и B2B. Если ваша ниша не представлена в кейсах — это не проблема. Системы привлечения заявок и автоматизации работают по универсальным принципам.",
+                },
+              ].map((faq, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`case-faq-${i}`}
+                  className="glass-card rounded-2xl px-6 border-none"
+                >
+                  <AccordionTrigger className="text-left font-display font-semibold py-6 hover:no-underline">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-6">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
       </section>
     </Layout>
