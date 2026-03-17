@@ -88,7 +88,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
+          <BrowserRouter basename="/taranyukha-digital-studio">
             <AnalyticsTracker />
             <CookieConsent />
             <Suspense fallback={<PageLoader />}>
